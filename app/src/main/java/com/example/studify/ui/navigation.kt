@@ -26,9 +26,9 @@ fun AppNavigation(modifier: Modifier = Modifier,
         routes.chatlist to "채팅방",
         routes.mypage to "마이페이지"
     )
-    /*
+/*
     Scaffold( bottomBar = {
-        NavigationBar (windowInsets = NavigationBarDefaults.windowInsets){ items.forEach { routes, s -> NavigationBarItem(selected = currentRoute()) } }
+        NavigationBar (windowInsets = NavigationBarDefaults.windowInsets){ items.forEach { route, s -> NavigationBarItem(selected = currentRoute()==route } }
     }) {
 
     }*/
