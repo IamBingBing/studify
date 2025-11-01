@@ -1,4 +1,4 @@
-package com.example.studify
+package com.example.studify.Tool
 
 import androidx.compose.ui.Modifier
 
@@ -21,5 +21,4 @@ object TextRanges{
     const val addressRange = 255
 
 }
-val BaseModifier = Modifier
 
