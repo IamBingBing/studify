@@ -34,7 +34,7 @@ import com.example.studify.Tool.BaseModifiers
 
 @Composable
 @Preview
-fun login(vm : loginVM = viewModel()) {
+fun login(vm : loginVM = viewModel() ) {
     var loginid by remember { mutableStateOf<String>("") }
     var password by remember { mutableStateOf<String>("") }
     var autologin by remember { mutableStateOf<Boolean>(false)  }
@@ -44,8 +44,8 @@ fun login(vm : loginVM = viewModel()) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.End
         ) {
-        Image(modifier = Modifier.size(400.dp,400.dp),painter = painterResource(id = R.drawable.logo) , contentDescription = "")
-        Box(modifier = Modifier.size(280.dp, 200.dp).align(alignment = Alignment.CenterHorizontally)) {
+        Image(modifier = BaseModifiers.BaseModifier.size(400.dp,400.dp),painter = painterResource(id = R.drawable.logo) , contentDescription = null)
+        Box(modifier = BaseModifiers.BaseModifier.size(280.dp, 200.dp).align(alignment = Alignment.CenterHorizontally)) {
             Column(
                 modifier = BaseModifiers.BaseBoxModifier,
                 verticalArrangement = Arrangement.Center,
@@ -66,7 +66,7 @@ fun login(vm : loginVM = viewModel()) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("자동 로그인")

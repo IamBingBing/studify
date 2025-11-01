@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 
 object BaseModifiers {
     val BaseBoxModifier = Modifier.fillMaxWidth().padding(top = 25.dp)
-    val BaseBtnModifier = Modifier
+    val BaseBtnModifier = Modifier.padding(10.dp)
     val BaseArticleModifier = Modifier
     val BaseModifier = Modifier
 }
