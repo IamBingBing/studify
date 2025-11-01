@@ -1,15 +1,12 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
-
 android {
     namespace = "com.example.studify"
     compileSdk = 35
-    kapt  {
-        correctErrorTypes = true
-    }
+
     defaultConfig {
         applicationId = "com.example.studify"
         minSdk = 29
@@ -19,7 +16,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
@@ -48,21 +50,41 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // retrofit2
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.6.4")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.6.4")
-    implementation("com.google.code.gson:gson:2.8.6")
-    implementation("com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0")
-    implementation("com.android.installreferrer:installreferrer:2.2")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit2.adapter.rxjava2)
+    implementation(libs.gson)
+    implementation(libs.retrofit2.rxjava2.adapter)
+    implementation(libs.installreferrer)
     // okhttp3
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     //Glide
-    implementation("com.github.bumptech.glide:glide:4.11.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
     //hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
-
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    //compose
+    val composeBom = platform("androidx.compose:compose-bom:2024.11.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(libs.androidx.material3)
+    // Android Studio Preview support
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    // UI Tests
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    // Optional - Add window size utils
+    implementation(libs.androidx.adaptive)
+    // Optional - Integration with activities
+    implementation(libs.androidx.activity.compose)
+    // Optional - Integration with ViewModels
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Optional - Integration with LiveData
+    implementation(libs.androidx.runtime.livedata)
+    // Optional - Integration with RxJava
+    implementation(libs.androidx.runtime.rxjava2)
 }
