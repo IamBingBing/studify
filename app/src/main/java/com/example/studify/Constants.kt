@@ -1,4 +1,7 @@
 package com.example.studify
+
+import androidx.compose.ui.Modifier
+
 object TextRanges{
     const val usernameRange = 10
     const val loginIdRange = 20
@@ -18,4 +21,5 @@ object TextRanges{
     const val addressRange = 255
 
 }
+val BaseModifier = Modifier
 

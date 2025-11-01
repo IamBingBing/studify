@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -12,21 +13,28 @@ import androidx.compose.runtime.remember
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.w3c.dom.Text
+import com.example.studify.BaseModifier
 
 @Composable
 @Preview
 fun login(vm : loginVM = viewModel()) {
     var loginid by remember { mutableStateOf<String>("") }
     var password by remember { mutableStateOf<String>("") }
-    Column {
-        Text (text = "ID")
-        TextField(value = loginid, onValueChange = { loginid = it} ,label = { Text("ID") }, singleLine = true)
-        Text (text = "Password")
+    Column ( modifier = BaseModifier,verticalArrangement = Arrangement.Center,horizontalAlignment = Alignment.CenterHorizontally ){
+        TextField(
+            value = loginid,
+            onValueChange = { loginid = it } ,
+            label = { Text("ID") },
+            singleLine = true
+        )
         TextField(
             value = password,
             onValueChange = { password = it} ,
@@ -35,6 +43,7 @@ fun login(vm : loginVM = viewModel()) {
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
+        Button( onClick = { vm.requestLogin()} , enabled = true, modifier = Modifier.align()) { Text("로그인") }
     }
 
 }
