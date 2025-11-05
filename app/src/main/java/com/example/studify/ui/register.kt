@@ -37,12 +37,13 @@ import androidx.compose.ui.unit.sp
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MenuAnchorType
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class) // <-- 이 한 줄을 추가합니다.
 @Composable
 @Preview
-fun register() {
+fun register(vm: registerVM = viewModel()) {
     val BaseBtnModifier = Modifier.padding(10.dp)
     val RawModifier = BaseModifiers.BaseModifier.padding(top = 10.dp)
     val BaseTextfillModifier = Modifier.padding(10.dp)
