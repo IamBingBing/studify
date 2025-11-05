@@ -11,4 +11,7 @@ object BaseModifiers {
     val BaseArticleModifier = Modifier
     val BaseTextfill = Modifier.padding(10.dp)
     val BaseModifier = Modifier
+
+    val DialogCard = Modifier
+    val Chip = Modifier
 }
