@@ -10,8 +10,7 @@ class MainActivity : androidx.activity.ComponentActivity(){
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            matchMenu()
-            navigation()
+
         }
     }
 }

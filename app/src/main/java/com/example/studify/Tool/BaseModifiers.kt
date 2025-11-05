@@ -9,6 +9,6 @@ object BaseModifiers {
     val BaseBoxModifier = Modifier.fillMaxWidth().padding(top = 25.dp)
     val BaseBtnModifier = Modifier.padding(10.dp)
     val BaseArticleModifier = Modifier
-    val BaseTextfill = Modifier.padding(10.dp)
+    val BaseTextfillModifier = Modifier.padding(10.dp)
     val BaseModifier = Modifier
 }
