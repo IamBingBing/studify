@@ -12,7 +12,7 @@ class MainActivity : androidx.activity.ComponentActivity(){
         setContent {
             //matchMenu()
             //navigation()
-            createGroup()
+            noticePage()
         }
     }
 }
