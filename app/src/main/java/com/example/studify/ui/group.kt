@@ -69,6 +69,7 @@ fun HomeTab(
 ) {
     Column(modifier = BaseModifiers.BaseTextfill) {
 
+
         SectionTitle("그룹정보")
         Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text("- 그룹이름: $groupName")
@@ -133,7 +134,9 @@ private fun SectionDivider() {
 @Composable
 private fun CalendarTab() {
     Box(
+
         modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("캘린더 (추가 예정)") }
 }
@@ -141,7 +144,9 @@ private fun CalendarTab() {
 @Composable
 private fun MembersTab() {
     Box(
+
         modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("멤버 (추가 예정)") }
 }
@@ -149,7 +154,9 @@ private fun MembersTab() {
 @Composable
 private fun NoticeTab() {
     Box(
+
         modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("공지 (추가 예정)") }
 }

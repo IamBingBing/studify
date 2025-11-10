@@ -42,6 +42,7 @@ fun createGroup(){
                 onValueChange = {groupName = it},
                 label = { Text("그룹 이름")},
                 modifier = BaseModifiers.BaseTextfill
+
             )
 
             Spacer(Modifier.height(6.dp))
@@ -50,7 +51,9 @@ fun createGroup(){
                 value = groupGoal,
                 onValueChange = { groupGoal = it },
                 label = {Text("목표/다짐")},
+
                 modifier = BaseModifiers.BaseTextfill
+
             )
 
             Spacer(Modifier.height(6.dp))
@@ -60,7 +63,8 @@ fun createGroup(){
                 onValueChange = { input ->
                     if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
                         maxMembers = input
-                        }
+
+                    }
                 },
                 label = { Text("최대 정원")},
                 singleLine = true,
@@ -75,13 +79,13 @@ fun createGroup(){
                 onOpenPicker = { showPicker = true }
             )
 
-                if (showPicker) {
-                    HashtagPickerDialog(
-                        available = available,
-                        selected = selected,
-                        onDismiss = { showPicker = false } //닫히는 순간 showpicker를 false로
-                    )
-                }
+            if (showPicker) {
+                HashtagPickerDialog(
+                    available = available,
+                    selected = selected,
+                    onDismiss = { showPicker = false } //닫히는 순간 showpicker를 false로
+                )
+            }
 
             Spacer(Modifier.height(6.dp))
 
@@ -94,13 +98,15 @@ fun createGroup(){
                 onClick = {{
                     //생성하기 버튼 눌렀을 때 발생할 이벤트 나중에 넣을것이다
                 }},
+
                 modifier = BaseModifiers.BaseTextfill
+
             ) {
                 Text("생성하기")
             }
 
-            }
         }
+    }
 
 
 }
@@ -112,6 +118,7 @@ fun PurposeField(
 ) {
     Box(
         modifier = BaseModifiers.BaseTextfill
+
             .height(56.dp)
             .width(280.dp)
             .border(
@@ -126,12 +133,15 @@ fun PurposeField(
     ) {
         Row(
             modifier = BaseModifiers.BaseTextfill,
+
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = if (selected.isEmpty()) "# 스터디 목적"
                 else selected.joinToString(" · ") { "#$it" },
+
                 modifier = BaseModifiers.BaseTextfill
+
                     .weight(1f)
                     .padding(end = 4.dp),
                 maxLines = 1,
@@ -168,7 +178,8 @@ fun HashtagPickerDialog(
             Column(BaseModifiers.DialogCard.then(modifier)) {
 
                 Row(
-                     horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+
                 ) {
                     available.forEach { tag ->        //available 목록에 잇는 태그들을 하나씩 꺼내서 태그라 부르며 처리
                         val checked = tag in selected
@@ -180,8 +191,9 @@ fun HashtagPickerDialog(
                             label = {Text("#$tag") }
                         )
 
-                 }
-            }
+                    }
+                }
+
                 Spacer(Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     TextField(
@@ -189,7 +201,9 @@ fun HashtagPickerDialog(
                         onValueChange = { newTag = it },
                         label = { Text("새 해시태그") },
                         singleLine = true,
+
                         modifier = BaseModifiers.BaseTextfill.weight(1f)
+
                     )
                     TextButton(onClick = {
                         val t = newTag.trim()
@@ -208,13 +222,17 @@ fun StudyStyleSlider(
     value: Int,
     onChange: (Int) -> Unit
 ) {
+
     Column(modifier = BaseModifiers.BaseTextfill ) {
+
 
         Slider(
             value = value.toFloat(),
             onValueChange = {onChange(it.toInt()) },
             valueRange = 0f..100f,
+
             modifier = BaseModifiers.BaseTextfill
+
                 .height(56.dp)
                 .width(280.dp)
         )
@@ -222,6 +240,7 @@ fun StudyStyleSlider(
         Spacer(Modifier.height(1.dp))
 
         Row(
+
             modifier = BaseModifiers.BaseTextfill
                 .height(56.dp)
                 .width(280.dp),
