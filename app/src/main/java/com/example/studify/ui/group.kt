@@ -15,7 +15,7 @@ enum class GroupTab { HOME, CALENDAR, MEMBERS, NOTICE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupPage(groupName: String = "Ctrl+F") {
+fun groupPage(groupName: String = "Ctrl+F") {
     var selectedTab by remember { mutableStateOf(GroupTab.HOME) }
 
     Scaffold( //화면의 기본구조를 잡아주는 뼈대, 위 아래 본문 이런것들을 알아서 배치해줌
@@ -54,7 +54,7 @@ fun GroupPage(groupName: String = "Ctrl+F") {
                 )
                 GroupTab.CALENDAR -> CalendarTab()
                 GroupTab.MEMBERS  -> MembersTab()
-                GroupTab.NOTICE   -> NoticeTab()
+                GroupTab.NOTICE   -> noticePage()
             }
         }
     }
@@ -99,12 +99,7 @@ fun HomeTab(
         ) {
             SectionTitle("공지")
 
-            Text(
-                text = "더보기",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable{onNoteClick()}
-            )
+
         }
 
         Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
