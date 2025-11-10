@@ -89,4 +89,5 @@ dependencies {
     implementation(libs.androidx.runtime.rxjava2)
     implementation(libs.androidx.navigation.compose)
 
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
 }
