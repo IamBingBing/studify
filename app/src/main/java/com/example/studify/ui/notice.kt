@@ -35,72 +35,72 @@ fun noticePage(
     val others = filtered.filter { !it.isPinned }.sortedByDescending { it.date }
 
 
-        Box(
-            modifier = Modifier
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = BaseModifiers.BaseTextfill
                 .fillMaxSize()
         ) {
-            Column(
-                modifier = BaseModifiers.BaseTextfillModifier
-                    .fillMaxSize()
+            LazyColumn( //화면에 보이는것만 그려줌(스크롤내리면 더보임)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp), //요소들 간격 자동으로
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
             ) {
-                LazyColumn( //화면에 보이는것만 그려줌(스크롤내리면 더보임)
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp), //요소들 간격 자동으로
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
-                ) {
-                    if (pinned.isNotEmpty()) {
+                if (pinned.isNotEmpty()) {
 
-                        items(pinned) { notice ->
-                            NoticeRow(notice)
-                        }
-                        item {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            )
-                        }
-                    }
-
-                    items(others) { notice ->
+                    items(pinned) { notice ->
                         NoticeRow(notice)
                     }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 15.dp, end = 15.dp, bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField( //공지 검색창
-                        value = query,
-                        onValueChange = { query = it },
-                        placeholder = { Text("검색어 입력") },
-                        singleLine = true,
-                        modifier = Modifier.weight(1f) //로우안에 남은공간 차지
-                    )
-
-                    Button(
-                        onClick = { /*검색실행*/ },
-                        modifier = Modifier.height(56.dp)
-                    ) {
-                        Text("검색")
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
                     }
                 }
+
+                items(others) { notice ->
+                    NoticeRow(notice)
+                }
             }
 
-            FloatingActionButton(
-                onClick = onWriteClick,
+            Row(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(y = (-80).dp)
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(start = 15.dp, end = 15.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("+")
+                TextField( //공지 검색창
+                    value = query,
+                    onValueChange = { query = it },
+                    placeholder = { Text("검색어 입력") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f) //로우안에 남은공간 차지
+                )
+
+                Button(
+                    onClick = { /*검색실행*/ },
+                    modifier = Modifier.height(56.dp)
+                ) {
+                    Text("검색")
+                }
             }
         }
+
+        FloatingActionButton(
+            onClick = onWriteClick,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(y = (-80).dp)
+                .padding(16.dp)
+        ) {
+            Text("+")
+        }
     }
+}
 
 
 @Composable
@@ -128,3 +128,4 @@ private fun NoticeRow(notice: Notice) {
         }
     }
 }
+

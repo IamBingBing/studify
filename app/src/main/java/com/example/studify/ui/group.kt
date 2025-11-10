@@ -67,7 +67,8 @@ fun HomeTab(
     tags: List<String> = listOf("프론트엔드개발", "알고리즘"),
     onNoteClick: () -> Unit
 ) {
-    Column(modifier = BaseModifiers.BaseTextfillModifier) {
+    Column(modifier = BaseModifiers.BaseTextfill) {
+
 
         SectionTitle("그룹정보")
         Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
@@ -128,7 +129,9 @@ private fun SectionDivider() {
 @Composable
 private fun CalendarTab() {
     Box(
-        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
+
+        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("캘린더 (추가 예정)") }
 }
@@ -136,7 +139,9 @@ private fun CalendarTab() {
 @Composable
 private fun MembersTab() {
     Box(
-        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
+
+        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("멤버 (추가 예정)") }
 }
@@ -144,7 +149,9 @@ private fun MembersTab() {
 @Composable
 private fun NoticeTab() {
     Box(
-        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
+
+        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+
         contentAlignment = Alignment.Center
     ) { Text("공지 (추가 예정)") }
 }

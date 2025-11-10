@@ -41,7 +41,8 @@ fun createGroup(){
                 value = groupName,
                 onValueChange = {groupName = it},
                 label = { Text("그룹 이름")},
-                modifier = BaseModifiers.BaseTextfillModifier
+                modifier = BaseModifiers.BaseTextfill
+
             )
 
             Spacer(Modifier.height(6.dp))
@@ -50,7 +51,9 @@ fun createGroup(){
                 value = groupGoal,
                 onValueChange = { groupGoal = it },
                 label = {Text("목표/다짐")},
-                modifier = BaseModifiers.BaseTextfillModifier
+
+                modifier = BaseModifiers.BaseTextfill
+
             )
 
             Spacer(Modifier.height(6.dp))
@@ -60,11 +63,12 @@ fun createGroup(){
                 onValueChange = { input ->
                     if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
                         maxMembers = input
+
                     }
                 },
                 label = { Text("최대 정원")},
                 singleLine = true,
-                modifier = BaseModifiers.BaseTextfillModifier
+                modifier = BaseModifiers.BaseTextfill
 
             )
 
@@ -94,7 +98,9 @@ fun createGroup(){
                 onClick = {{
                     //생성하기 버튼 눌렀을 때 발생할 이벤트 나중에 넣을것이다
                 }},
-                modifier = BaseModifiers.BaseTextfillModifier
+
+                modifier = BaseModifiers.BaseTextfill
+
             ) {
                 Text("생성하기")
             }
@@ -111,7 +117,8 @@ fun PurposeField(
     onOpenPicker: () -> Unit
 ) {
     Box(
-        modifier = BaseModifiers.BaseTextfillModifier
+        modifier = BaseModifiers.BaseTextfill
+
             .height(56.dp)
             .width(280.dp)
             .border(
@@ -125,13 +132,16 @@ fun PurposeField(
 
     ) {
         Row(
-            modifier = BaseModifiers.BaseTextfillModifier,
+            modifier = BaseModifiers.BaseTextfill,
+
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = if (selected.isEmpty()) "# 스터디 목적"
                 else selected.joinToString(" · ") { "#$it" },
-                modifier = BaseModifiers.BaseTextfillModifier
+
+                modifier = BaseModifiers.BaseTextfill
+
                     .weight(1f)
                     .padding(end = 4.dp),
                 maxLines = 1,
@@ -169,6 +179,7 @@ fun HashtagPickerDialog(
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
+
                 ) {
                     available.forEach { tag ->        //available 목록에 잇는 태그들을 하나씩 꺼내서 태그라 부르며 처리
                         val checked = tag in selected
@@ -182,6 +193,7 @@ fun HashtagPickerDialog(
 
                     }
                 }
+
                 Spacer(Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     TextField(
@@ -189,7 +201,9 @@ fun HashtagPickerDialog(
                         onValueChange = { newTag = it },
                         label = { Text("새 해시태그") },
                         singleLine = true,
-                        modifier = BaseModifiers.BaseTextfillModifier.weight(1f)
+
+                        modifier = BaseModifiers.BaseTextfill.weight(1f)
+
                     )
                     TextButton(onClick = {
                         val t = newTag.trim()
@@ -208,13 +222,17 @@ fun StudyStyleSlider(
     value: Int,
     onChange: (Int) -> Unit
 ) {
-    Column(modifier = BaseModifiers.BaseTextfillModifier ) {
+
+    Column(modifier = BaseModifiers.BaseTextfill ) {
+
 
         Slider(
             value = value.toFloat(),
             onValueChange = {onChange(it.toInt()) },
             valueRange = 0f..100f,
-            modifier = BaseModifiers.BaseTextfillModifier
+
+            modifier = BaseModifiers.BaseTextfill
+
                 .height(56.dp)
                 .width(280.dp)
         )
@@ -222,7 +240,8 @@ fun StudyStyleSlider(
         Spacer(Modifier.height(1.dp))
 
         Row(
-            modifier = BaseModifiers.BaseTextfillModifier
+
+            modifier = BaseModifiers.BaseTextfill
                 .height(56.dp)
                 .width(280.dp),
             verticalAlignment = Alignment.CenterVertically,
