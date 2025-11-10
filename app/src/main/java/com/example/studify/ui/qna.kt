@@ -1,5 +1,6 @@
 package com.example.studify.ui
 
+import android.view.Surface
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,7 @@ fun qna(vm : qnaVM = viewModel()){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White){
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = BaseModifiers.BaseModifier.fillMaxSize()) {
             LazyColumn(modifier = BaseModifiers.BaseModifier.fillMaxSize()){
                 items(20){
                         index ->
