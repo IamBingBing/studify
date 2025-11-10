@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,7 +43,7 @@ fun matchingcomplete(){
 
 
               ){Text ("상대방")}
-
+              Spacer(modifier = Modifier.padding(10.dp))
               Box(
                   modifier = BaseModifiers.BaseModifier
                       .width(50.dp).height(50.dp)
@@ -62,7 +63,7 @@ fun matchingcomplete(){
                     contentColor = Color.White
                 )
             ) {
-                Text(text = "확인")
+                Text(text = "채팅방으로 아동")
             }
         }
     }
