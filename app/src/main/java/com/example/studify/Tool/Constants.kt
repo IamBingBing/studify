@@ -19,6 +19,10 @@ object TextRanges{
 
     const val emailRange = 255
     const val addressRange = 255
-
+}
+object MatchingCase {
+    const val fast = "fast"
+    const val group = "group"
+    const val exchange = "exchange"
 }
 
