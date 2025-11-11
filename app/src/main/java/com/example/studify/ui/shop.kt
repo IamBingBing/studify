@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studify.R
+import com.example.studify.Tool.BaseModifiers
 
 data class Gifticon(val name: String, val price: String, val imageResId: Int)
 
@@ -79,7 +80,7 @@ fun shop() {
             }
         ) { paddingValues ->
             Column(
-                modifier = Modifier
+                modifier = BaseModifiers.BaseModifier
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(16.dp),
@@ -93,13 +94,13 @@ fun shop() {
         }
 
     } else {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = BaseModifiers.BaseModifier.fillMaxSize()) {
             Scaffold(
                 topBar = { TopAppBar(title = { Text("상점") }) }
             ) { paddingValues ->
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(4),
-                    modifier = Modifier
+                    modifier = BaseModifiers.BaseModifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     contentPadding = PaddingValues(8.dp),
@@ -107,9 +108,9 @@ fun shop() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item(span = { GridItemSpan(4) }) {
-                        Card(modifier = Modifier.fillMaxWidth()) {
+                        Card(modifier = BaseModifiers.BaseModifier.fillMaxWidth()) {
                             Box(
-                                modifier = Modifier
+                                modifier = BaseModifiers.BaseModifier
                                     .fillMaxWidth()
                                     .height(100.dp)
                                     .background(Color.LightGray),
@@ -122,17 +123,17 @@ fun shop() {
                     items(sampleGifticons) { gifticon ->
                         // --- GifticonItem 함수의 내용이 여기로 통합되었습니다 ---
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
+                                modifier = BaseModifiers.BaseModifier.padding(8.dp)
                             ) {
                                 Image(
                                     painter = painterResource(id = gifticon.imageResId),
                                     contentDescription = gifticon.name,
-                                    modifier = Modifier
+                                    modifier = BaseModifiers.BaseModifier
                                         .fillMaxWidth()
                                         .aspectRatio(1f),
                                     contentScale = ContentScale.Crop
@@ -141,7 +142,7 @@ fun shop() {
                                     text = gifticon.name,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(top = 4.dp)
+                                    modifier = BaseModifiers.BaseModifier.padding(top = 4.dp)
                                 )
                                 Text(
                                     text = gifticon.price,
@@ -156,7 +157,7 @@ fun shop() {
             }
 
             Column(
-                modifier = Modifier
+                modifier = BaseModifiers.BaseModifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.End,
@@ -172,7 +173,7 @@ fun shop() {
                         text = "잔여 포인트: 1,234P",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        modifier = BaseModifiers.BaseModifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
             }

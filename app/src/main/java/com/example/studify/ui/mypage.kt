@@ -92,7 +92,7 @@ fun mypage(vm : mypageVM = viewModel() ) {
 }
 
 @Composable
-private fun DisplayProfileField(label: String, value: String) {
+public fun DisplayProfileField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
