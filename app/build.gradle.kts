@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 android {
     namespace = "com.example.studify"
@@ -13,7 +14,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
@@ -61,11 +62,10 @@ dependencies {
     implementation(libs.logging.interceptor)
     //Glide
     implementation(libs.glide)
-    annotationProcessor(libs.compiler)
+    ksp(libs.glide.ksp)
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    ksp(libs.androidx.hilt.compiler)
     //compose
     val composeBom = platform("androidx.compose:compose-bom:2024.11.00")
     implementation(composeBom)
@@ -90,4 +90,5 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+
 }

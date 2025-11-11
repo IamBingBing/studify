@@ -21,6 +21,5 @@ data class LoginModel(
         @SerializedName("ADDRESS") @Expose var address:String?= null,
         @SerializedName("EMAIL") @Expose var email:String?=null,
         @SerializedName("CHATLIST") @Expose var chatlist: JSONArray?=null
-
         )
 }

@@ -8,9 +8,10 @@ import java.io.Serializable
 data class StfChatDataModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
-    @SerializedName("list") @Expose var list: List<StfChat>? =null
+    @SerializedName("result") @Expose var list: StfChat? =null
 ) : Serializable {
     data class  StfChat(
+        @SerializedName("CHATID") @Expose var CHATID: Int? = null,
         @SerializedName("CHATNAME") @Expose var CHATNAME: String? = null,
         @SerializedName("CHAT") @Expose var CHAT: JsonArray? = null
     ):Serializable

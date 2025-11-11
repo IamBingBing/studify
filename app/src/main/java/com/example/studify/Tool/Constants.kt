@@ -1,6 +1,8 @@
 package com.example.studify.Tool
 
-import androidx.compose.ui.Modifier
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.studify.App
 
 object TextRanges{
     const val usernameRange = 10
@@ -19,10 +21,13 @@ object TextRanges{
 
     const val emailRange = 255
     const val addressRange = 255
+    const val purpose = 20
 }
 object MatchingCase {
     const val fast = "fast"
     const val group = "group"
     const val exchange = "exchange"
 }
-
+private fun getSharedPreferences (): SharedPreferences{
+    return App.getContext()!!.getSharedPreferences("studify", Context.MODE_PRIVATE);
+}

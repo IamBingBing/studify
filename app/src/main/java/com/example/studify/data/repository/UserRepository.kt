@@ -13,7 +13,6 @@ class UserRepository(private val studifyService: StudifyService) {
             this["ID"] = userid
             this["PASSWORD"] = password
         }
-
         return studifyService.requestLogin(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

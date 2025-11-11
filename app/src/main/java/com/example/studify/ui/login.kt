@@ -35,9 +35,9 @@ import com.example.studify.Tool.BaseModifiers
 @Composable
 @Preview
 fun login(vm : loginVM = viewModel() ) {
-    var loginid by remember { mutableStateOf<String>("") }
-    var password by remember { mutableStateOf<String>("") }
-    var autologin by remember { mutableStateOf<Boolean>(false)  }
+    var loginid by vm.loginid
+    var password by vm.password
+    var autologin by vm.autologin
     Box (modifier = BaseModifiers.BaseBoxModifier) {
         Column(
             modifier = BaseModifiers.BaseBoxModifier,
