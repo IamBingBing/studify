@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-@Preview
-fun matchMenu (vm : matchMenuVM = viewModel() ){
+fun matchMenu (vm : matchMenuVM = viewModel(), navController: NavController){
     Box(modifier = BaseModifiers.BaseBoxModifier.fillMaxSize()){
         Row (modifier = BaseModifiers.BaseModifier.align(Alignment.Center)) {
             Button(modifier = BaseModifiers.BaseBtnModifier.width(100.dp).height(200.dp), onClick = { vm.lightMatch() } ) {

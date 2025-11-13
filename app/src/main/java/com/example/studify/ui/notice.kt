@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 data class Notice(
@@ -21,12 +22,12 @@ data class Notice(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun noticePage(
+fun notice(
     notices: List<Notice> = listOf(
         Notice(1, "첫 모임 안내", isPinned = true, date = 1),
         Notice(2, "스터디 규칙 안내", isPinned = false, date = 3),
     ),
-    onWriteClick: () -> Unit = {}
+    onWriteClick: () -> Unit = {}, navController: NavController
 ) {
     var query by remember { mutableStateOf("") }
 

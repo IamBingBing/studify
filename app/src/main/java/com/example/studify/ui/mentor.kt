@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 
@@ -48,7 +49,7 @@ data class ChatMessage(val sender: String, val message: String, val isMine: Bool
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun mentor(vm : mentorVM = viewModel() ) {
+fun mentor(vm : mentorVM = viewModel() , navController: NavController) {
     var mentorSubject by remember { mutableStateOf("") }
     var menteeSubject by remember { mutableStateOf("") }
     var newMessage by remember { mutableStateOf("") }

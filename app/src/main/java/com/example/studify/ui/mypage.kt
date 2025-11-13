@@ -25,11 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
 @Preview
-fun mypage(vm : mypageVM = viewModel() ) {
+fun mypage(vm : mypageVM = viewModel() , navController: NavController) {
 
     var isEditing by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("강명묵") }

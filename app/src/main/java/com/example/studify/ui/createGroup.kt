@@ -12,10 +12,12 @@ import com.example.studify.Tool.BaseModifiers
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 
 @Composable
-fun createGroup(){
+fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
 
     var groupName by remember {mutableStateOf("")}
     var groupGoal by remember {mutableStateOf("")}

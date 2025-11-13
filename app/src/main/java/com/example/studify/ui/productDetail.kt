@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
 
@@ -22,7 +23,7 @@ fun productDetail(
     productPrice: Int = 300,
     productDescription: String = "스타벅스에서 사용 가능한 기프티콘 입니다.",
     onBackClick: () -> Unit = {},
-    onBuyClick: () -> Unit = {}
+    onBuyClick: () -> Unit = {}, navController: NavController
 ) {
     Scaffold(
         topBar = {

@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 data class MemberProgress(
@@ -48,8 +49,7 @@ data class MemberProgress(
 )
 
 @Composable
-@Preview
-fun progresscheck() { // 함수 이름과 파라미터를 수정했습니다.
+fun progress(navController: NavController) { // 함수 이름과 파라미터를 수정했습니다.
     var mainGoal by remember { mutableStateOf("") }
     var personalGoal by remember { mutableStateOf("") }
     val context = LocalContext.current

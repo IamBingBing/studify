@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,7 +17,7 @@ fun noticeDetail(
     title: String = "공지 제목 ",
     content: String = "여기가 공지 내용",
     date: String = "2025-11-09",
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {}, navController: NavController
 ) {
     Scaffold(
         topBar = {

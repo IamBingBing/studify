@@ -31,10 +31,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun login(vm : loginVM = viewModel()) {
+fun login(vm : loginVM = viewModel(),navController: NavController) {
     var loginid by vm.loginid
     var password by vm.password
     var autologin by vm.autologin

@@ -18,11 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
 @Preview
-fun profilepage(vm : profilepageVM = viewModel() ) {
+fun profilepage(vm : profilepageVM = viewModel() , navController: NavController) {
     val userName = "이종원"
     val studyStyle = "아침형인간"
     val mannerScore = 98.5

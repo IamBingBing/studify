@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 data class Answer(val author: String, val content: String)
@@ -28,7 +29,7 @@ data class Question(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun qna() {
+fun qna(navController: NavController) {
     var isWriting by remember { mutableStateOf(false) }
     var selectedQuestion by remember { mutableStateOf<Question?>(null) }
 

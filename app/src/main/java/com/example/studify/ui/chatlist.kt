@@ -9,10 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipScope
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun chatlist(vm : chatlistVM = viewModel() , chatlist : List<String>){
+fun chatlist(vm : chatlistVM = viewModel() ,  navController: NavController){
+    var chatlist = listOf("")
     Column(modifier= BaseModifiers.BaseBoxModifier) {
         Box(BaseModifiers.BaseBoxModifier) { Text("채팅방") }
 

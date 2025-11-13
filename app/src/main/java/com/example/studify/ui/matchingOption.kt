@@ -20,12 +20,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.Tool.MatchingCase
 import java.time.LocalTime
 
 @Composable
-fun matchingOption (vm : matchingOptionVM = viewModel(), Case : String){
+fun matchingOption (vm : matchingOptionVM = viewModel(), Case : String, navController: NavController){
     var expanded by remember { mutableStateOf(false) }
     var expanded2 by remember { mutableStateOf(false) }
     var purpose by remember { mutableStateOf("토익") }

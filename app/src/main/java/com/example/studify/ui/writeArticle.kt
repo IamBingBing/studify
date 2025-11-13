@@ -16,11 +16,11 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-@Preview
-fun writeArticle ( vm : writeArticleVM = viewModel()){
+fun writeArticle ( vm : writeArticleVM = viewModel(), navController: NavController){
     var title by remember { mutableStateOf<String>("") }
     var content by remember { mutableStateOf<String>("") }
     Column (modifier = BaseModifiers.BaseBoxModifier){

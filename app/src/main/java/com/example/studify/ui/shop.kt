@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
 
@@ -60,8 +61,7 @@ val sampleGifticons = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-fun shop() {
+fun shop(navController: NavController) {
     var showPointInfoScreen by remember { mutableStateOf(false) }
 
     if (showPointInfoScreen) {

@@ -20,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-@Preview
-fun matchingcomplete(){
+fun matchingcomplete( navController: NavController){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White)

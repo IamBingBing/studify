@@ -1,6 +1,5 @@
 package com.example.studify.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,12 +9,15 @@ import androidx.compose.ui.unit.dp
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 enum class GroupTab { HOME, CALENDAR, MEMBERS, NOTICE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun groupPage(groupName: String = "Ctrl+F") {
+fun groupPage(vm: groupVM= viewModel(), navController: NavController) {
+    var groupName= "Ctrl+F"
     var selectedTab by remember { mutableStateOf(GroupTab.HOME) }
 
     Scaffold( //화면의 기본구조를 잡아주는 뼈대, 위 아래 본문 이런것들을 알아서 배치해줌
