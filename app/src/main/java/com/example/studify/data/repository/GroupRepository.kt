@@ -1,7 +1,7 @@
 package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
-import com.example.studify.data.model.LoginModel
+import com.example.studify.data.model.GroupModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -9,13 +9,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestLogin(userid:String, password:String) : Single<LoginModel> {
-        val param = HashMap<String, String>().apply {
-            this["ID"] = userid
-            this["PASSWORD"] = password
+class GroupRepository @Inject constructor(private val studifyService: StudifyService){
+    fun requestgroup(groupid:Int): Single<GroupModel>{
+        var params = HashMap<String, Int>().apply {
+            this["GROUPID"] = groupid
         }
-        return studifyService.requestLogin(param)
+        return studifyService.requestgroup(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

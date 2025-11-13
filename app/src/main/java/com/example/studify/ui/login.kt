@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,8 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-@Preview
-fun login(vm : loginVM = viewModel() ) {
+fun login(vm : loginVM = viewModel()) {
     var loginid by vm.loginid
     var password by vm.password
     var autologin by vm.autologin
@@ -74,6 +74,7 @@ fun login(vm : loginVM = viewModel() ) {
                         checked = autologin,
                         onCheckedChange = { autologin = it },
                     )
+                    IconButton(onClick = {}) { }
                     Spacer(Modifier.weight(1f))
                     Button(
                         onClick = { vm.requestLogin() },

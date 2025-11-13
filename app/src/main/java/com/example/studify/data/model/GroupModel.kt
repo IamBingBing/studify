@@ -1,0 +1,27 @@
+package com.example.studify.data.model
+
+import com.google.gson.JsonArray
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
+data class GroupModel (
+    @SerializedName("result_code") @Expose var resultCode : String = "",
+    @SerializedName("error_msg") @Expose var errorMsg: String = "",
+    @SerializedName("result") @Expose var list: GroupResult? =null
+) : Serializable {
+    data class  GroupResult(
+        @SerializedName("GROUPID") @Expose var groupid: Int? = null,
+        @SerializedName("GROUPNAME") @Expose var groupname: String? = null,
+        @SerializedName("MAX_LENGTH") @Expose var maxlength: Int? = null,
+        @SerializedName("USERS") @Expose var users: JsonArray? = null,
+        @SerializedName("ANNOUNCE") @Expose var annouce: JsonArray? = null,
+        @SerializedName("QNA") @Expose var qna: JsonArray? = null,
+        @SerializedName("DATES") @Expose var dates: JsonArray? = null,
+        @SerializedName("HASHTAG") @Expose var hashtag: JsonArray?=null,
+        @SerializedName("HOST") @Expose var host: Int? = null,
+        @SerializedName("TENDENCY") @Expose var tendency: JsonArray? = null,
+        @SerializedName("PURPOSE") @Expose var purpose: String ? = null,
+        @SerializedName ("GROUPTYPE") @Expose var grouptype : Int = 0 //0 : 번개 1: 그룹 2: 멘토
+    ):Serializable
+}
