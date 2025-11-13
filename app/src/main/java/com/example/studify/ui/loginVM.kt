@@ -1,23 +1,29 @@
 package com.example.studify.ui
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
+import com.example.studify.data.StudifyService
+import com.example.studify.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
 
 @HiltViewModel
-class loginVM : ViewModel {
-    val loginid =mutableStateOf<String>("")
-    val password = mutableStateOf<String>("")
-    val autologin=mutableStateOf<Boolean>(false)
-    constructor() {
-        requestLogin()
-        init()
-    }
-    fun init(){
-        //TODO
-    }
-    fun requestLogin(){
+class loginVM @Inject constructor(application: Application,studifyService: StudifyService): ViewModel() {
+    var loginid =mutableStateOf<String>("")
+    var password = mutableStateOf<String>("")
+    var autologin=mutableStateOf<Boolean>(false)
+
+    val userRepository = UserRepository(studifyService)
+    fun init() {
 
     }
+    private fun requestlogin(loginid :String, password: String) = userRepository.requestLogin(loginid ,password)
+        .subscribe {
+            if (it != null){
+                it.result
+            }
+
+        }
 }

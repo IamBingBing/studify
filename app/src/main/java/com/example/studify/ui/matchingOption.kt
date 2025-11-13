@@ -26,7 +26,8 @@ import com.example.studify.Tool.MatchingCase
 import java.time.LocalTime
 
 @Composable
-fun matchingOption (vm : matchingOptionVM = viewModel(), Case : String, navController: NavController){
+fun matchingOption (vm : matchingOptionVM = viewModel(),  navController: NavController){
+    var Case = ""
     var expanded by remember { mutableStateOf(false) }
     var expanded2 by remember { mutableStateOf(false) }
     var purpose by remember { mutableStateOf("토익") }

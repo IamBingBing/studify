@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestLogin(userid:String, password:String) : Single<LoginModel> {
+    fun requestLogin(loginid:String, password:String) : Single<LoginModel> {
         val param = HashMap<String, String>().apply {
-            this["ID"] = userid
+            this["ID"] = loginid
             this["PASSWORD"] = password
         }
         return studifyService.requestLogin(param)

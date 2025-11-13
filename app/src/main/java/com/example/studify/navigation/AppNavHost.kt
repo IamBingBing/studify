@@ -53,9 +53,16 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="Matchinging"){
             MatchingIng(navController = navController)
         }
-        composable(route="matchingOption"){
-            matchingOption(navController = navController, Case = MatchingCase.fast)
+        composable(route="matchingOptionFast"){
+            matchingOption(navController = navController)
         }
+        composable(route="matchingOptionGroup"){
+            matchingOption(navController = navController)
+        }
+        composable(route="matchingOptionMentor"){
+            matchingOption(navController = navController)
+        }
+        
         composable(route="matchMenu"){
             matchMenu(navController = navController)
         }
