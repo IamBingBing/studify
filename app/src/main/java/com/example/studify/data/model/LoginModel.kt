@@ -13,7 +13,7 @@ data class LoginModel(
         @SerializedName("USERID") @Expose var userid: Int? = null,
         @SerializedName("USERNAME") @Expose var username: String? = null,
         @SerializedName("ID") @Expose var id: String? = null,
-        @SerializedName("SEX") @Expose var sex: Int? = null,
+        @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
         @SerializedName("GROUP") @Expose var group: JSONArray? = null,
         @SerializedName("POINT") @Expose var point: Int? = null,
         @SerializedName("TENDENCY") @Expose var tendency: Int? = null,

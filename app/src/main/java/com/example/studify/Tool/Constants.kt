@@ -28,6 +28,3 @@ object MatchingCase {
     const val group = "group"
     const val exchange = "exchange"
 }
-private fun getSharedPreferences (): SharedPreferences{
-    return App.getContext()!!.getSharedPreferences("studify", Context.MODE_PRIVATE);
-}

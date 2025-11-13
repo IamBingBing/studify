@@ -3,6 +3,7 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
 import com.example.studify.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,8 @@ class loginVM @Inject constructor(application: Application,studifyService: Studi
     private fun requestlogin(loginid :String, password: String) = userRepository.requestLogin(loginid ,password)
         .subscribe {
             if (it != null){
-                it.result
+                Preferences.putString("USERNAME",it.result!!.username.toString() )
+                
             }
-
         }
 }
