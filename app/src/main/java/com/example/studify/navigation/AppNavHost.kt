@@ -13,6 +13,9 @@ import com.example.studify.ui.createGroup
 import com.example.studify.ui.groupPage
 import com.example.studify.ui.matchMenu
 import com.example.studify.ui.matchingOption
+import com.example.studify.ui.matchingOptionFast
+import com.example.studify.ui.matchingOptionGroup
+import com.example.studify.ui.matchingOptionMentor
 import com.example.studify.ui.matchingcomplete
 import com.example.studify.ui.mentor
 import com.example.studify.ui.mypage
@@ -54,13 +57,13 @@ fun AppNavHost(navController: NavHostController) {
             MatchingIng(navController = navController)
         }
         composable(route="matchingOptionFast"){
-            matchingOption(navController = navController)
+            matchingOptionFast(navController = navController)
         }
         composable(route="matchingOptionGroup"){
-            matchingOption(navController = navController)
+            matchingOptionGroup(navController = navController)
         }
         composable(route="matchingOptionMentor"){
-            matchingOption(navController = navController)
+            matchingOptionMentor(navController = navController)
         }
         
         composable(route="matchMenu"){
