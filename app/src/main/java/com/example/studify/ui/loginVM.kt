@@ -24,7 +24,7 @@ class loginVM @Inject constructor(application: Application,studifyService: Studi
         .subscribe {
             if (it != null){
                 Preferences.putString("USERNAME",it.result!!.username.toString() )
-                
+                Preferences.putInt("SEX", it.result!!.sex!!.toInt()  )
             }
         }
 }
