@@ -9,11 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 
 @Composable
-fun groupHome(vm: groupVM = hiltViewModel() ) {
+fun groupHome(vm: groupVM = hiltViewModel() , navController: NavController) {
     val groupName = vm.groupName.value
     val groupGoal = vm.groupGoal.value
     val hashTags = vm.hashTags.value

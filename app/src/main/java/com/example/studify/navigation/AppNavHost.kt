@@ -6,11 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.studify.ui.login
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.studify.Tool.MatchingCase
 import com.example.studify.ui.MatchingIng
 import com.example.studify.ui.chatingRoom
 import com.example.studify.ui.chatlist
 import com.example.studify.ui.createGroup
+import com.example.studify.ui.groupHome
+import com.example.studify.ui.groupNavigation
 //import com.example.studify.ui.groupPage
 import com.example.studify.ui.matchMenu
 import com.example.studify.ui.matchingOptionFast
@@ -19,6 +22,7 @@ import com.example.studify.ui.matchingOptionMentor
 import com.example.studify.ui.matchingcomplete
 import com.example.studify.ui.mentor
 import com.example.studify.ui.mypage
+import com.example.studify.ui.navigationbar
 import com.example.studify.ui.notice
 import com.example.studify.ui.noticeDetail
 import com.example.studify.ui.productDetail
@@ -43,6 +47,7 @@ fun AppNavHost(navController: NavHostController) {
             chatingRoom(navController = navController)
         }
         composable(route="chatlist"){
+            navigationbar(navController = navController)
             chatlist(navController = navController)
         }
         composable(route="createGroup"){
@@ -68,15 +73,19 @@ fun AppNavHost(navController: NavHostController) {
         }
         
         composable(route="matchMenu"){
+            navigationbar(navController = navController)
             matchMenu(navController = navController)
         }
         composable(route="mentor"){
             mentor(navController = navController)
         }
         composable(route="mypage"){
+            navigationbar(navController = navController)
             mypage(navController = navController)
         }
         composable(route="notice"){
+            groupNavigation(navController = navController)
+            navigationbar(navController = navController)
             notice(navController = navController)
         }
         composable(route="noticeDetail"){
@@ -89,16 +98,24 @@ fun AppNavHost(navController: NavHostController) {
             profilepage(navController = navController)
         }
         composable(route="progress"){
+            groupNavigation(navController = navController)
+            navigationbar(navController = navController)
             progress(navController = navController)
         }
         composable(route="qna"){
             qna(navController = navController)
         }
         composable(route="shop"){
+            navigationbar(navController = navController)
             shop(navController = navController)
         }
         composable(route="writeArticle"){
             writeArticle(navController = navController)
+        }
+        composable(route= "groupHome"){
+            groupNavigation(navController = navController)
+            navigationbar(navController = navController)
+            groupHome(navController = navController)
         }
     }
 }
