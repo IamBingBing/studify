@@ -14,21 +14,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
-@Preview
-fun profilepage(vm : profilepageVM = viewModel() , navController: NavController) {
-    val userName = "이종원"
-    val studyStyle = "아침형인간"
-    val mannerScore = 98.5
-    val reviewTags = listOf("시간 약속을 잘 지켜요", "설명을 잘해줘요", "적극적이에요")
-    val studyHistory = "알고리즘 스터디, 토익 스터디"
+fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavController) {
+    var userName by vm.userName
+    var studyStyle by vm.studyStyle
+    var mannerScore by vm.mannerScore
+    var reviewTags = vm.reviewTags
+    var studyHistory by vm.studyHistory
 
     Column(
         modifier = BaseModifiers.BaseBoxModifier
