@@ -16,9 +16,7 @@ import androidx.navigation.NavController
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun navigationbar(
-                  navController: NavController
-                ) {
+fun navigationbar(navController: NavController) {
     var current by remember { mutableStateOf("") }
 
 
@@ -26,7 +24,11 @@ fun navigationbar(
             NavigationBarItem(
                 selected = current == "grouphome",
                 onClick = {
-                    navController.navigate("groupHome")
+                    navController.navigate("groupHome"){
+                        popUpTo("groupHome"){
+                            inclusive = true
+                        }
+                    }
                     current = "grouphome"
                           },
                 icon = {
@@ -39,7 +41,11 @@ fun navigationbar(
             NavigationBarItem(
                 selected = current == "matchMenu",
                 onClick = {
-                    navController.navigate("matchMenu")
+                    navController.navigate("matchMenu"){
+                        popUpTo("groupHome"){
+                            inclusive = true
+                        }
+                    }
                     current ="matchMenu"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
@@ -48,7 +54,11 @@ fun navigationbar(
             NavigationBarItem(
                 selected = current == "shop",
                 onClick = {
-                    navController.navigate("shop")
+                    navController.navigate("shop"){
+                        popUpTo("groupHome"){
+                            inclusive = true
+                        }
+                    }
                     current = "shop"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
@@ -57,7 +67,11 @@ fun navigationbar(
             NavigationBarItem(
                 selected = current == "mypage",
                 onClick = {
-                    navController.navigate("mypage")
+                    navController.navigate("mypage"){
+                        popUpTo("groupHome"){
+                            inclusive = true
+                        }
+                    }
                     current = "mypage"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
@@ -66,7 +80,11 @@ fun navigationbar(
             NavigationBarItem(
                 selected = current == "chatlist",
                 onClick = {
-                    navController.navigate("chatlist")
+                    navController.navigate("chatlist"){
+                        popUpTo("groupHome"){
+                            inclusive = true
+                        }
+                    }
                     current = "chatlist"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },

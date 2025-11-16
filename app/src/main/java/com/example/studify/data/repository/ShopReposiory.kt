@@ -19,6 +19,5 @@ class ShopReposiory @Inject constructor(private val studifyService: StudifyServi
         return studifyService.requestLogin(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
     }
 }
