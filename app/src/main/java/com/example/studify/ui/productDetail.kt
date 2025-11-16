@@ -5,32 +5,33 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.studify.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.studify.Tool.BaseModifiers
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun productDetail(
-    productName: String = "스타벅스 기프티콘",
-    productImage: Int = R.drawable.statbucks1,  // drawable에 넣은 이미지
-    productPrice: Int = 300,
-    productDescription: String = "스타벅스에서 사용 가능한 기프티콘 입니다.",
-    onBackClick: () -> Unit = {},
-    onBuyClick: () -> Unit = {}, navController: NavController
+    vm: productDetailVM = viewModel(),
+    navController: NavController
 ) {
+    val productName by vm.productName
+    val productImage by vm.productImageRes
+    val productPrice by vm.productPrice
+    val productDescription by vm.productDescription
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("상품 상세정보") },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "뒤로가기",
@@ -58,14 +59,12 @@ fun productDetail(
                 contentScale = ContentScale.Crop
             )
 
-
             Text(
                 text = productName,
                 style = MaterialTheme.typography.headlineSmall
             )
 
             Spacer(Modifier.height(8.dp))
-
 
             Text(
                 text = "${productPrice}포인트",
@@ -80,7 +79,6 @@ fun productDetail(
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
 
-
             Text(
                 text = productDescription,
                 style = MaterialTheme.typography.bodyMedium,
@@ -89,9 +87,17 @@ fun productDetail(
 
             Spacer(Modifier.weight(1f))
 
-
             Button(
-                onClick = onBuyClick,
+                onClick = {
+                    vm.requestBuy(
+                        onSuccess = {
+                            // TODO: 구매 성공 후 처리
+                        },
+                        onError = {
+                            // TODO: 에러 처리
+                        }
+                    )
+                },
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()
                     .height(56.dp)

@@ -5,27 +5,30 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun noticeDetail(
-    title: String = "공지 제목 ",
-    content: String = "여기가 공지 내용",
-    date: String = "2025-11-09",
-    onBackClick: () -> Unit = {}, navController: NavController
+    vm: noticeDetailVM = viewModel(), navController: NavController
 ) {
+    val title by vm.title
+    val content by vm.content
+    val date by vm.date
+
     Scaffold(
         topBar = {
 
             CenterAlignedTopAppBar(
                 title = { Text("공지사항") },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = navController.popBackStack()) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "뒤로가기",
@@ -86,10 +89,15 @@ fun noticeDetail(
                 TextButton(onClick = { /* TODO: 수정 기능 */ }) {
                     Text("수정")
                 }
-                TextButton(onClick = { /* TODO: 삭제 기능 */ }) {
+                TextButton(onClick = {
+                    vm.deleteNotice(
+                        onSuccess = { navController.popBackStack() }
+                    )
+                }) {
                     Text("삭제", color = MaterialTheme.colorScheme.error)
                 }
             }
         }
     }
 }
+

@@ -19,17 +19,17 @@ import androidx.navigation.NavController
 @Composable
 fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
 
-    var groupName by remember {mutableStateOf("")}
-    var groupGoal by remember {mutableStateOf("")}
-    var showPicker by remember { mutableStateOf(false) }
-    var available = remember { mutableStateListOf("토익", "정처기", "한국사") }
-    var selected = remember { mutableStateListOf<String>() }
-    var maxMembers by remember {mutableStateOf("")}
-    var intensity by remember {mutableStateOf(50)}
+    var groupName by vm.groupName
+    var groupGoal by vm.groupGoal
+    var showPicker by vm.showPicker
+    val available = vm.available
+    val selected = vm.selected
+    var maxMembers by vm.maxMembers
+    var intensity by vm.intensity
 
     Box(modifier = BaseModifiers.BaseBoxModifier) {
         Column(
-            modifier = BaseModifiers.BaseBoxModifier,
+            modifier = BaseModifiers.BaseModifier,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -43,7 +43,7 @@ fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
                 value = groupName,
                 onValueChange = {groupName = it},
                 label = { Text("그룹 이름")},
-                modifier = BaseModifiers.BaseTextfill
+                modifier = BaseModifiers.BaseTextfillModifier
 
             )
 
@@ -54,7 +54,7 @@ fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
                 onValueChange = { groupGoal = it },
                 label = {Text("목표/다짐")},
 
-                modifier = BaseModifiers.BaseTextfill
+                modifier = BaseModifiers.BaseTextfillModifier
 
             )
 
@@ -65,27 +65,27 @@ fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
                 onValueChange = { input ->
                     if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
                         maxMembers = input
-
                     }
                 },
                 label = { Text("최대 정원")},
                 singleLine = true,
-                modifier = BaseModifiers.BaseTextfill
+                modifier = BaseModifiers.BaseTextfillModifier
 
             )
 
             Spacer(Modifier.height(6.dp))
 
+            //해시태그 선택필드
             PurposeField(
                 selected = selected,
-                onOpenPicker = { showPicker = true }
+                onOpenPicker = { vm.openPicker() }
             )
 
             if (showPicker) {
                 HashtagPickerDialog(
                     available = available,
                     selected = selected,
-                    onDismiss = { showPicker = false } //닫히는 순간 showpicker를 false로
+                    onDismiss = { vm.closePicker() }
                 )
             }
 
@@ -97,11 +97,16 @@ fun createGroup(vm: createGroupVM= viewModel(), navController: NavController){
             )
 
             Button(
-                onClick = {{
-                    //생성하기 버튼 눌렀을 때 발생할 이벤트 나중에 넣을것이다
-                }},
-
-                modifier = BaseModifiers.BaseTextfill
+                onClick = {
+                    vm.requestCreate(
+                        onSuccess = {
+                            //TODO:생성성공 시 이동할 화면
+                        },
+                        onError = {}
+                    )
+                },
+                enabled = vm.canCreate(),
+                modifier = BaseModifiers.BaseBtnModifier
 
             ) {
                 Text("생성하기")
@@ -119,7 +124,7 @@ fun PurposeField(
     onOpenPicker: () -> Unit
 ) {
     Box(
-        modifier = BaseModifiers.BaseTextfill
+        modifier = BaseModifiers.BaseBoxModifier
 
             .height(56.dp)
             .width(280.dp)
@@ -134,16 +139,13 @@ fun PurposeField(
 
     ) {
         Row(
-            modifier = BaseModifiers.BaseTextfill,
-
+            modifier = BaseModifiers.BaseModifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = if (selected.isEmpty()) "# 스터디 목적"
                 else selected.joinToString(" · ") { "#$it" },
-
-                modifier = BaseModifiers.BaseTextfill
-
+                modifier = BaseModifiers.BaseTextfillModifier
                     .weight(1f)
                     .padding(end = 4.dp),
                 maxLines = 1,
@@ -168,7 +170,6 @@ fun HashtagPickerDialog(
     available: SnapshotStateList<String>, //리스트 상태 저장소, 리스트요소가 변경될때 자동으로 ui 다시 그려줌
     selected: SnapshotStateList<String>,
     onDismiss: () -> Unit, //닫히는 순간에만 이벤트발생시키기 위해. 입력값도 없고 반환값도 없음
-    modifier: Modifier = Modifier
 ) {
     var newTag by remember { mutableStateOf("") }
 
@@ -177,7 +178,7 @@ fun HashtagPickerDialog(
         confirmButton = { TextButton(onClick = onDismiss) { Text("완료") } }, //닫힐때나 뒤로가기
         title = { Text("스터디 목적 선택") },
         text = {
-            Column(BaseModifiers.DialogCard.then(modifier)) {
+            Column(BaseModifiers.DialogCard) {
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -188,7 +189,8 @@ fun HashtagPickerDialog(
                         FilterChip(
                             selected = checked,
                             onClick = {
-                                if (checked) selected.remove(tag) else selected.add(tag)
+                                if (checked) selected.remove(tag)
+                                else selected.add(tag)
                             },
                             label = {Text("#$tag") }
                         )
@@ -203,8 +205,7 @@ fun HashtagPickerDialog(
                         onValueChange = { newTag = it },
                         label = { Text("새 해시태그") },
                         singleLine = true,
-
-                        modifier = BaseModifiers.BaseTextfill.weight(1f)
+                        modifier = BaseModifiers.BaseTextfillModifier.weight(1f)
 
                     )
                     TextButton(onClick = {
@@ -225,7 +226,7 @@ fun StudyStyleSlider(
     onChange: (Int) -> Unit
 ) {
 
-    Column(modifier = BaseModifiers.BaseTextfill ) {
+    Column(modifier = BaseModifiers.BaseModifier ) {
 
 
         Slider(
@@ -233,7 +234,7 @@ fun StudyStyleSlider(
             onValueChange = {onChange(it.toInt()) },
             valueRange = 0f..100f,
 
-            modifier = BaseModifiers.BaseTextfill
+            modifier = BaseModifiers.BaseModifier
 
                 .height(56.dp)
                 .width(280.dp)
@@ -243,7 +244,7 @@ fun StudyStyleSlider(
 
         Row(
 
-            modifier = BaseModifiers.BaseTextfill
+            modifier = BaseModifiers.BaseModifier
                 .height(56.dp)
                 .width(280.dp),
             verticalAlignment = Alignment.CenterVertically,

@@ -12,35 +12,44 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
-enum class GroupTab { HOME, CALENDAR, MEMBERS, NOTICE }
-
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
-fun groupPage(vm: groupVM= viewModel(), navController: NavController) {
-    var groupName= "Ctrl+F"
-    var selectedTab by remember { mutableStateOf(GroupTab.HOME) }
+fun group(vm: groupVM= viewModel(), navController: NavController) {
+    var groupName by vm.groupName
+    val selectedTab = mapOf(0 to "home", 1 to "calender",2 to "member",3 to "notice")
+    var currentTab by vm.currentTab //화면이 리컴포즈될때마다 0으로 초기화돼서 탭이 자꾸 홈으로 이동하는 거 방지
+    var groupGoal by vm.groupGoal
+    var hashTags by vm.hashTags
 
-    Scaffold( //화면의 기본구조를 잡아주는 뼈대, 위 아래 본문 이런것들을 알아서 배치해줌
+
+    Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(groupName) }) }
-    ) { inner -> //위에 topbar(맨위 그룹이름)있으니까 여기서부터 본문 시작. inner라는 이름으로 스캐폴드가 넘겨준 패딩값을 받아온다
+    ) { inner ->
         Column(
             modifier = Modifier
-                .padding(inner) //스캐폴드가 넘겨준 패딩값, 탑바 높이 만큼 살짝 내려줌
-                .fillMaxSize(), //남은 화면 세로 가로로 꽉 채움
-            horizontalAlignment = Alignment.CenterHorizontally //가로기준 가운데 정렬
+                .padding(inner)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TabRow(selectedTabIndex = selectedTab.ordinal) { //가로로 탭버튼 올려놓는 줄
-                GroupTab.values().forEach { tab ->
+            TabRow(selectedTabIndex = currentTab) {
+                selectedTab.keys.forEach { tab ->
                     Tab(
-                        selected = tab == selectedTab,
-                        onClick = { selectedTab = tab },
+                        selected = tab == currentTab,
+                        onClick = {
+                            if (tab == 3) {
+                                navController.navigate("notice")
+                            } else {
+                                currentTab = tab
+                            }
+                        },
                         text = {
                             Text(
                                 when (tab) {
-                                    GroupTab.HOME -> "홈"
-                                    GroupTab.CALENDAR -> "캘린더"
-                                    GroupTab.MEMBERS -> "멤버"
-                                    GroupTab.NOTICE -> "공지"
+                                    0 -> "홈"
+                                    1 -> "캘린더"
+                                    2-> "멤버"
+                                    3 -> "공지"
+                                    else -> ""
                                 }
                             )
                         }
@@ -50,13 +59,16 @@ fun groupPage(vm: groupVM= viewModel(), navController: NavController) {
 
             Spacer(Modifier.height(12.dp))
 
-            when (selectedTab) {
-                GroupTab.HOME -> HomeTab(
-                    onNoteClick = { selectedTab = GroupTab.NOTICE }
+            when (currentTab) {
+                0 -> HomeTab(
+                    groupName = groupName,
+                    groupGoal = groupGoal,
+                    hashTags = hashTags,
+                    onNoteClick = { }
                 )
-                GroupTab.CALENDAR -> CalendarTab()
-                GroupTab.MEMBERS  -> MembersTab()
-                GroupTab.NOTICE   -> noticePage()
+                1 -> CalendarTab()
+                2  -> MemberTab()
+                3   -> NoticeTab()
             }
         }
     }
@@ -66,24 +78,24 @@ fun groupPage(vm: groupVM= viewModel(), navController: NavController) {
 fun HomeTab(
     groupName: String = "Ctrl + F",
     groupGoal: String = "잠은 죽어서 자자",
-    tags: List<String> = listOf("프론트엔드개발", "알고리즘"),
+    hashTags: List<String> = listOf("프론트엔드개발", "알고리즘"),
     onNoteClick: () -> Unit
 ) {
-    Column(modifier = BaseModifiers.BaseTextfill) {
+    Column(modifier = BaseModifiers.BaseTextfillModifier) {
 
 
-        SectionTitle("그룹정보")
+        sectionTitle("그룹정보")
         Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text("- 그룹이름: $groupName")
             Text("- 목표/다짐: $groupGoal")
-            Text("- 목적: ${tags.joinToString(" ") { "#$it" }}")
+            Text("- 목적: ${hashTags.joinToString(" ") { "#$it" }}")
         }
 
         Spacer(Modifier.height(12.dp))
 
         SectionDivider()
 
-        SectionTitle("스터디 일정")
+        sectionTitle("스터디 일정")
         Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text("11/15(토) 10:30 · 한경대 도서관 스터디룸 5")
             Text("참석 1/20", style = MaterialTheme.typography.bodySmall)
@@ -100,7 +112,7 @@ fun HomeTab(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SectionTitle("공지")
+            sectionTitle("공지")
 
 
         }
@@ -115,7 +127,7 @@ fun HomeTab(
 }
 
 @Composable
-private fun SectionTitle(title: String) { //각 구역마다 타이틀 보여줌
+private fun sectionTitle(title: String) { //각 구역마다 타이틀 보여줌
     Text(
         text = title,
         style = MaterialTheme.typography.titleMedium,
@@ -132,17 +144,17 @@ private fun SectionDivider() {
 private fun CalendarTab() {
     Box(
 
-        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
 
         contentAlignment = Alignment.Center
     ) { Text("캘린더 (추가 예정)") }
 }
 
 @Composable
-private fun MembersTab() {
+private fun MemberTab() {
     Box(
 
-        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
 
         contentAlignment = Alignment.Center
     ) { Text("멤버 (추가 예정)") }
@@ -152,8 +164,8 @@ private fun MembersTab() {
 private fun NoticeTab() {
     Box(
 
-        modifier = BaseModifiers.BaseTextfill.height(200.dp),
+        modifier = BaseModifiers.BaseTextfillModifier.height(200.dp),
 
         contentAlignment = Alignment.Center
-    ) { Text("공지 (추가 예정)") }
+    ) { Text("공지") }
 }

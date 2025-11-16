@@ -10,41 +10,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
-data class Notice(
-    val id: Int,
-    val title: String,
-    val isPinned: Boolean = false,
-    val date: Long
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun notice(
-    notices: List<Notice> = listOf(
-        Notice(1, "첫 모임 안내", isPinned = true, date = 1),
-        Notice(2, "스터디 규칙 안내", isPinned = false, date = 3),
-    ),
-    onWriteClick: () -> Unit = {}, navController: NavController
+fun notice(vm:noticeVM = viewModel(), navController: NavController
 ) {
-    var query by remember { mutableStateOf("") }
-
-    val filtered = notices.filter { it.title.contains(query, ignoreCase = true) }
-    val pinned = filtered.filter { it.isPinned }
-    val others = filtered.filter { !it.isPinned }.sortedByDescending { it.date }
-
+    val query by vm.query
+    val pinned = vm.pinnedNotices()
+    val others = vm.otherNotices()
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = BaseModifiers.BaseTextfill
-                .fillMaxSize()
+            modifier = BaseModifiers.BaseModifier.fillMaxSize()
         ) {
-            LazyColumn( //화면에 보이는것만 그려줌(스크롤내리면 더보임)
+            LazyColumn( //공지목록:화면에 보이는것만 그려줌(스크롤내리면 더보임)
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -52,9 +37,13 @@ fun notice(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
             ) {
                 if (pinned.isNotEmpty()) {
-
                     items(pinned) { notice ->
-                        NoticeRow(notice)
+                        NoticeRow(
+                            notice = notice,
+                            onClick = {
+                                navController.navigate("noticeDetail")
+                            }
+                        )
                     }
                     item {
                         HorizontalDivider(
@@ -64,7 +53,11 @@ fun notice(
                 }
 
                 items(others) { notice ->
-                    NoticeRow(notice)
+                    NoticeRow(notice = notice,
+                        onClick = {
+                            navController.navigate("noticeDetail")
+                        }
+                    )
                 }
             }
 
@@ -76,10 +69,10 @@ fun notice(
             ) {
                 TextField( //공지 검색창
                     value = query,
-                    onValueChange = { query = it },
+                    onValueChange = { vm.onQueryChange(it) },
                     placeholder = { Text("검색어 입력") },
                     singleLine = true,
-                    modifier = Modifier.weight(1f) //로우안에 남은공간 차지
+                    modifier = Modifier.weight(1f)
                 )
 
                 Button(
@@ -91,8 +84,11 @@ fun notice(
             }
         }
 
+        //공지 작성 버튼
         FloatingActionButton(
-            onClick = onWriteClick,
+            onClick = {
+                //TODO : 공지 작성창으로 이동
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .offset(y = (-80).dp)
@@ -105,11 +101,13 @@ fun notice(
 
 
 @Composable
-private fun NoticeRow(notice: Notice) {
+private fun NoticeRow(notice: Notice,
+                      onClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* TODO: 공지 상세 */ }
+            .clickable { onClick }
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Row(
