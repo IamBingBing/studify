@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class registerVM : ViewModel{
     var email = mutableStateOf<String>("")
-    var sex = mutableStateOf<String>("")
+    var sex = mutableStateOf<Int>(-1)
     var adress = mutableStateOf<String>("")
     var username = mutableStateOf<String>("")
     var group = mutableStateOf<String>("")
@@ -15,19 +15,17 @@ class registerVM : ViewModel{
     var phone = mutableStateOf<String>("")
     var pw = mutableStateOf<String>("")
     var repw = mutableStateOf<String>("")
-    
 
-    var genderOptions = mutableStateOf(listOf("남", "여"))
-    
 
-    var expanded = mutableStateOf(false)
+    var genderOptions = mutableStateOf<Int>(-1)
+    var expanded = mutableStateOf<Int>(0)
 
-    fun onSexSelected(selection: String) {
+    fun onSexSelected(selection: Int) {
         sex.value = selection
     }
 
-    fun onExpandedChange(isExpanded: Boolean) {
-        expanded.value = isExpanded
+    fun onExpandedChange(isExpanded: Int) {
+        expanded.value = 0
     }
     constructor(){
 

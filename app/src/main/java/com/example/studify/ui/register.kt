@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -36,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,7 +62,7 @@ fun register(vm: registerVM = viewModel(), navController: NavController) {
     var userid by vm.userid
     var pw by vm.pw
     var repw by vm.repw
-    var expanded by vm.expanded
+    val expanded = vm.expanded.value == 1
     val genderOptions by vm.genderOptions
 
 
@@ -120,33 +125,42 @@ fun register(vm: registerVM = viewModel(), navController: NavController) {
 
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { vm.onExpandedChange(!expanded) },
+                    onExpandedChange = { isExpanded ->
+                        vm.onExpandedChange(if (isExpanded) 1 else 0) },
                     modifier = BaseTextfillModifier
                 ) {
-                    TextField(
-                        modifier = BaseTextfillModifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable),
-                        value = sex,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("성별") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { vm.onExpandedChange(false) }
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
                     ) {
-                        genderOptions.forEach { selectionOption ->
+                        IconButton (onClick = {
+                            vm.onExpandedChange(if (expanded) 0 else 1)   // toggle
+                        }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        }
+
+                        DropdownMenu (
+                            expanded = expanded,
+                            onDismissRequest = { vm.onExpandedChange(0) }
+                        ) {
+
                             DropdownMenuItem(
-                                text = { Text(selectionOption) },
+                                text = { Text("남") },
                                 onClick = {
-                                    vm.onSexSelected(selectionOption)
-                                    vm.onExpandedChange(false)
+                                    vm.onSexSelected(0)    // 남자 = 0
+                                    vm.onExpandedChange(0) // 닫기
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = { Text("여") },
+                                onClick = {
+                                    vm.onSexSelected(1)    // 여자 = 1
+                                    vm.onExpandedChange(0)
                                 }
                             )
                         }
                     }
-                }
 
                 TextField(
                     modifier = BaseTextfillModifier,
@@ -163,5 +177,5 @@ fun register(vm: registerVM = viewModel(), navController: NavController) {
             }
         }
     }
-}
+}}
 
