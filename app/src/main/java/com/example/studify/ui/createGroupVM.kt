@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.StudifyService
+import com.example.studify.data.repository.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+
 @HiltViewModel
-class createGroupVM @Inject constructor(application: Application, studifyService: StudifyService) : ViewModel() {
+class createGroupVM @Inject constructor(application: Application, private val groupRepository : GroupRepository) : ViewModel() {
     var groupName = mutableStateOf("")
     var groupGoal = mutableStateOf("")
     var showPicker = mutableStateOf(false)
@@ -17,6 +19,9 @@ class createGroupVM @Inject constructor(application: Application, studifyService
     var selected = mutableStateListOf<String>()
     var maxMembers = mutableStateOf("")
     var intensity = mutableStateOf(50)
+
+    var createError = mutableStateOf("")
+    var createSuccess = mutableStateOf(false)
 
 
     fun openPicker() {
@@ -29,7 +34,7 @@ class createGroupVM @Inject constructor(application: Application, studifyService
     }
 
     fun loadTagsFromDb() {
-        //TODO :
+        //TODO : 해시태그 목록 불러오기
     }
 
     // 생성 가능한지 검증
@@ -42,16 +47,18 @@ class createGroupVM @Inject constructor(application: Application, studifyService
 
     // 나중에 백엔드/DB 저장
     fun requestCreate(
-        onSuccess: () -> Unit = {},
-        onError: (String) -> Unit = {}
+        name: String = groupName.value,
+        goal: String = groupGoal.value,
+        maxLen: Int = maxMembers.value.toIntOrNull() ?: 0,
+        tendency: Int = intensity.value,
+        hashtags: List<String> = selected.toList()
     ) {
         if (!canCreate()) {
-            onError("필수 항목을 확인해 주세요. (그룹 이름 / 정원 / 해시태그)")
+            createError.value = "필수 항목을 확인해 주세요. (그룹 이름 / 정원 / 해시태그)"
             return
         }
 
-        onSuccess()
+
     }
 }
-
 

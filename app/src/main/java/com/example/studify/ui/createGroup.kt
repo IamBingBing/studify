@@ -99,12 +99,7 @@ fun createGroup(vm: createGroupVM= hiltViewModel(), navController: NavController
 
             Button(
                 onClick = {
-                    vm.requestCreate(
-                        onSuccess = {
-                            //TODO:생성성공 시 이동할 화면
-                        },
-                        onError = {}
-                    )
+                    vm.requestCreate()
                 },
                 enabled = vm.canCreate(),
                 modifier = BaseModifiers.BaseBtnModifier

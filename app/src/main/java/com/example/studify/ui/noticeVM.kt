@@ -3,18 +3,13 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.AnnounceModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-data class Notice(
-    val id: Int,
-    val title: String,
-    val isPinned: Boolean = false,
-    val date: Long = 0L
-)
 @HiltViewModel
 class noticeVM @Inject constructor(
     application: Application,
@@ -22,7 +17,7 @@ class noticeVM @Inject constructor(
 ) : ViewModel() {
 
     // 전체 공지 목록 (서버/DB에서 받아온 결과가 들어갈 곳)
-    val notices = mutableStateListOf<Notice>()
+    val notices = mutableStateListOf<String>()
     var query = mutableStateOf("")
 
     init {
@@ -38,26 +33,15 @@ class noticeVM @Inject constructor(
         query.value = value
     }
 
-    /** 검색어 적용된 전체 목록 */
-    private fun filtered(): List<Notice> {
-        val q = query.value.trim()
-        if (q.isBlank()) return notices
+    /*private requestAnnouce ( groupid )<model> {
 
-        return notices.filter { item ->
-            val title = item.title.orEmpty()
-            title.contains(q, ignoreCase = true)
+        model.result.foreach(){
+            it ->
+            if ( it.result.is_pin  )
+            notices.add(it.result.announcename , it.result.is_pin)
         }
     }
-
-    /** 핀 고정된 공지 리스트 */
-    fun pinnedNotices(): List<Notice> =
-        filtered().filter { it.isPinned == true }
-
-    /** 그 외 공지 리스트 (날짜 최신순) */
-    fun otherNotices(): List<Notice> =
-        filtered()
-            .filter { it.isPinned != true }
-            .sortedByDescending { it.date }
+*/
 }
 
 

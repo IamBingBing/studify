@@ -3,7 +3,9 @@ package com.example.studify.data
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ChatModel
 import com.example.studify.data.model.GroupModel
+import com.example.studify.data.req.GroupReqModel
 import io.reactivex.Single
+import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -18,4 +20,8 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/group.php")
     fun requestgroup (@FieldMap data: Map<String, Int>): Single<GroupModel>
+
+    @FormUrlEncoded
+    @POST("api/createGroup.php")
+    fun requestCreateGroup (@FieldMap data : GroupReqModel)
 }

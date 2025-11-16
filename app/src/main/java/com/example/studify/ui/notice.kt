@@ -21,8 +21,7 @@ import com.example.studify.Tool.BaseModifiers
 fun notice(vm:noticeVM = hiltViewModel(), navController: NavController
 ) {
     val query by vm.query
-    val pinned = vm.pinnedNotices()
-    val others = vm.otherNotices()
+    val notices = vm.notices
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -37,29 +36,13 @@ fun notice(vm:noticeVM = hiltViewModel(), navController: NavController
                 verticalArrangement = Arrangement.spacedBy(6.dp), //요소들 간격 자동으로
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
             ) {
-                if (pinned.isNotEmpty()) {
-                    items(pinned) { notice ->
-                        NoticeRow(
-                            notice = notice,
-                            onClick = {
-                                navController.navigate("noticeDetail")
-                            }
-                        )
+                    items(notices) { notice ->
+                        Text(notice)
                     }
-                    item {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
-                }
 
-                items(others) { notice ->
-                    NoticeRow(notice = notice,
-                        onClick = {
-                            navController.navigate("noticeDetail")
-                        }
-                    )
-                }
+
+
+
             }
 
             Row(
@@ -100,7 +83,7 @@ fun notice(vm:noticeVM = hiltViewModel(), navController: NavController
     }
 }
 
-
+/*
 @Composable
 private fun NoticeRow(notice: Notice,
                       onClick: () -> Unit
@@ -128,4 +111,4 @@ private fun NoticeRow(notice: Notice,
         }
     }
 }
-
+*/
