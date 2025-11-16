@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.studify.Tool.MatchingCase
 import com.example.studify.ui.MatchingIng
+import com.example.studify.ui.calender
 import com.example.studify.ui.chatingRoom
 import com.example.studify.ui.chatlist
 import com.example.studify.ui.createGroup
@@ -47,7 +48,7 @@ fun AppNavHost(navController: NavHostController) {
             chatingRoom(navController = navController)
         }
         composable(route="chatlist"){
-            navigationbar(navController = navController)
+            
             chatlist(navController = navController)
         }
         composable(route="createGroup"){
@@ -73,19 +74,18 @@ fun AppNavHost(navController: NavHostController) {
         }
         
         composable(route="matchMenu"){
-            navigationbar(navController = navController)
+            
             matchMenu(navController = navController)
         }
         composable(route="mentor"){
             mentor(navController = navController)
         }
         composable(route="mypage"){
-            navigationbar(navController = navController)
+            
             mypage(navController = navController)
         }
         composable(route="notice"){
-            groupNavigation(navController = navController)
-            navigationbar(navController = navController)
+            
             notice(navController = navController)
         }
         composable(route="noticeDetail"){
@@ -98,24 +98,24 @@ fun AppNavHost(navController: NavHostController) {
             profilepage(navController = navController)
         }
         composable(route="progress"){
-            groupNavigation(navController = navController)
-            navigationbar(navController = navController)
+            
             progress(navController = navController)
         }
         composable(route="qna"){
             qna(navController = navController)
         }
         composable(route="shop"){
-            navigationbar(navController = navController)
             shop(navController = navController)
         }
         composable(route="writeArticle"){
             writeArticle(navController = navController)
         }
         composable(route= "groupHome"){
-            groupNavigation(navController = navController)
-            navigationbar(navController = navController)
+            
             groupHome(navController = navController)
+        }
+        composable(route= "calender"){
+            calender(navController = navController)
         }
     }
 }

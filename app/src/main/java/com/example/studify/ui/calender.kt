@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun CalendarTab(
+fun calender(
     vm: calenderVM = hiltViewModel(),
     navController: NavController
 ) {

@@ -41,8 +41,7 @@ fun mypage(vm : mypageVM = hiltViewModel() , navController: NavController) {
         modifier = BaseModifiers.BaseBoxModifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+            ,horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "마이 페이지",
