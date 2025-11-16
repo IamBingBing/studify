@@ -24,7 +24,12 @@ class noticeDetailVM @Inject constructor(
     fun loadNotice () {
     }
 
-    fun deleteNotice() {
+    fun deleteNotice(
+        onSuccess: () -> Unit = {},
+        onError: (String) -> Unit = {}
+    ) {
+        // TODO: 실제 삭제
+        onSuccess()
 
     }
 }

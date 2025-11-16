@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.studify.Tool.BaseModifiers
@@ -18,7 +19,7 @@ import com.example.studify.Tool.BaseModifiers
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun productDetail(
-    vm: productDetailVM = viewModel(),
+    vm: productDetailVM = hiltViewModel(),
     navController: NavController
 ) {
     val productName by vm.productName

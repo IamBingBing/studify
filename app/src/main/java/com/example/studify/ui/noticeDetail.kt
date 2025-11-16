@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
@@ -16,7 +17,7 @@ import com.example.studify.Tool.BaseModifiers
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun noticeDetail(
-    vm: noticeDetailVM = viewModel(), navController: NavController
+    vm: noticeDetailVM = hiltViewModel(), navController: NavController
 ) {
     val title by vm.title
     val content by vm.content
@@ -28,7 +29,7 @@ fun noticeDetail(
             CenterAlignedTopAppBar(
                 title = { Text("공지사항") },
                 navigationIcon = {
-                    IconButton(onClick = navController.popBackStack()) {
+                    IconButton(onClick = {navController.popBackStack()}) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "뒤로가기",
