@@ -22,11 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-<<<<<<< Updated upstream
-=======
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
->>>>>>> Stashed changes
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 

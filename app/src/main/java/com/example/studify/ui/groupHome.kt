@@ -57,7 +57,7 @@ fun groupHome(vm: groupVM = hiltViewModel() , navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SectionTitle("공지")
+                sectionTitle("공지")
             }
 
             Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
