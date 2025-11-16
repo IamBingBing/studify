@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+
 }
 android {
     namespace = "com.example.studify"
@@ -66,6 +67,7 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     //compose
     val composeBom = platform("androidx.compose:compose-bom:2024.11.00")
     implementation(composeBom)

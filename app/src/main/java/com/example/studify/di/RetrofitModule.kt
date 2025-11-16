@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
     companion object {
-        private const val SERVER = "112.175.185.131"
+        private const val SERVER = "http://112.175.185.131/"
         private const val REQUEST_TIMEOUT = 60
     }
     @Provides

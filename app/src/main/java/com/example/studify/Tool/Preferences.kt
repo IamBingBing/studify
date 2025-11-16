@@ -12,12 +12,14 @@ object Preferences {
     fun remove(key: String?) {
         getSharedPreferences().edit {
             remove(key)
+            apply()
         }
     }
 
     fun putString(key: String?, value: String?) {
         getSharedPreferences().edit{
             putString(key, value)
+            apply()
         }
     }
 
@@ -28,17 +30,30 @@ object Preferences {
     fun putInt(key: String?, value: Int) {
         getSharedPreferences().edit{
             putInt(key, value)
+            apply()
         }
 
     }
-
     fun getInt(key: String?): Int {
         return getSharedPreferences().getInt(key, 0)
     }
 
+    fun putFloat(key: String?, value: Int) {
+        getSharedPreferences().edit{
+            putFloat(key, value)
+            apply()
+        }
+
+    }
+    fun getFloat(key: String?): Float {
+        return getSharedPreferences().getFloat(key,0f)
+    }
+
+
     fun putBoolean(key: String?, value: Boolean) {
         val edit = getSharedPreferences().edit{
             putBoolean(key, value)
+            apply()
         }
     }
 
@@ -49,6 +64,7 @@ object Preferences {
     fun putStringSet(key: String?, value: kotlin.collections.Set<String?>?) {
         getSharedPreferences().edit(){
             putStringSet(key, value)
+            apply()
         }
     }
 

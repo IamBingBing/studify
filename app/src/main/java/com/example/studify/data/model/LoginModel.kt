@@ -20,6 +20,7 @@ data class LoginModel(
         @SerializedName("REPORT") @Expose var report:Int?= null,
         @SerializedName("ADDRESS") @Expose var address:String?= null,
         @SerializedName("EMAIL") @Expose var email:String?=null,
-        @SerializedName("CHATLIST") @Expose var chatlist: JSONArray?=null
+        @SerializedName("CHATLIST") @Expose var chatlist: JSONArray?=null,
+        @SerializedName("TOKEN") @Expose var token:String?=null
         )
 }

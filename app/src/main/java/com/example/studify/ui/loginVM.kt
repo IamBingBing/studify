@@ -5,26 +5,51 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
+import com.example.studify.data.model.LoginModel
 import com.example.studify.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.json.JSONArray
 import javax.inject.Inject
 
 
 @HiltViewModel
-class loginVM @Inject constructor(application: Application,studifyService: StudifyService): ViewModel() {
+class loginVM @Inject constructor(application: Application,private val userRepository: UserRepository): ViewModel() {
     var loginid =mutableStateOf<String>("")
     var password = mutableStateOf<String>("")
     var autologin=mutableStateOf<Boolean>(false)
+    var loginerror = mutableStateOf<String>("")
+    var loginsuccess = mutableStateOf(false)
 
-    val userRepository = UserRepository(studifyService)
-    fun init() {
 
-    }
-    private fun requestlogin(loginid :String, password: String) = userRepository.requestLogin(loginid ,password)
-        .subscribe {
-            if (it != null){
-                Preferences.putString("USERNAME",it.result!!.username.toString() )
-                Preferences.putInt("SEX", it.result!!.sex!!.toInt()  )
-            }
+    init {
+        if (Preferences.getBoolean("AUTOLOGIN")){
+            requestlogin(id = Preferences.getString("ID").toString(),token = Preferences.getString("TOKEN").toString() , pwd= "")
         }
+    }
+
+    fun requestlogin(id :String = loginid.value, pwd: String = password.value ,token :String ="" ) = userRepository.requestLogin(id ,pwd, token)
+        .subscribe ({
+            loginModel ->
+            if (loginModel.resultCode == "200"){
+                Preferences.putString("USERID", loginModel.result!!.userid.toString())
+                Preferences.putString("ID", loginModel.result!!.id.toString())
+                Preferences.putString("USERNAME", loginModel.result!!.username.toString())
+                Preferences.putInt("SEX", loginModel.result!!.sex!! )
+                Preferences.putString("GROUP", loginModel.result!!.group.toString())
+                Preferences.putFloat("TENDENCY", loginModel.result!!.tendency!!)
+                Preferences.putInt("REPORT", loginModel.result!!.report!!)
+                Preferences.putString("ADDRESS", loginModel.result!!.address.toString())
+                Preferences.putString("EMAIL", loginModel.result!!.email.toString())
+                Preferences.putString("TOKEN" , loginModel.result!!.token.toString())
+                Preferences.putBoolean("AUTOLOGIN", autologin.value)
+
+            }
+            else if(loginModel.resultCode =="400"){
+                loginerror.value = loginModel.errorMsg
+            }
+        },{
+            error->
+            loginerror.value= error.toString()
+        }
+        )
 }

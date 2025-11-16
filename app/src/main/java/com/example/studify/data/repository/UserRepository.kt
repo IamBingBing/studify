@@ -10,10 +10,11 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestLogin(loginid:String, password:String) : Single<LoginModel> {
+    fun requestLogin(loginid:String, password:String,token:String = "") : Single<LoginModel> {
         val param = HashMap<String, String>().apply {
             this["ID"] = loginid
             this["PASSWORD"] = password
+            this["TOKEN"] = token
         }
         return studifyService.requestLogin(param)
             .subscribeOn(Schedulers.io())

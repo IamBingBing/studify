@@ -1,5 +1,6 @@
 package com.example.studify.navigation
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,9 +11,8 @@ import com.example.studify.ui.MatchingIng
 import com.example.studify.ui.chatingRoom
 import com.example.studify.ui.chatlist
 import com.example.studify.ui.createGroup
-import com.example.studify.ui.groupPage
+//import com.example.studify.ui.groupPage
 import com.example.studify.ui.matchMenu
-import com.example.studify.ui.matchingOption
 import com.example.studify.ui.matchingOptionFast
 import com.example.studify.ui.matchingOptionGroup
 import com.example.studify.ui.matchingOptionMentor
@@ -30,6 +30,7 @@ import com.example.studify.ui.shop
 import com.example.studify.ui.writeArticle
 
 @Composable
+@ExperimentalMaterial3Api
 fun AppNavHost(navController: NavHostController) {
     NavHost(navController= navController, startDestination = "login") {
         composable(route="login"){
@@ -48,7 +49,7 @@ fun AppNavHost(navController: NavHostController) {
             createGroup(navController = navController)
         }
         composable(route="group"){
-            groupPage(navController = navController)
+            //groupPage(navController = navController)
         }
         composable(route="matchingComplete"){
             matchingcomplete(navController = navController)
