@@ -3,9 +3,8 @@ package com.example.studify.data.model
 import com.example.studify.data.model.GroupModel.GroupResult
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
-data class shopModel (
+data class ShopModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
     @SerializedName("result") @Expose var result: GroupResult? =null
