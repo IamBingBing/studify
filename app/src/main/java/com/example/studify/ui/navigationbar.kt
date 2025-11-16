@@ -10,23 +10,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavHostController
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.navigation.NavController
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun navigationbar(
-                  navController: NavHostController
+                  navController: NavController
                 ) {
     var current by remember { mutableStateOf("") }
 
-    Scaffold( bottomBar = {
-        NavigationBar (windowInsets = NavigationBarDefaults.windowInsets){
+
+        NavigationBar (windowInsets = NavigationBarDefaults.windowInsets ){
             NavigationBarItem(
                 selected = current == "grouphome",
                 onClick = {
                     navController.navigate("groupHome")
-                    current == "grouphome"
+                    current = "grouphome"
                           },
                 icon = {
                     Icon(Icons.Default.Home, contentDescription = null)
@@ -39,7 +40,7 @@ fun navigationbar(
                 selected = current == "matchMenu",
                 onClick = {
                     navController.navigate("matchMenu")
-                    current == "matchMenu"
+                    current ="matchMenu"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
                 label = { Text("matchMenu") }
@@ -48,7 +49,7 @@ fun navigationbar(
                 selected = current == "shop",
                 onClick = {
                     navController.navigate("shop")
-                    current == "shop"
+                    current = "shop"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
                 label = { Text("shop") }
@@ -57,7 +58,7 @@ fun navigationbar(
                 selected = current == "mypage",
                 onClick = {
                     navController.navigate("mypage")
-                    current == "mypage"
+                    current = "mypage"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
                 label = { Text("mypage") }
@@ -66,13 +67,12 @@ fun navigationbar(
                 selected = current == "chatlist",
                 onClick = {
                     navController.navigate("chatlist")
-                    current == "chatlist"
+                    current = "chatlist"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
                 label = { Text("chatlist") }
             )
         }
-    }){
-    }
+
 }
 

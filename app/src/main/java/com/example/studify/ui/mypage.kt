@@ -22,6 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+<<<<<<< Updated upstream
+=======
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+>>>>>>> Stashed changes
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
@@ -41,8 +46,7 @@ fun mypage(vm : mypageVM = hiltViewModel() , navController: NavController) {
         modifier = BaseModifiers.BaseBoxModifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+            ,horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "마이 페이지",

@@ -106,7 +106,6 @@ fun AppNavHost(navController: NavHostController) {
             qna(navController = navController)
         }
         composable(route="shop"){
-            navigationbar(navController = navController)
             shop(navController = navController)
         }
         composable(route="writeArticle"){
