@@ -39,8 +39,9 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
     var autologin by vm.autologin
     var loginerror by vm.loginerror
     if (vm.loginsuccess.value) {
-        navController.navigate("group") {
+        navController.navigate("matchMenu") {
             popUpTo("login") {
+                vm.loginsuccess.value = false
                 inclusive = true
             }
         }

@@ -5,9 +5,9 @@ import com.example.studify.R
 
 enum class routes(val route: String, val label: String,val icon:Int, val contentDescription : String?){
 
-    group("com.example.studify.ui.group", label="그룹",R.drawable.logo ,null),
-    matchMenu("com.example.studify.ui.matchMenu", label="매칭",R.drawable.logo ,null),
-    shop("com.example.studify.ui.shop", label="상점",R.drawable.logo ,null),
-    mypage("com.example.studify.mypage", label="내 정보",R.drawable.logo ,null),
-    chatlist("com.example.studify.chat", label="채팅",R.drawable.logo ,null)
+    group("grouphome", label="그룹",R.drawable.logo ,null),
+    matchMenu("matching", label="매칭",R.drawable.logo ,null),
+    shop("shop", label="상점",R.drawable.logo ,null),
+    mypage("mypage", label="내 정보",R.drawable.logo ,null),
+    chatlist("chatlist", label="채팅",R.drawable.logo ,null)
 }
