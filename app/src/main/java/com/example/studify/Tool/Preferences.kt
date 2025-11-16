@@ -38,12 +38,12 @@ object Preferences {
         return getSharedPreferences().getInt(key, 0)
     }
 
-    fun putFloat(key: String?, value: Int) {
-        getSharedPreferences().edit{
-            putFloat(key, value)
+    fun putFloat(key: String?, value: Float) {
+        getSharedPreferences().edit(){
+
+            putFloat(key,value)
             apply()
         }
-
     }
     fun getFloat(key: String?): Float {
         return getSharedPreferences().getFloat(key,0f)

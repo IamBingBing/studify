@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 import org.json.JSONArray
 
 data class UserReqModel (
-    @SerializedName("USERID") @Expose var userid: Int? = null,
     @SerializedName("USERNAME") @Expose var username: String? = null,
     @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
     @SerializedName("GROUP") @Expose var group: JSONArray? = null,

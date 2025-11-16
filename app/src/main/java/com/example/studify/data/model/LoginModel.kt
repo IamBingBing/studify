@@ -16,7 +16,7 @@ data class LoginModel(
         @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
         @SerializedName("GROUP") @Expose var group: JSONArray? = null,
         @SerializedName("POINT") @Expose var point: Int? = null,
-        @SerializedName("TENDENCY") @Expose var tendency: Int? = null,
+        @SerializedName("TENDENCY") @Expose var tendency: Float = 0f,
         @SerializedName("REPORT") @Expose var report:Int?= null,
         @SerializedName("ADDRESS") @Expose var address:String?= null,
         @SerializedName("EMAIL") @Expose var email:String?=null,

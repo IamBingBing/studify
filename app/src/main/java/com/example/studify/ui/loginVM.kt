@@ -31,18 +31,18 @@ class loginVM @Inject constructor(application: Application,private val userRepos
         .subscribe ({
             loginModel ->
             if (loginModel.resultCode == "200"){
-                Preferences.putString("USERID", loginModel.result!!.userid.toString())
+                Preferences.putInt("USERID", loginModel.result!!.userid!!)
                 Preferences.putString("ID", loginModel.result!!.id.toString())
                 Preferences.putString("USERNAME", loginModel.result!!.username.toString())
                 Preferences.putInt("SEX", loginModel.result!!.sex!! )
                 Preferences.putString("GROUP", loginModel.result!!.group.toString())
-                Preferences.putFloat("TENDENCY", loginModel.result!!.tendency!!)
+                Preferences.putFloat("TENDENCY", loginModel.result!!.tendency)
                 Preferences.putInt("REPORT", loginModel.result!!.report!!)
                 Preferences.putString("ADDRESS", loginModel.result!!.address.toString())
                 Preferences.putString("EMAIL", loginModel.result!!.email.toString())
-                Preferences.putString("TOKEN" , loginModel.result!!.token.toString())
+                //Preferences.putString("TOKEN" , loginModel.result!!.token.toString())
                 Preferences.putBoolean("AUTOLOGIN", autologin.value)
-
+                loginsuccess.value = true
             }
             else if(loginModel.resultCode =="400"){
                 loginerror.value = loginModel.errorMsg

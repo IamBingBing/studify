@@ -8,7 +8,7 @@ import java.io.Serializable
 data class GroupModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
-    @SerializedName("result") @Expose var list: GroupResult? =null
+    @SerializedName("result") @Expose var result: GroupResult? =null
 ) : Serializable {
     data class  GroupResult(
         @SerializedName("GROUPID") @Expose var groupid: Int? = null,
