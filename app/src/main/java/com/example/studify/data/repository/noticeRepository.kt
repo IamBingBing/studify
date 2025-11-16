@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class noticeRepository @Inject constructor(private val studifyService: StudifyService
 ) {
     fun requestNoticeList(groupId: Int): Single<AnnounceModel> {
-        val param = HashMap<String, Any>().apply {
+        val param = HashMap<String, Int>().apply {
             this["GROUP_ID"] = groupId
         }
 
@@ -20,6 +20,4 @@ class noticeRepository @Inject constructor(private val studifyService: StudifySe
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-
-    companion object
 }

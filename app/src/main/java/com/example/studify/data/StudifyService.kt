@@ -1,5 +1,6 @@
 package com.example.studify.data
 
+import com.example.studify.data.model.AnnounceModel
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ChatModel
 import com.example.studify.data.model.GroupModel
@@ -24,4 +25,8 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/createGroup.php")
     fun requestCreateGroup (@FieldMap data : GroupReqModel)
+
+    @FormUrlEncoded
+    @POST("api/announce.php")
+    fun requestAnnounce (@FieldMap data :Map<String,Int>): Single<AnnounceModel>
 }
