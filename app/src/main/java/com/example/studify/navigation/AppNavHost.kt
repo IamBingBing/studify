@@ -33,6 +33,7 @@ import com.example.studify.ui.qna
 import com.example.studify.ui.register
 import com.example.studify.ui.shop
 import com.example.studify.ui.writeArticle
+import com.example.studify.ui.createDate
 
 @Composable
 @ExperimentalMaterial3Api
@@ -116,6 +117,9 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(route= "calender"){
             calender(navController = navController)
+        }
+        composable(route="createDate"){
+            createDate(navController = navController)
         }
     }
 }
