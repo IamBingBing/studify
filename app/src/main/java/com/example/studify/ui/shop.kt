@@ -48,9 +48,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
+
 
 data class Gifticon(val name: String, val price: String, val imageResId: Int)
 
@@ -67,8 +69,14 @@ val sampleGifticons = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun shop(navController: NavController) {
+fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
     var showPointInfoScreen by remember { mutableStateOf(false) }
+    var goodname by vm.goodname
+    var price by vm.price
+    var good_id by vm.good_ID
+    var detail by vm.detail
+    var itemmap by vm.items
+    val itemList = vm.items.toList()
 
     if (showPointInfoScreen) {
         BackHandler { showPointInfoScreen = false }
@@ -127,8 +135,7 @@ fun shop(navController: NavController) {
                             }
                         }
                     }
-                    items(sampleGifticons) { gifticon ->
-                        // --- GifticonItem 함수의 내용이 여기로 통합되었습니다 ---
+                    items(itemList) { (name, price) ->
                         Card(
                             modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -137,27 +144,31 @@ fun shop(navController: NavController) {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = BaseModifiers.BaseModifier.padding(8.dp)
                             ) {
+                                // 이미지가 없으니 기본 이미지 사용
                                 Image(
-                                    painter = painterResource(id = gifticon.imageResId),
-                                    contentDescription = gifticon.name,
+                                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                                    contentDescription = name,
                                     modifier = BaseModifiers.BaseModifier
                                         .fillMaxWidth()
                                         .aspectRatio(1f),
                                     contentScale = ContentScale.Crop
                                 )
+
                                 Text(
-                                    text = gifticon.name,
+                                    text = name,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
                                     modifier = BaseModifiers.BaseModifier.padding(top = 4.dp)
                                 )
+
                                 Text(
-                                    text = gifticon.price,
+                                    text = "${price}포인트",
                                     color = Color.Gray,
                                     textAlign = TextAlign.Center
                                 )
                             }
                         }
+                    }
                         // -------------------------------------------------
                     }
 
@@ -185,4 +196,4 @@ fun shop(navController: NavController) {
 
         }
     }
-}
+
