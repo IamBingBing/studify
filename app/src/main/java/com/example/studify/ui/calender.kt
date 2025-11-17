@@ -27,80 +27,83 @@ fun calender(
     val formatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.KOREA) }
     val selectedDateString = vm.selectedDateString()
 
-    Box(
-        modifier = BaseModifiers.BaseTextfillModifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-
-        // 위쪽: 달력 + 일정 리스트
-        Column(
-            modifier = Modifier
+    Scaffold { innerPadding ->
+        Box(
+            modifier = BaseModifiers.BaseBoxModifier
                 .fillMaxSize()
+                .padding(16.dp)
+                .padding(innerPadding)
         ) {
 
-            // 1) 안드로이드 기본 캘린더뷰
-            AndroidView(
+            // 위쪽: 달력 + 일정 리스트
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                factory = { context ->
-                    CalendarView(context)
-                },
-                update = { calendarView ->
-                    val date = formatter.parse(selectedDateString)
-                    if (date != null) {
-                        calendarView.date = date.time
+                    .fillMaxSize()
+            ) {
+
+                // 1) 안드로이드 기본 캘린더뷰
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    factory = { context ->
+                        CalendarView(context)
+                    },
+                    update = { calendarView ->
+                        val date = formatter.parse(selectedDateString)
+                        if (date != null) {
+                            calendarView.date = date.time
+                        }
+
+                        calendarView.setOnDateChangeListener { _, y, m, d ->
+                            vm.onDateSelected(y, m, d)
+                        }
                     }
-
-                    calendarView.setOnDateChangeListener { _, y, m, d ->
-                        vm.onDateSelected(y, m, d)
-                    }
-                }
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            // 2) 선택된 날짜 텍스트
-            Text(
-                text = "${month}월 ${day}일 일정",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            // 3) 해당 날짜 일정 리스트
-            if (schedules.isEmpty()) {
-                Text(
-                    text = "등록된 일정이 없습니다.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 4.dp)
                 )
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    schedules.forEach { item ->
-                        Text(
-                            text = "• $item",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+
+                Spacer(Modifier.height(16.dp))
+
+                // 2) 선택된 날짜 텍스트
+                Text(
+                    text = "${month}월 ${day}일 일정",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                // 3) 해당 날짜 일정 리스트
+                if (schedules.isEmpty()) {
+                    Text(
+                        text = "등록된 일정이 없습니다.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        schedules.forEach { item ->
+                            Text(
+                                text = "• $item",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        // 오른쪽 아래 + 버튼 (일정 추가)
-        FloatingActionButton(
-            onClick = {
-                navController.navigate("createDate")
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(8.dp)
-        ) {
-            Text("+")
+            // 👉 FAB를 Box 안으로 옮김 (그래야 align 사용 가능)
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("createDate")
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp)
+            ) {
+                Text("+")
+            }
         }
     }
 }

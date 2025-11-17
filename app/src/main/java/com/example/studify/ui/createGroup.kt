@@ -28,86 +28,85 @@ fun createGroup(vm: createGroupVM= hiltViewModel(), navController: NavController
     var maxMembers by vm.maxMembers
     var intensity by vm.intensity
 
-    Box(modifier = BaseModifiers.BaseBoxModifier) {
-        Column(
-            modifier = BaseModifiers.BaseModifier,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold { innerPadding ->
+        Box(
+            modifier = BaseModifiers.BaseBoxModifier
+                .padding(innerPadding)
         ) {
-            Text(
-                text = "그룹방 만들기",
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Spacer(Modifier.height(16.dp))
-
-            TextField(
-                value = groupName,
-                onValueChange = {groupName = it},
-                label = { Text("그룹 이름")},
-                modifier = BaseModifiers.BaseTextfillModifier
-
-            )
-
-            Spacer(Modifier.height(6.dp))
-
-            TextField(
-                value = groupGoal,
-                onValueChange = { groupGoal = it },
-                label = {Text("목표/다짐")},
-
-                modifier = BaseModifiers.BaseTextfillModifier
-
-            )
-
-            Spacer(Modifier.height(6.dp))
-
-            TextField(
-                value = maxMembers,
-                onValueChange = { input ->
-                    if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
-                        maxMembers = input
-                    }
-                },
-                label = { Text("최대 정원")},
-                singleLine = true,
-                modifier = BaseModifiers.BaseTextfillModifier
-
-            )
-
-            Spacer(Modifier.height(6.dp))
-
-            //해시태그 선택필드
-            PurposeField(
-                selected = selected,
-                onOpenPicker = { vm.openPicker() }
-            )
-
-            if (showPicker) {
-                HashtagPickerDialog(
-                    available = available,
-                    selected = selected,
-                    onDismiss = { vm.closePicker() }
-                )
-            }
-
-            Spacer(Modifier.height(6.dp))
-
-            StudyStyleSlider(
-                value = intensity,
-                onChange = { intensity = it }
-            )
-
-            Button(
-                onClick = {
-                    vm.requestCreate()
-                },
-                enabled = vm.canCreate(),
-                modifier = BaseModifiers.BaseBtnModifier
-
+            Column(
+                modifier = BaseModifiers.BaseModifier,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("생성하기")
-            }
+                Text(
+                    text = "그룹방 만들기",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                Spacer(Modifier.height(16.dp))
 
+                TextField(
+                    value = groupName,
+                    onValueChange = { groupName = it },
+                    label = { Text("그룹 이름") },
+                    modifier = BaseModifiers.BaseTextfillModifier
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                TextField(
+                    value = groupGoal,
+                    onValueChange = { groupGoal = it },
+                    label = { Text("목표/다짐") },
+                    modifier = BaseModifiers.BaseTextfillModifier
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                TextField(
+                    value = maxMembers,
+                    onValueChange = { input ->
+                        if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
+                            maxMembers = input
+                        }
+                    },
+                    label = { Text("최대 정원") },
+                    singleLine = true,
+                    modifier = BaseModifiers.BaseTextfillModifier
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                // 해시태그 선택필드
+                PurposeField(
+                    selected = selected,
+                    onOpenPicker = { vm.openPicker() }
+                )
+
+                if (showPicker) {
+                    HashtagPickerDialog(
+                        available = available,
+                        selected = selected,
+                        onDismiss = { vm.closePicker() }
+                    )
+                }
+
+                Spacer(Modifier.height(6.dp))
+
+                StudyStyleSlider(
+                    value = intensity,
+                    onChange = { intensity = it }
+                )
+
+                Button(
+                    onClick = {
+                        vm.requestCreate()
+                    },
+                    enabled = vm.canCreate(),
+                    modifier = BaseModifiers.BaseBtnModifier
+                ) {
+                    Text("생성하기")
+                }
+            }
         }
     }
 
