@@ -166,6 +166,11 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                                     color = Color.Gray,
                                     textAlign = TextAlign.Center
                                 )
+                                Button(
+                                    onClick = {
+                                        navController.navigate("productDetail")
+                                    }
+                                ) { Text("구매하기") }
                             }
                         }
                     }

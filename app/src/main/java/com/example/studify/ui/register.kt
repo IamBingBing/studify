@@ -42,7 +42,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.MutableState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
@@ -50,7 +52,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun register(vm: registerVM = viewModel(), navController: NavController) {
+fun register(vm: registerVM = hiltViewModel(), navController: NavController) {
     val BaseBtnModifier = Modifier.padding(10.dp)
     val RawModifier = BaseModifiers.BaseModifier.padding(top = 10.dp)
     val BaseTextfillModifier = Modifier.padding(10.dp)
@@ -62,120 +64,120 @@ fun register(vm: registerVM = viewModel(), navController: NavController) {
     var userid by vm.userid
     var pw by vm.pw
     var repw by vm.repw
-    val expanded = vm.expanded.value == 1
+    val expanded by vm.expanded
     val genderOptions by vm.genderOptions
 
 
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        Surface(
-            color = Color.White,
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = BaseModifiers.BaseModifier,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+
+            Surface(
+                color = Color.White,
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text("회원가입")
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("한경대 이메일") },
-                    singleLine = true
-                )
-
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("이름") },
-                    singleLine = true
-                )
-
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = userid,
-                    onValueChange = { userid = it },
-                    label = { Text("아이디") },
-                    singleLine = true
-                )
-
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = pw,
-                    onValueChange = { pw = it },
-                    label = { Text("비밀번호") },
-                    singleLine = true
-                )
-
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = repw,
-                    onValueChange = { repw = it },
-                    label = { Text("비밀번호 재등록") },
-                    singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                )
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { isExpanded ->
-                        vm.onExpandedChange(if (isExpanded) 1 else 0) },
-                    modifier = BaseTextfillModifier
+                Column(
+                    modifier = BaseModifiers.BaseModifier,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
+                    Text("회원가입")
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("한경대 이메일") },
+                        singleLine = true
+                    )
+
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("이름") },
+                        singleLine = true
+                    )
+
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = userid,
+                        onValueChange = { userid = it },
+                        label = { Text("아이디") },
+                        singleLine = true
+                    )
+
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = pw,
+                        onValueChange = { pw = it },
+                        label = { Text("비밀번호") },
+                        singleLine = true
+                    )
+
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = repw,
+                        onValueChange = { repw = it },
+                        label = { Text("비밀번호 재등록") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { isExpanded ->
+                            vm.onExpandedChange(if (isExpanded) false else true) },
+                        modifier = BaseTextfillModifier
                     ) {
-                        IconButton (onClick = {
-                            vm.onExpandedChange(if (expanded) 0 else 1)   // toggle
-                        }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                        }
-
-                        DropdownMenu (
-                            expanded = expanded,
-                            onDismissRequest = { vm.onExpandedChange(0) }
+                        Box(
+                            modifier = Modifier
+                                .padding(16.dp)
                         ) {
+                            IconButton (onClick = {
+                                vm.onExpandedChange(if (expanded) false else true)   // toggle
+                            }) {
+                                Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            }
 
-                            DropdownMenuItem(
-                                text = { Text("남") },
-                                onClick = {
-                                    vm.onSexSelected(0)    // 남자 = 0
-                                    vm.onExpandedChange(0) // 닫기
-                                }
-                            )
+                            DropdownMenu (
+                                expanded = expanded,
+                                onDismissRequest = { vm.onExpandedChange(false) }
+                            ) {
 
-                            DropdownMenuItem(
-                                text = { Text("여") },
-                                onClick = {
-                                    vm.onSexSelected(1)    // 여자 = 1
-                                    vm.onExpandedChange(0)
-                                }
-                            )
+                                DropdownMenuItem(
+                                    text = { Text("남") },
+                                    onClick = {
+                                        sex = 0   // 남자 = 0
+                                        vm.onExpandedChange(false) // 닫기
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = { Text("여") },
+                                    onClick = {
+                                        sex =1  // 여자 = 1
+                                        vm.onExpandedChange(false)
+                                    }
+                                )
+                            }
                         }
-                    }
 
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = adress,
-                    onValueChange = { adress = it },
-                    label = { Text("주소") },
-                    singleLine = true
-                )
-                Button(
-                    onClick = {
-
+                        TextField(
+                            modifier = BaseTextfillModifier,
+                            value = adress,
+                            onValueChange = { adress = it },
+                            label = { Text("주소") },
+                            singleLine = true
+                        )
+                        Button(
+                            onClick = {
+                                navController.navigate("groupHome")
+                            }
+                        ) { Text("가입하기") }
                     }
-                ) { Text("가입하기") }
+                }
             }
         }
     }
-}}
 
