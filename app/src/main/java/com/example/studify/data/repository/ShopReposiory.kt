@@ -2,6 +2,7 @@ package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.LoginModel
+import com.example.studify.data.model.ShopModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -10,13 +11,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ShopReposiory @Inject constructor(private val studifyService: StudifyService) {
-    fun requestShop(loginid:String, password:String,token:String = "") : Single<LoginModel> {
-        val param = HashMap<String, String>().apply {
-            this["ID"] = loginid
-            this["PASSWORD"] = password
-            this["TOKEN"] = token
+    fun requestShop() : Single<ShopModel> {
+        val param = HashMap<String, Any>().apply {
+
         }
-        return studifyService.requestLogin(param)
+        return studifyService.requestShopData(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName
 data class ShopModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
-    @SerializedName("result") @Expose var result: GroupResult? =null
+    @SerializedName("result") @Expose var result: List<shopResult>? =null
 )  {
-    data class Result(
+    data class shopResult(
         @SerializedName("GOOD_ID") @Expose var userid: Int? = null,
         @SerializedName("PRICE") @Expose var price: Int? = null,
         @SerializedName("GOOD_NAME") @Expose var good_name: String? = null,
