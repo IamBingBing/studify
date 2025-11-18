@@ -11,8 +11,8 @@ import javax.inject.Inject
 class profilepageVM @Inject constructor(application: Application,studifyService: StudifyService): ViewModel() {
     var userName = mutableStateOf<String>("")
     var studyStyle = mutableStateOf<String>("")
-    var mannerScore = mutableStateOf<Double>(101.1)
+    var mannerScore = mutableStateOf<Double>(0.0)
     var reviewTags = mutableStateListOf<String>("")
     var studyHistory = mutableStateOf("")
 
-}
+    }

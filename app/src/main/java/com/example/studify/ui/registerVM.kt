@@ -1,11 +1,17 @@
 package com.example.studify.ui
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.example.studify.data.StudifyService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class registerVM : ViewModel{
+@HiltViewModel
+class registerVM @Inject constructor( appliction: Application , studifyService: StudifyService) : ViewModel(){
     var email = mutableStateOf<String>("")
     var sex = mutableStateOf<Int>(-1)
     var adress = mutableStateOf<String>("")
@@ -18,16 +24,15 @@ class registerVM : ViewModel{
 
 
     var genderOptions = mutableStateOf<Int>(-1)
-    var expanded = mutableStateOf<Int>(0)
+    var expanded = mutableStateOf(false)
+
+    fun onExpandedChange(isExpanded: Boolean) {
+        expanded.value = isExpanded
+    }
 
     fun onSexSelected(selection: Int) {
         sex.value = selection
     }
 
-    fun onExpandedChange(isExpanded: Int) {
-        expanded.value = 0
-    }
-    constructor(){
 
-    }
 }

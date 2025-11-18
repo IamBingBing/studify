@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +22,9 @@ import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.Scaffold
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavController) {
     var userName by vm.userName
@@ -30,29 +33,33 @@ fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavControll
     var reviewTags = vm.reviewTags
     var studyHistory by vm.studyHistory
 
-    Column(
-        modifier = BaseModifiers.BaseBoxModifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "상세 프로필",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+    Scaffold(
+        topBar = {groupNavigation(navController = navController) }, bottomBar = { navigationbar(navController) }) {
+        innerPadding ->
+        Column(
+            modifier = BaseModifiers.BaseBoxModifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "상세 프로필",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        ProfileInfoRow(label = "이름", value = userName)
-        ProfileInfoRow(label = "학습 스타일", value = studyStyle)
-        ProfileInfoRow(label = "매너 점수", value = "$mannerScore 점")
-        ProfileInfoRow(label = "스터디 내역", value = studyHistory)
-        ProfileInfoRow(label = "칭찬 리뷰", value = reviewTags.joinToString(", "))
+            ProfileInfoRow(label = "이름", value = userName)
+            ProfileInfoRow(label = "학습 스타일", value = studyStyle)
+            ProfileInfoRow(label = "매너 점수", value = "$mannerScore 점")
+            ProfileInfoRow(label = "스터디 내역", value = studyHistory)
+            ProfileInfoRow(label = "칭찬 리뷰", value = reviewTags.joinToString())
 
+        }
     }
 }
-
 @Composable
 public fun ProfileInfoRow(label: String, value: String) {
     Row(
