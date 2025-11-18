@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -37,56 +38,62 @@ fun mypage(vm : mypageVM = hiltViewModel() , navController: NavController) {
     var tendency by vm.tendency
     var point by vm.point
 
-    Column(
-        modifier = BaseModifiers.BaseBoxModifier
-            .fillMaxSize()
-            .padding(16.dp)
-            ,horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "마이 페이지",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+    Scaffold(
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
 
-        if (isEditing) {
-
-            EditProfileField(label = "이름", value = name, onValueChange = { name = it })
-            EditProfileField(label = "이메일", value = email, onValueChange = { email = it })
-            EditProfileField(label = "주소", value = address, onValueChange = { address = it })
-            EditProfileField(label = "성별", value = sex, onValueChange = { sex = it })
-
+        Column(
+            modifier = BaseModifiers.BaseBoxModifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "마이 페이지",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
-                onClick = { isEditing = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("저장하기")
-            }
+            if (isEditing) {
 
-        } else {
-            DisplayProfileField(label = "이름", value = name)
-            DisplayProfileField(label = "이메일", value = email)
-            DisplayProfileField(label = "소속 그룹", value = group)
-            DisplayProfileField(label = "성별", value = sex)
-            DisplayProfileField(label = "주소", value = address)
-            DisplayProfileField(label = "성향 점수", value = tendency)
-            DisplayProfileField(label = "포인트", value = point)
+                EditProfileField(label = "이름", value = name, onValueChange = { name = it })
+                EditProfileField(label = "이메일", value = email, onValueChange = { email = it })
+                EditProfileField(label = "주소", value = address, onValueChange = { address = it })
+                EditProfileField(label = "성별", value = sex, onValueChange = { sex = it })
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
-                onClick = { isEditing = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("정보 수정")
+                Button(
+                    onClick = { isEditing = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("저장하기")
+                }
+
+            } else {
+                DisplayProfileField(label = "이름", value = name)
+                DisplayProfileField(label = "이메일", value = email)
+                DisplayProfileField(label = "소속 그룹", value = group)
+                DisplayProfileField(label = "성별", value = sex)
+                DisplayProfileField(label = "주소", value = address)
+                DisplayProfileField(label = "성향 점수", value = tendency)
+                DisplayProfileField(label = "포인트", value = point)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = { isEditing = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("정보 수정")
+                }
             }
         }
     }
 }
-
 @Composable
 public fun DisplayProfileField(label: String, value: String) {
     Row(

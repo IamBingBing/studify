@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.studify.data.model.ProgressModel
+import com.example.studify.data.repository.ProgressRepository
+import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
