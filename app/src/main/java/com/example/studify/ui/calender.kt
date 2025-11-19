@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import android.widget.CalendarView
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.data.model.DateModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,10 +24,13 @@ fun calender(
     val year by vm.year
     val month by vm.month
     val day by vm.day
-    val schedules = vm.schedules
+    val schedules = vm.schedules          // List<DateModel.DateResult>
 
     val formatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.KOREA) }
     val selectedDateString = vm.selectedDateString()
+
+    // 상세보기용으로 선택된 일정
+    var selectedSchedule by remember { mutableStateOf<DateModel.DateResult?>(null) }
 
     Scaffold { innerPadding ->
         Box(
@@ -35,7 +40,6 @@ fun calender(
                 .padding(innerPadding)
         ) {
 
-            // 위쪽: 달력 + 일정 리스트
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,16 +88,20 @@ fun calender(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         schedules.forEach { item ->
+                            // 한 줄에 제목만 보여주고, 클릭하면 상세 다이얼로그 표시
                             Text(
-                                text = "• $item",
-                                style = MaterialTheme.typography.bodyMedium
+                                text = "• ${item.title}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.clickable {
+                                    selectedSchedule = item
+                                }
                             )
                         }
                     }
                 }
             }
 
-
+            // 일정 추가 버튼
             FloatingActionButton(
                 onClick = {
                     navController.navigate("createDate")
@@ -103,6 +111,30 @@ fun calender(
                     .padding(8.dp)
             ) {
                 Text("+")
+            }
+
+            // 상세 정보 다이얼로그
+            if (selectedSchedule != null) {
+                val item = selectedSchedule!!
+                AlertDialog(
+                    onDismissRequest = { selectedSchedule = null },
+                    confirmButton = {
+                        TextButton(onClick = { selectedSchedule = null }) {
+                            Text("닫기")
+                        }
+                    },
+                    title = { Text(text = item.title) },
+                    text = {
+                        Column {
+                            Text("날짜/시간: ${item.time}")
+                            Spacer(Modifier.height(4.dp))
+                            Text("장소: ${item.location}")
+                            Spacer(Modifier.height(4.dp))
+                            Text("내용:")
+                            Text(item.content)
+                        }
+                    }
+                )
             }
         }
     }
