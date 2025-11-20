@@ -8,4 +8,5 @@ import java.io.Serializable
 data class UpdateModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
+    @SerializedName("result") @Expose var result : String = ""
     ) : Serializable

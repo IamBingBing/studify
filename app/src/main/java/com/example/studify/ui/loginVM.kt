@@ -25,6 +25,7 @@ class loginVM @Inject constructor(application: Application,private val userRepos
         if (Preferences.getBoolean("AUTOLOGIN")){
             requestlogin(id = Preferences.getString("ID").toString(),token = Preferences.getString("TOKEN").toString() , pwd= "")
         }
+
     }
 
     fun requestlogin(id :String = loginid.value, pwd: String = password.value ,token :String ="" ) = userRepository.requestLogin(id ,pwd, token)
@@ -40,7 +41,6 @@ class loginVM @Inject constructor(application: Application,private val userRepos
                 Preferences.putInt("REPORT", loginModel.result!!.report!!)
                 Preferences.putString("ADDRESS", loginModel.result!!.address.toString())
                 Preferences.putString("EMAIL", loginModel.result!!.email.toString())
-                //Preferences.putString("TOKEN" , loginModel.result!!.token.toString())
                 Preferences.putBoolean("AUTOLOGIN", autologin.value)
                 loginsuccess.value = true
             }
