@@ -27,4 +27,12 @@ class GroupRepository @Inject constructor(private val studifyService: StudifySer
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+    fun requestGroupData(groupid: Int) : Single<GroupModel> {
+        var params = HashMap<String, Any>().apply {
+            this["GROUPID"] = groupid
+        }
+        return studifyService.requestGroupData(params)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }
