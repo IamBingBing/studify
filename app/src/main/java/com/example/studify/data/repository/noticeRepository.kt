@@ -13,7 +13,7 @@ class noticeRepository @Inject constructor(private val studifyService: StudifySe
 ) {
     fun requestNoticeList(groupId: Int): Single<AnnounceModel> {
         val param = HashMap<String, Int>().apply {
-            this["GROUP_ID"] = groupId
+            this["GROUPID"] = groupId
         }
 
         return studifyService.requestAnnounce(param)

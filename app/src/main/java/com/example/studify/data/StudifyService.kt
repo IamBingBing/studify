@@ -56,7 +56,6 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("Mentordata.php")
     fun requestMentorData(@FieldMap data: Map<String, Any>): Single<MentorModel>
-
     @FormUrlEncoded
     @POST( "addProgress.php")
     fun UpdateProgress(@FieldMap data: Map<String, Any>) : Single<UpdateModel>
