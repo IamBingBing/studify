@@ -1,10 +1,10 @@
 package com.example.studify.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -31,6 +31,7 @@ fun createDate(
     val title by vm.title
     val time by vm.time
     val memo by vm.memo
+    val location by vm.location   // 🔥 위치 상태
 
     // 날짜 초기값 세팅
     val initialDate = remember(dateText) {
@@ -206,6 +207,18 @@ fun createDate(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            // 🔥 위치 입력
+            OutlinedTextField(
+                value = location,
+                onValueChange = { vm.location.value = it },
+                label = { Text("위치") },
+                singleLine = true,
+                modifier = BaseModifiers.BaseTextfillModifier
+                    .fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(12.dp))
+
             // 메모 입력
             OutlinedTextField(
                 value = memo,
@@ -242,8 +255,7 @@ fun createDate(
     }
 }
 
-//공용 드롭다운 컴포저블 (연/월/일용)
-
+// 공용 드롭다운 컴포저블 (연/월/일용)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleDropdown(

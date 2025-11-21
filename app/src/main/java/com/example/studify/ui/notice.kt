@@ -22,7 +22,7 @@ fun notice(
     navController: NavController
 ) {
     val query by vm.query
-    // 검색어까지 반영된 공지 리스트
+    // 검색어가 적용된 공지 리스트
     val notices = vm.filteredNotices()
 
     Box(
@@ -31,7 +31,7 @@ fun notice(
         Column(
             modifier = BaseModifiers.BaseModifier.fillMaxSize()
         ) {
-            // 공지 목록
+            // 공지 목록 리스트
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -46,8 +46,11 @@ fun notice(
                     NoticeRow(
                         notice = noticeItem,
                         onClick = {
-                            // TODO: 공지 ID를 넘겨서 상세 화면에서 다시 조회하게 만들고 싶으면
-                            // navController.navigate("noticeDetail/${noticeItem.announceId}")
+                            // 클릭된 공지를 VM에 알림
+                            vm.onNoticeClick(noticeItem)
+
+                            // 필요하면 상세 페이지로 이동
+                            // 나중에 navArgument 쓰면 ID 넘겨서 이동 가능
                             navController.navigate("noticeDetail")
                         }
                     )
@@ -70,9 +73,9 @@ fun notice(
                 )
 
                 Button(
-                    // 필터링은 query 변경될 때마다 자동으로 적용되니까
-                    // 검색 버튼은 눌러도 따로 할 건 없음 (원하면 onClick에서 키보드 내리기 정도 가능)
-                    onClick = { /* 별도 동작 없음 - 실시간 검색 */ },
+                    // 검색은 query 바뀔 때마다 filteredNotices()에 반영되니까,
+                    // 버튼은 있어도 동작은 따로 없어도 됨
+                    onClick = { /* 실시간 검색이라 별도 처리 없음 */ },
                     modifier = Modifier.height(56.dp)
                 ) {
                     Text("검색")
@@ -80,9 +83,10 @@ fun notice(
             }
         }
 
-        // 공지 작성 버튼
+        // 공지 작성 버튼 (지금은 일정 생성 화면으로 연결 중)
         FloatingActionButton(
             onClick = {
+                // TODO: 나중에 공지 작성 화면 만들면 그쪽으로 변경
                 navController.navigate("createDate")
             },
             modifier = Modifier
@@ -109,7 +113,7 @@ private fun NoticeRow(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 고정 공지면 [필독] 뱃지
+            // 고정 공지면 [필독] 뱃지 표시
             if (notice.isPin == true) {
                 Text(
                     text = "[필독] ",
@@ -123,7 +127,7 @@ private fun NoticeRow(
             )
         }
 
-        // 날짜가 있다면 아래에 작게 표시
+        // 날짜가 있으면 아래에 작게 표시
         notice.announceDate?.let { dateString ->
             Spacer(Modifier.height(2.dp))
             Text(

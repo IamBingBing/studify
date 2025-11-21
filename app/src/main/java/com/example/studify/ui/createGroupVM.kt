@@ -4,28 +4,32 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.studify.data.StudifyService
 import com.example.studify.data.repository.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
 @HiltViewModel
-class createGroupVM @Inject constructor(application: Application, private val groupRepository : GroupRepository) : ViewModel() {
+class createGroupVM @Inject constructor(
+    application: Application,
+    private val groupRepository: GroupRepository
+) : ViewModel() {
+
     var groupName = mutableStateOf("")
     var groupGoal = mutableStateOf("")
-    var showPicker = mutableStateOf(false)
-    var available = mutableStateListOf("토익", "정처기", "한국사")
-    var selected = mutableStateListOf<String>()
+
     var maxMembers = mutableStateOf("")
     var intensity = mutableStateOf(50)
 
-    var createError = mutableStateOf("")
-    var createSuccess = mutableStateOf(false)
+    // 스터디 목적 선택 (단일 선택)
+    var selectedPurpose = mutableStateOf<String?>(null)
 
+    // DB에 미리 등록해둔 목적 목록 (서버에서 불러올 예정)
+    var availablePurpose = mutableStateListOf("토익", "자격증", "면접", "공무원", "자기계발")
+
+    // Picker 사용 여부
+    var showPicker = mutableStateOf(false)
 
     fun openPicker() {
-        loadTagsFromDb() // DB/서버에서 태그 목록 가져옴
         showPicker.value = true
     }
 
@@ -33,32 +37,47 @@ class createGroupVM @Inject constructor(application: Application, private val gr
         showPicker.value = false
     }
 
-    fun loadTagsFromDb() {
-        //TODO : 해시태그 목록 불러오기
+    fun setPurpose(value: String) {
+        selectedPurpose.value = value
     }
 
-    // 생성 가능한지 검증
+    // 생성 가능한지 검사
     fun canCreate(): Boolean {
         val nameOk = groupName.value.isNotBlank()
         val membersOk = (maxMembers.value.toIntOrNull() ?: 0) in 1..30
-        val tagsOk = selected.isNotEmpty()
-        return nameOk && membersOk && tagsOk
+        val purposeOk = selectedPurpose.value != null
+
+        return nameOk && membersOk && purposeOk
     }
 
-    // 나중에 백엔드/DB 저장
+    // 그룹 생성 요청
     fun requestCreate(
-        name: String = groupName.value,
-        goal: String = groupGoal.value,
-        maxLen: Int = maxMembers.value.toIntOrNull() ?: 0,
-        tendency: Int = intensity.value,
-        hashtags: List<String> = selected.toList()
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
     ) {
         if (!canCreate()) {
-            createError.value = "필수 항목을 확인해 주세요. (그룹 이름 / 정원 / 해시태그)"
+            onError("필수 항목을 확인해 주세요.")
             return
         }
 
+        val hostId = 1 // 로그인한 사용자 ID (나중에 실제 로그인 데이터에서 가져올 것)
 
+        groupRepository.createGroup(
+            groupName = groupName.value,
+            maxLength = maxMembers.value.toIntOrNull() ?: 1,
+            hashtag = selectedPurpose.value ?: "",
+            tendency = intensity.value,
+            purpose = groupGoal.value,
+            hostUserId = hostId,
+        ).subscribe({ result ->
+            if (result.resultCode == "200") {
+                onSuccess()
+            } else {
+                onError(result.errorMsg)
+            }
+        }, { e ->
+            e.printStackTrace()
+            onError("생성 실패")
+        })
     }
 }
-

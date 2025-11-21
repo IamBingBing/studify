@@ -18,9 +18,9 @@ data class GroupModel (
         @SerializedName("ANNOUNCE") @Expose var annouce: JsonArray? = null,
         @SerializedName("QNA") @Expose var qna: JsonArray? = null,
         @SerializedName("DATES") @Expose var dates: JsonArray? = null,
-        @SerializedName("HASHTAG") @Expose var hashtag: JsonArray?=null,
+        @SerializedName("HASHTAG") @Expose var hashtag: String?=null,
         @SerializedName("HOST") @Expose var host: Int? = null,
-        @SerializedName("TENDENCY") @Expose var tendency: JsonArray? = null,
+        @SerializedName("TENDENCY") @Expose var tendency: Int? = null,
         @SerializedName("PURPOSE") @Expose var purpose: String ? = null,
         @SerializedName ("GROUPTYPE") @Expose var grouptype : Int = 0 //0 : 번개 1: 그룹 2: 멘토
     ):Serializable
