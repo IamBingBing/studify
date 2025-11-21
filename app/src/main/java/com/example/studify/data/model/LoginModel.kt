@@ -26,11 +26,11 @@ data class LoginModel(
         ){
         data class chat (
             @SerializedName("CHATID") @Expose var chatid: Int? = null,
-            @SerializedName("ROOMNAME") @Expose var roomname: Int? = null
+            @SerializedName("ROOMNAME") @Expose var roomname: String = ""
         ): Serializable
         data class group (
             @SerializedName("GROUPID") @Expose var groupid: Int? = null,
-            @SerializedName("GROUPNAME") @Expose var groupname: Int? = null,
+            @SerializedName("GROUPNAME") @Expose var groupname: String = "",
         ):Serializable
     }
 }

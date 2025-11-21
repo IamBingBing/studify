@@ -1,5 +1,7 @@
 package com.example.studify.di
 
+import com.example.studify.Tool.Preferences
+import com.example.studify.data.localDB.Message
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
@@ -9,18 +11,27 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import org.json.JSONObject
+import java.sql.Timestamp
 
-class ChatWebSocketClient : WebSocketListener() {
+class ChatWebSocketClient (private val onNewMsg: (Message) ->Unit) : WebSocketListener() {
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
+        sendLogin()
     }
-    override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-        super.onMessage(webSocket, bytes)
-        var data = bytes.toByteArray().toString(Charsets.UTF_8)
-        val result = JSONObject(data)
-        result["GROUPID"]
+
+    override fun onMessage(webSocket: WebSocket, text: String) {
+        super.onMessage(webSocket, text)
+        val jsonObject = JSONObject(text)
+        val msg = Message(
+            id =0,
+            CHATID = jsonObject.getInt("CHATID"),
+            CHATNAME = jsonObject.getString("CHATNAME"),
+            CHAT = jsonObject.getString("CHAT"),
+            TIME = jsonObject.get("TIME") as Timestamp
+        )
+        onNewMsg(msg)
     }
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
@@ -34,8 +45,8 @@ class ChatWebSocketClient : WebSocketListener() {
             .build()
         webSocket = client.newWebSocket(request,this)
     }
-    fun sendLogin(userId: String) {
-        val json = """{"USERID":"$userId"}"""
+    fun sendLogin() {
+        val json = """{"USERID":"${Preferences.getString("USERID")}"}"""
         webSocket?.send(json)
     }
 }

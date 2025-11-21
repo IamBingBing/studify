@@ -22,19 +22,19 @@ fun navigationbar(navController: NavController) {
 
         NavigationBar (windowInsets = NavigationBarDefaults.windowInsets ){
             NavigationBarItem(
-                selected = current == "grouphome",
+                selected = current == "grouplist",
                 onClick = {
-                    navController.navigate("groupHome"){
-                        popUpTo("groupHome"){
+                    navController.navigate("grouplist"){
+                        popUpTo(0){
                             inclusive = true
                         }
                     }
-                    current = "grouphome"
+                    current = "grouplist"
                           },
                 icon = {
                     Icon(Icons.Default.Home, contentDescription = null)
                        },
-                label = { Text("groupHome") }
+                label = { Text("grouplist") }
             )
 
 
@@ -42,7 +42,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "matchMenu",
                 onClick = {
                     navController.navigate("matchMenu"){
-                        popUpTo("groupHome"){
+                        popUpTo(0){
                             inclusive = true
                         }
                     }
@@ -55,7 +55,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "shop",
                 onClick = {
                     navController.navigate("shop"){
-                        popUpTo("groupHome"){
+                        popUpTo(0){
                             inclusive = true
                         }
                     }
@@ -68,7 +68,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "mypage",
                 onClick = {
                     navController.navigate("mypage"){
-                        popUpTo("groupHome"){
+                        popUpTo(0){
                             inclusive = true
                         }
                     }
@@ -81,7 +81,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "chatlist",
                 onClick = {
                     navController.navigate("chatlist"){
-                        popUpTo("groupHome"){
+                        popUpTo(0){
                             inclusive = true
                         }
                     }

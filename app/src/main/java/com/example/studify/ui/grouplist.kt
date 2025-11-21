@@ -1,5 +1,4 @@
 package com.example.studify.ui
-
 import android.service.autofill.OnClickAction
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,9 +20,9 @@ import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun chatlist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
+fun grouplist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
     var error = vm.error
-    var chatlist = vm.chatlist
+    var grouplist = vm.chatlist
     if (error.value != "") {
         AlertDialog(
             onDismissRequest = { error.value =""},
@@ -36,18 +35,18 @@ fun chatlist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
             }
         )
     }
-    Scaffold (topBar = { Text("채팅방") }, bottomBar= { navigationbar(navController) }){
-        innerpadding->
+    Scaffold (topBar = { Text("그룹 목록") }, bottomBar= { navigationbar(navController) }){
+            innerpadding->
         Column(modifier= BaseModifiers.BaseBoxModifier.padding(innerpadding).fillMaxSize()) {
-            Box(BaseModifiers.BaseBoxModifier) { Text("채팅방") }
+            Box(BaseModifiers.BaseBoxModifier) { Text("그룹 목록") }
 
             LazyColumn(modifier = BaseModifiers.BaseBoxModifier) {
-                chatlist.forEach({
-                    chat->
+                grouplist.forEach({
+                        group->
                     item {
-                        Text(text = chat.value, modifier= BaseModifiers.BaseChatModifier.clickable {
-                        navController.navigate("chatingRoom/${chat.key}")
-                    }) }
+                        Text(text = group.value, modifier= BaseModifiers.BaseChatModifier.clickable {
+                            navController.navigate("groupHome/${group.key}")
+                        }) }
                 })
 
             }

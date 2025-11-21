@@ -8,7 +8,7 @@ data class Message (
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0L,
 
-    val GROUPID : Int,
+    val CHATID : Int,
     val CHATNAME : String,
     val CHAT : String,
     val TIME : Timestamp
