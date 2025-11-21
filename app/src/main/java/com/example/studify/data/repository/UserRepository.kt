@@ -30,6 +30,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+<<<<<<< Updated upstream
     fun UpdateUser (
         id: String,
         pw: String,
@@ -47,6 +48,16 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["ADDRESS"]  = address.toString()         // String
         }
         return studifyService.UpdateUser(param)
+=======
+    fun requestUpdateUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
+        val param = HashMap<String, String>().apply {
+            this["USERNAME"] = name
+            this["EMAIL"] = email
+            this["ADDRESS"] = address
+            this["SEX"] = sex.toString()
+        }
+        return studifyService.requestUpdateUser(param)
+>>>>>>> Stashed changes
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

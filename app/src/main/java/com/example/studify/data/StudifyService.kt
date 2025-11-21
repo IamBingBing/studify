@@ -27,6 +27,9 @@ interface StudifyService {
     @POST("api/userdata.php")
     fun requestUserData(@FieldMap data: Map<String, String>): Single<LoginModel>
     @FormUrlEncoded
+    @POST("api/updateUser.php")
+    fun requestUpdateUser(@FieldMap data: Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
     @POST("api/shopdata.php")
     fun requestShopData (@FieldMap data : Map<String,String>): Single<ShopModel>
     @FormUrlEncoded
