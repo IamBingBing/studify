@@ -29,7 +29,7 @@ class ChatWebSocketClient (private val onNewMsg: (Message) ->Unit) : WebSocketLi
             CHATID = jsonObject.getInt("CHATID"),
             CHATNAME = jsonObject.getString("CHATNAME"),
             CHAT = jsonObject.getString("CHAT"),
-            TIME = jsonObject.get("TIME") as Timestamp
+            TIME = jsonObject.getString("TIME")
         )
         onNewMsg(msg)
     }

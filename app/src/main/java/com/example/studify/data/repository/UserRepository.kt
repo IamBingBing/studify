@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestLogin(loginid: String, password: String, token: String = ""): Single<LoginModel> {
+    fun requestLogin(loginid:String, password:String,token:String = "") : Single<LoginModel> {
         val param = HashMap<String, String>().apply {
             this["ID"] = loginid
             this["PASSWORD"] = password
@@ -22,8 +22,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .observeOn(AndroidSchedulers.mainThread())
 
     }
-
-    fun requestUserData(): Single<LoginModel> {
+    fun requestUserData (): Single<LoginModel>{
         val param = HashMap<String, String>().apply {
 
         }
@@ -31,23 +30,14 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-
-    fun requestUpdatiUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
-        val param = HashMap<String, String>().apply {
-            this["USERNAME"] = name
-            this["EMAIL"] = email
-            this["ADDRESS"] = address
-            this["SEX"] = sex.toString()
-        }
-        return studifyService.requestUpdateUser(param)
-    fun UpdateUser(
+    fun UpdateUser (
         id: String,
         pw: String,
         username: String,
         email: String,
         sex: String,
         address: String
-    ): Single<UpdateModel> {
+    ) : Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
             this["ID"] = id.toString()             // 이미 String
             this["PASSWORD"] = pw.toString()             // String
@@ -57,21 +47,16 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["ADDRESS"] = address.toString()         // String
         }
         return studifyService.UpdateUser(param)
-       fun requestUpdateUser(
-            name: String,
-            email: String,
-            address: String,
-            sex: Int
-        ): Single<UpdateModel> {
-            val param = HashMap<String, String>().apply {
-                this["USERNAME"] = name
-                this["EMAIL"] = email
-                this["ADDRESS"] = address
-                this["SEX"] = sex.toString()
-            }
-            return studifyService.requestUpdateUser(param)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    }
+    fun requestUpdateUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
+        val param = HashMap<String, String>().apply {
+            this["USERNAME"] = name
+            this["EMAIL"] = email
+            this["ADDRESS"] = address
+            this["SEX"] = sex.toString()
         }
+        return studifyService.requestUpdateUser(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }
