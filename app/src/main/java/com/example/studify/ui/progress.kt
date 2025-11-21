@@ -18,13 +18,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) {
     val mainGoal by vm.mainGoal
     val personalGoals = vm.personalGoals
-    val personalGoalsDone = vm.personalGoalsDone
+    val personalGoalsDone = false
     val progressPercent by vm.progressPercent
     var showMainGoalDialog by vm.showMainGoalDialog
     var showPersonalGoalDialog by vm.showPersonalGoalDialog
@@ -219,4 +219,4 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
             )
         }
     }
-}
+}*/
