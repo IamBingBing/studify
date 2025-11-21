@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,24 +25,31 @@ import com.example.studify.Tool.BaseModifiers
 fun matchMenu (vm : matchMenuVM = viewModel(), navController: NavController){
     Scaffold (bottomBar = { navigationbar(navController) }) {
         innerpadding->
-        Box(modifier = BaseModifiers.BaseModifier.padding(innerpadding).fillMaxSize()) {
-            Row(modifier = BaseModifiers.BaseModifier.align(Alignment.Center)) {
-                Button(modifier = BaseModifiers.BaseBtnModifier
-                    .width(100.dp)
-                    .height(200.dp), onClick = { vm.lightMatch() }) {
-                    Text("번개\n매칭")
+            Column(modifier = BaseModifiers.BaseModifier.padding(innerpadding)) {
+                Row(modifier = BaseModifiers.BaseModifier) {
+                    Button(modifier = BaseModifiers.BaseBtnModifier
+                        .width(100.dp)
+                        .height(200.dp), onClick = { vm.lightMatch() }) {
+                        Text("번개\n매칭")
+                    }
+                    Button(modifier = BaseModifiers.BaseBtnModifier
+                        .width(100.dp)
+                        .height(200.dp), onClick = { vm.groupMatch() }) {
+                        Text("그룹\n매칭")
+                    }
+                    Button(modifier = BaseModifiers.BaseBtnModifier
+                        .width(100.dp)
+                        .height(200.dp), onClick = { vm.knowledgeTrade() }) {
+                        Text("지식\n교환")
+                    }
                 }
-                Button(modifier = BaseModifiers.BaseBtnModifier
-                    .width(100.dp)
-                    .height(200.dp), onClick = { vm.groupMatch() }) {
-                    Text("그룹\n매칭")
-                }
-                Button(modifier = BaseModifiers.BaseBtnModifier
-                    .width(100.dp)
-                    .height(200.dp), onClick = { vm.knowledgeTrade() }) {
-                    Text("지식\n교환")
+                Button(
+                    modifier = BaseModifiers.BaseBtnModifier,
+                    onClick = {navController.navigate("createGroup")}
+                ){
+                    Text("방만들기")
                 }
             }
-        }
+
     }
 }

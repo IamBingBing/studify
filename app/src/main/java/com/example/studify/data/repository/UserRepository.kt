@@ -20,7 +20,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
         return studifyService.requestLogin(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            
+
     }
     fun requestUserData (): Single<LoginModel>{
         val param = HashMap<String, String>().apply {
@@ -30,7 +30,6 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-<<<<<<< Updated upstream
     fun UpdateUser (
         id: String,
         pw: String,
@@ -38,17 +37,17 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
         email: String,
         sex: String,
         address: String
-    ) : Single<UpdateModel>{
+    ) : Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
-            this["ID"]       = id.toString()             // 이미 String
+            this["ID"] = id.toString()             // 이미 String
             this["PASSWORD"] = pw.toString()             // String
             this["USERNAME"] = username.toString()       // String
-            this["EMAIL"]    = email.toString()          // String
-            this["SEX"]      = sex.toString()            // Int → String
-            this["ADDRESS"]  = address.toString()         // String
+            this["EMAIL"] = email.toString()          // String
+            this["SEX"] = sex.toString()            // Int → String
+            this["ADDRESS"] = address.toString()         // String
         }
         return studifyService.UpdateUser(param)
-=======
+    }
     fun requestUpdateUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
             this["USERNAME"] = name
@@ -57,7 +56,6 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["SEX"] = sex.toString()
         }
         return studifyService.requestUpdateUser(param)
->>>>>>> Stashed changes
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

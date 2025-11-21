@@ -11,5 +11,5 @@ data class Message (
     val CHATID : Int,
     val CHATNAME : String,
     val CHAT : String,
-    val TIME : Timestamp
+    val TIME : String
 )

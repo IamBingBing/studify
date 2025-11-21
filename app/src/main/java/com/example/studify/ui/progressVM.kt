@@ -12,7 +12,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
-
+/*
 @HiltViewModel
 class progressVM @Inject constructor(
     private val application: Application,
@@ -132,4 +132,4 @@ class progressVM @Inject constructor(
         super.onCleared()
         disposables.clear()
     }
-}
+}*/
