@@ -20,14 +20,6 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
     init {
         var messages = chatRepository.loadChat(groupid.toString())
     }
-    fun getGrouplist()=userRepository.requestUserData()
-        .subscribe({
-            result->
-            groupids.clear()
-            groupids.addAll(result.result?.group ?: emptyList<String>())
-        },{
-            errorMsg->
-            error.value = errorMsg.toString()
-        })
+
     fun getGroup
 }

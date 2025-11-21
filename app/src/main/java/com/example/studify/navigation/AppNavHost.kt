@@ -130,7 +130,7 @@ fun AppNavHost(navController: NavHostController) {
                 type = NavType.StringType
             }
         )){
-            entry -> val roomid = entry.arguments?.getString("groupid")
+            entry -> val groupid = entry.arguments?.getString("groupid")
             groupHome(navController = navController)
         }
         composable(route= "calender"){
