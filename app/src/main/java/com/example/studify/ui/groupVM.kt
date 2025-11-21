@@ -21,7 +21,7 @@ class groupVM @Inject constructor(
     val groupGoal = mutableStateOf("")
     val hashTags = mutableStateOf<List<String>>(emptyList())
 
-    // 🔥 여기 중요 — USERS 는 List<user>
+    val currentTab = mutableStateOf(0)
     val users = mutableStateOf<List<GroupModel.GroupResult.user>>(emptyList())
 
     val errorMessage = mutableStateOf<String?>(null)
