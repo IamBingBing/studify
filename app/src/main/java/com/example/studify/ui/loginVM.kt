@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.Tool.Preferences
@@ -42,6 +43,8 @@ class loginVM @Inject constructor(application: Application,private val userRepos
                 Preferences.putString("ADDRESS", loginModel.result!!.address.toString())
                 Preferences.putString("EMAIL", loginModel.result!!.email.toString())
                 Preferences.putBoolean("AUTOLOGIN", autologin.value)
+                Preferences.putString("access_token", loginModel.result!!.token)
+                Log.d("access_token" , Preferences.getString("access_token").toString())
                 loginsuccess.value = true
             }
             else if(loginModel.resultCode =="400"){

@@ -1,5 +1,6 @@
 package com.example.studify.di
 
+import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
 import com.example.studify.di.interceptor.AddCookieInterceptor
 import dagger.Module
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
     companion object {
-        private const val SERVER = "https://ctrlf.dothome.co.kr/"
+        private const val SERVER = "http://studify.kr/"
         private const val REQUEST_TIMEOUT = 60
     }
     @Provides
@@ -27,11 +28,11 @@ class RetrofitModule {
         val httpLoggingInterceptor= HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(AddCookieInterceptor())
             .connectTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .readTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
-            .addInterceptor(AddCookieInterceptor())
+            .addInterceptor(httpLoggingInterceptor)
             .build()
         return Retrofit.Builder()
             .baseUrl(SERVER)
