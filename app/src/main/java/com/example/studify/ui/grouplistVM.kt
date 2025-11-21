@@ -10,22 +10,21 @@ import com.example.studify.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
-class chatlistVM @Inject constructor(application: Application,  private val userRepository: UserRepository):ViewModel(){
-    var chatlist = mutableStateMapOf<Int,String>()
+class grouplistVM @Inject constructor(application: Application,  private val userRepository: UserRepository):ViewModel(){
+    var grouplist = mutableStateMapOf<Int,String>()
     var error = mutableStateOf("")
-    fun getChatlist()=userRepository.requestUserData()
-
+    fun getGrouplist()=userRepository.requestUserData()
         .subscribe({
-            result->
-            chatlist.clear()
-            result.result?.chatlist?.forEach { chat->
-                chatlist.put(chat.chatid!!,chat.roomname)
+                result->
+            grouplist.clear()
+            result.result?.grouplist?.forEach { group->
+                grouplist.put(group.groupid!!,group.groupname)
             }
         },{
-            errorMsg->
+                errorMsg->
             error.value = errorMsg.toString()
         })
     init {
-        getChatlist()
+        getGrouplist()
     }
 }

@@ -62,4 +62,7 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/addGroup.php")
     fun UpdateGroup(@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/updateChat.php")
+    fun UpdateChat(@FieldMap data : Map<String, String>) : Single<UpdateModel>
 }

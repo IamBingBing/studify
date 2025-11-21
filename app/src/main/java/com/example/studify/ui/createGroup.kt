@@ -105,10 +105,14 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
                 Button(
                     onClick = {
                         vm.requestCreate(
-                            onSuccess = {
-                                navController.navigate("groupHome")
+                            onSuccess = { newGroupId ->
+                                // PHP에서 UpdateModel.result 에 넣어준 새 GROUPID 사용
+                                navController.navigate("groupHome/$newGroupId")
                             },
-                            onError = { /* 스낵바 표시하면 됨 */ }
+                            onError = {
+                                // TODO: 스낵바로 바꿔도 됨
+                                // 일단은 로그/디버그용으로만 사용한다고 생각하자
+                            }
                         )
                     },
                     enabled = vm.canCreate(),
@@ -183,17 +187,16 @@ fun PurposePickerDialog(
     )
 }
 
-
 @Composable
 fun StudyStyleSlider(
     value: Int,
     onChange: (Int) -> Unit
 ) {
-    Column(modifier = BaseModifiers.BaseTextfillModifier ) {
+    Column(modifier = BaseModifiers.BaseTextfillModifier) {
 
         Slider(
             value = value.toFloat(),
-            onValueChange = {onChange(it.toInt()) },
+            onValueChange = { onChange(it.toInt()) },
             valueRange = 0f..100f,
             modifier = BaseModifiers.BaseTextfillModifier
                 .height(56.dp)
@@ -210,17 +213,17 @@ fun StudyStyleSlider(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("여유로움")
-            Text(when {
-                value < 20 -> "매우 여유"
-                value < 40 -> "조금 여유"
-                value < 60 -> "보통"
-                value < 80 -> "조금 빡셈"
-                else       -> "매우 빡셈"
-            }, style = MaterialTheme.typography.labelSmall)
+            Text(
+                when {
+                    value < 20 -> "매우 여유"
+                    value < 40 -> "조금 여유"
+                    value < 60 -> "보통"
+                    value < 80 -> "조금 빡셈"
+                    else       -> "매우 빡셈"
+                },
+                style = MaterialTheme.typography.labelSmall
+            )
             Text("빡셈")
         }
-
-
     }
 }
-
