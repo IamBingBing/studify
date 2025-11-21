@@ -14,7 +14,7 @@ data class GroupModel (
         @SerializedName("GROUPID") @Expose var groupid: Int? = null,
         @SerializedName("GROUPNAME") @Expose var groupname: String? = null,
         @SerializedName("MAX_LENGTH") @Expose var maxlength: Int? = null,
-        @SerializedName("USERS") @Expose var users: List<String>? = null,
+        @SerializedName("USERS") @Expose var users: List<user>? = null,
         @SerializedName("ANNOUNCE") @Expose var annouce: List<String>? = null,
         @SerializedName("QNA") @Expose var qna: List<String>? = null,
         @SerializedName("DATES") @Expose var dates: List<String>? = null,
@@ -23,5 +23,10 @@ data class GroupModel (
         @SerializedName("TENDENCY") @Expose var tendency: Int? = null,
         @SerializedName("PURPOSE") @Expose var purpose: String ? = null,
         @SerializedName ("GROUPTYPE") @Expose var grouptype : Int = 0 //0 : 번개 1: 그룹 2: 멘토
-    ):Serializable
+    ):Serializable{
+        data class user(
+            @SerializedName("USERID") @Expose var userid: Int? = null,
+            @SerializedName("USERNAME") @Expose var username: String? = null,
+            ):Serializable
+    }
 }
