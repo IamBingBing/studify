@@ -46,8 +46,6 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
             }
         }
     }
-
-
     if (loginerror != "") {
         AlertDialog(
             onDismissRequest = { loginerror =""},

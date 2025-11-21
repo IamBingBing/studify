@@ -3,6 +3,7 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.StudifyService
 import com.example.studify.data.localDB.Message
@@ -12,21 +13,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class chatingRoomVM @Inject constructor(application: Application, private val chatRepository: ChatRepository, private val userRepository: UserRepository): ViewModel() {
+class chatingRoomVM @Inject constructor(application: Application, private val chatRepository: ChatRepository, private val userRepository: UserRepository,savedStateHandle: SavedStateHandle): ViewModel() {
     var groupids = mutableStateListOf("")
-    var groupid = mutableStateOf("");
-
+    var groupid = mutableStateOf(savedStateHandle["roomid"]?:"");
+    var error = mutableStateOf("")
     init {
-
         var messages = chatRepository.loadChat(groupid.toString())
-
     }
     fun getGrouplist()=userRepository.requestUserData()
         .subscribe({
             result->
-            groupids = result.result.group
+            groupids.clear()
+            groupids.addAll(result.result?.group ?: emptyList<String>())
         },{
-            error->
-            error.toString()
+            errorMsg->
+            error.value = errorMsg.toString()
         })
+    fun getGroup
 }

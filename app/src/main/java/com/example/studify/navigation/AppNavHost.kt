@@ -3,9 +3,11 @@ package com.example.studify.navigation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import com.example.studify.ui.login
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.studify.Tool.MatchingCase
 import com.example.studify.ui.MatchingIng
@@ -45,7 +47,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="register"){
             register(navController = navController)
         }
-        composable(route="chatingRoom"){
+        composable(route="chatingRoom/{roomid}", arguments = listOf(
+            navArgument("roomid"){
+                type = NavType.StringType
+            }
+        )){
+            entry -> val roomid = entry.arguments?.getString("roomid")
             chatingRoom(navController = navController)
         }
         composable(route="chatlist"){
@@ -54,9 +61,6 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(route="createGroup"){
             createGroup(navController = navController)
-        }
-        composable(route="group"){
-            //groupPage(navController = navController)
         }
         composable(route="matchingComplete"){
             matchingcomplete(navController = navController)
@@ -78,7 +82,12 @@ fun AppNavHost(navController: NavHostController) {
             
             matchMenu(navController = navController)
         }
-        composable(route="mentor"){
+        composable(route="mentor", arguments = listOf(
+            navArgument("mentorid"){
+                type = NavType.StringType
+            }
+        )){
+            entry -> val mentorid = entry.arguments?.getString("mentorid")
             mentor(navController = navController)
         }
         composable(route="mypage"){
@@ -89,7 +98,12 @@ fun AppNavHost(navController: NavHostController) {
             
             notice(navController = navController)
         }
-        composable(route="noticeDetail"){
+        composable(route="noticeDetail/{noticeid}", arguments = listOf(
+            navArgument("noticeid"){
+                type = NavType.StringType
+            }
+        )){
+            entry -> val noticeid = entry.arguments?.getString("noticeid")
             noticeDetail(navController = navController)
         }
         composable(route="productDetail"){
@@ -111,8 +125,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="writeArticle"){
             writeArticle(navController = navController)
         }
-        composable(route= "groupHome"){
-            
+        composable(route= "groupHome/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+            entry -> val roomid = entry.arguments?.getString("groupid")
             groupHome(navController = navController)
         }
         composable(route= "calender"){
