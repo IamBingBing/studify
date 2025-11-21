@@ -28,7 +28,6 @@ class GroupRepository @Inject constructor(private val studifyService: StudifySer
         hashtag: String,
         tendency: Int,
         purpose: String,
-        hostUserId: Int,     // 방장 USERID
     ): Single<UpdateModel> {
 
         val param = HashMap<String, String>().apply {
@@ -37,7 +36,6 @@ class GroupRepository @Inject constructor(private val studifyService: StudifySer
             this["HASHTAG"] = hashtag
             this["TENDENCY"] = tendency.toString()
             this["PURPOSE"] = purpose
-            this["HOST"] = hostUserId.toString()
         }
 
         return studifyService.UpdateGroup(param)
