@@ -37,16 +37,16 @@ interface StudifyService {
     fun requestMatchingUser(@FieldMap data : Map<String, String>): String
     @FormUrlEncoded
     @POST("api/mentorqnadata.php")
-    fun requestgroupMentorQnaData(@FieldMap data: Map<String, String>) : Single<List<QnaModel>>
+    fun requestgroupMentorQnaData(@FieldMap data: Map<String, String>) : Single<QnaModel>
     @FormUrlEncoded
     @POST("api/groupdata.php")
     fun requestGroupData(@FieldMap data : Map<String, String>) : Single<GroupModel>
     @FormUrlEncoded
     @POST("api/noticedata.php")
-    fun requestNoticeData(@FieldMap data: Map<String, String>): Single<List<AnnounceModel>>
+    fun requestNoticeData(@FieldMap data: Map<String, String>): Single<AnnounceModel>
     @FormUrlEncoded
     @POST("api/datedata.php")
-    fun requestDateData(@FieldMap data : Map<String, String>): Single<List<DateModel>>
+    fun requestDateData(@FieldMap data : Map<String, String>): Single<DateModel>
     @FormUrlEncoded
     @POST("Mentordata.php")
     fun requestMentorData(@FieldMap data: Map<String, String>): Single<MentorModel>
@@ -65,5 +65,4 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/addGroup.php")
     fun UpdateGroup(@FieldMap data : Map<String, String>) : Single<UpdateModel>
-
 }

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 data class QnaModel (
     @SerializedName("result_code") @Expose var resultCode : String = "",
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
-    @SerializedName("result") @Expose var result: QnaResult? =null
+    @SerializedName("result") @Expose var result: List<QnaResult>? = emptyList()
 ) {
     data class QnaResult (
         @SerializedName("QNA_ID") @Expose var qnaid : Int? =null,

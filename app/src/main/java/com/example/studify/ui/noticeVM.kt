@@ -11,10 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @HiltViewModel
-class noticeVM @Inject constructor(
-    application: Application,
-    private val noticeRepository: noticeRepository
-) : ViewModel() {
+class noticeVM @Inject constructor(application: Application, private val noticeRepository: noticeRepository) : ViewModel() {
 
     // 전체 공지 목록
     val notices = mutableStateListOf<AnnounceModel.AnnounceContent>()
