@@ -61,10 +61,11 @@ class calenderVM @Inject constructor(
 
     /** 서버에서 그룹 전체 일정 한번 가져오기 */
     private fun loadAllSchedulesForGroup() {
-        val disposable = dateRepository.requestDate(currentGroupId)
+        val disposable = dateRepository.requestDateData(currentGroupId)
             .subscribe({ dateModel ->
                 allSchedules.clear()
                 allSchedules.addAll(dateModel.result)
+
 
                 // 처음 들어왔을 때: 오늘 날짜 기준으로 한번 필터링
                 filterSchedulesForSelectedDate()

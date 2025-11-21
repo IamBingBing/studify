@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
-import com.example.studify.data.model.shopModel
+import com.example.studify.data.model.ShopModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import dagger.hilt.android.lifecycle.HiltViewModel
