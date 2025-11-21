@@ -35,16 +35,17 @@ data class MenteeInfo(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mentor(vm : mentorVM = hiltViewModel() , navController: NavController) {
+fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
     var groupName by vm.groupName
     var currentTab by vm.currentTab
-
+    val currentGroupId = 1
     val selectedTab = mapOf(
         0 to "home",
         1 to "calendar",
         2 to "member",
-        3 to "notice",
-        4 to "progress"
+        3 to "qna",
+        4 to "notice",
+        5 to "progress"
     )
 
     Scaffold(
@@ -61,10 +62,14 @@ fun mentor(vm : mentorVM = hiltViewModel() , navController: NavController) {
                     Tab(
                         selected = tab == currentTab,
                         onClick = {
+
                             when (tab) {
-                                3 -> navController.navigate("notice")
-                                4 -> navController.navigate("progress")
-                                else -> currentTab = tab
+                                0 -> currentTab = 0
+                                1 -> navController.navigate("calendar")
+                                2 -> currentTab = 2
+                                3 -> navController.navigate("qna/$currentGroupId")
+                                4 -> navController.navigate("notice")
+                                5 -> navController.navigate("progress")
                             }
                         },
                         text = {
@@ -73,8 +78,9 @@ fun mentor(vm : mentorVM = hiltViewModel() , navController: NavController) {
                                     0 -> "홈"
                                     1 -> "캘린더"
                                     2 -> "멤버"
-                                    3 -> "공지"
-                                    4 -> "진도체크"
+                                    3 -> "Q&A"
+                                    4 -> "공지"
+                                    5 -> "진도체크"
                                     else -> ""
                                 }
                             )
@@ -87,7 +93,6 @@ fun mentor(vm : mentorVM = hiltViewModel() , navController: NavController) {
 
             when (currentTab) {
                 0 -> MentorHomeTab(vm = vm)
-                1 -> MentorCalendarTab()
                 2 -> MentorMemberTab(vm = vm)
             }
         }
@@ -165,24 +170,16 @@ private fun MentorHomeTab(vm: mentorVM) {
                     Text("등록된 공지가 없습니다.")
                 } else {
                     notices.forEachIndexed { index, notice ->
-                        Text("${index + 1}. $notice", modifier = Modifier.padding(vertical = 2.dp))
+                        Text(
+                            "${index + 1}. $notice",
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        )
                     }
                 }
             }
         }
 
         Spacer(Modifier.height(16.dp))
-    }
-}
-
-@Composable
-private fun MentorCalendarTab() {
-    Box(
-        modifier = BaseModifiers.BaseTextfillModifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("캘린더 화면 (구현 예정)")
     }
 }
 
@@ -211,7 +208,10 @@ private fun MentorMemberTab(vm: mentorVM) {
                     Text("등록된 멘토가 없습니다.")
                 } else {
                     mentorList.forEach { mentor ->
-                        Text("- ${mentor.name} (${mentor.field})", modifier = Modifier.padding(vertical = 2.dp))
+                        Text(
+                            "- ${mentor.name} (${mentor.field})",
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        )
                     }
                 }
             }
@@ -233,7 +233,10 @@ private fun MentorMemberTab(vm: mentorVM) {
                     Text("등록된 멘티가 없습니다.")
                 } else {
                     menteeList.forEach { mentee ->
-                        Text("- ${mentee.name} (${mentee.goal})", modifier = Modifier.padding(vertical = 2.dp))
+                        Text(
+                            "- ${mentee.name} (${mentee.goal})",
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        )
                     }
                 }
             }
