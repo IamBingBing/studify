@@ -51,7 +51,7 @@ class mypageVM @Inject constructor(
     fun saveUserInfo() {
         val sexInt = if (sex.value == "남자") 0 else 1
 
-        val d = userRepository.requestUpdatiUser(
+        val d = userRepository.requestUpdateUser(
             name = name.value,
             email = email.value,
             address = address.value,

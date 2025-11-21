@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -97,7 +98,7 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
                         onCheckedChange = { autologin = it },
                     )
                     IconButton(onClick = {}) { }
-                    Spacer(Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = { vm.requestlogin() },
                         enabled = true,
@@ -107,6 +108,15 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
                             "로그인"
                         )
                     }
+                }
+                Button(
+                    onClick = { navController.navigate("register") },
+                    enabled = true,
+                    modifier = BaseModifiers.BaseBtnModifier
+                ) {
+                    Text(
+                        "회원가입"
+                    )
                 }
 
             }
