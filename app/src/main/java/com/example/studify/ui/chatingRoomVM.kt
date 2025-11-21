@@ -23,8 +23,8 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
     }
     fun getGrouplist()=userRepository.requestUserData()
         .subscribe({
-
-            result-> {result.result!!.group }
+            result->
+            groupids = result.result.group
         },{
             error->
             error.toString()

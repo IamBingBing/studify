@@ -14,13 +14,13 @@ data class LoginModel(
         @SerializedName("USERNAME") @Expose var username: String? = null,
         @SerializedName("ID") @Expose var id: String? = null,
         @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
-        @SerializedName("GROUP") @Expose var group: JSONArray? = null,
+        @SerializedName("GROUP") @Expose var group: List<String>? = null,
         @SerializedName("POINT") @Expose var point: Int? = null,
         @SerializedName("TENDENCY") @Expose var tendency: Float = 0f,
         @SerializedName("REPORT") @Expose var report:Int?= null,
         @SerializedName("ADDRESS") @Expose var address:String?= null,
         @SerializedName("EMAIL") @Expose var email:String?=null,
-        @SerializedName("CHATLIST") @Expose var chatlist: JSONArray?=null,
+        @SerializedName("CHATLIST") @Expose var chatlist: List<String>?=null,
         @SerializedName("TOKEN") @Expose var token:String?=null
         )
 }

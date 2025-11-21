@@ -12,7 +12,11 @@ data class ProgressModel (
     data class ProgressResult (
         @SerializedName("GROUP_ID") @Expose var dateid : Int =-1,
         @SerializedName("USER_ID") @Expose var location : Int = -1,
-        @SerializedName("PURPOSE") @Expose var time : JsonArray
-
+        @SerializedName("PURPOSE") @Expose var time : List<Purpose>? = null
+        ){
+        data class Purpose(
+            @SerializedName("PURPOSE") @Expose var purpose : String = "",
+            @SerializedName("COMPLIT") @Expose var complit : Boolean = false
         )
+    }
 }
