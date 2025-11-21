@@ -12,13 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun chatingRoom(vm: chatingRoomVM = viewModel() , navController: NavController) {
-    var chat =  mapOf ("a" to "a")
+fun chatingRoom(vm: chatingRoomVM = hiltViewModel() , navController: NavController) {
+    var chat = vm.
     LazyColumn(modifier= BaseModifiers.BaseBoxModifier) {
         items(chat.entries.toList()){ entries ->
             Column(modifier= BaseModifiers.BaseModifier.padding(vertical = 5.dp)) {

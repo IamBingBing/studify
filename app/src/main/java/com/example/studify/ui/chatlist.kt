@@ -17,8 +17,7 @@ import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun chatlist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
-
+fun chatlist(vm : chatingRoomVM = hiltViewModel() ,  navController: NavController){
     var chatlist = listOf("")
     Scaffold (topBar = { Text("채팅방") }, bottomBar= { navigationbar(navController) }){
         innerpadding->

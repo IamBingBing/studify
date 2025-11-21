@@ -24,9 +24,6 @@ interface StudifyService {
     @POST("api/chat.php")
     fun requestchat(@FieldMap data: Map<String, String>): Single<ChatModel>
     @FormUrlEncoded
-    @POST("api/group.php")
-    fun requestgroup (@FieldMap data: Map<String, String>): Single<GroupModel>
-    @FormUrlEncoded
     @POST("api/userdata.php")
     fun requestUserData(@FieldMap data: Map<String, String>): Single<LoginModel>
     @FormUrlEncoded
