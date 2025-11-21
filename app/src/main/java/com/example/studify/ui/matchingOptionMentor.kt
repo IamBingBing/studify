@@ -1,12 +1,21 @@
 package com.example.studify.ui
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,84 +23,185 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun matchingOptionMentor (vm: matchingOptionMentorVM = viewModel(), navController: NavController){
-    var expanded = false
-    var expanded2 = false
+fun matchingOptionMentor(
+    vm: matchingOptionMentorVM = hiltViewModel(),
+    navController: NavController
+) {
+    var expandedLearn by remember { mutableStateOf(false) }
+    var expandedTeach by remember { mutableStateOf(false) }
     var wantLearn by vm.wantlearn
     var wantTeach by vm.wantteach
 
+    // 로컬 상태: 가능한 요일 (필요하면 VM으로 빼도 됨)
+    val dayList = listOf("월", "화", "수", "목", "금", "토", "일")
+    var selectedDays by remember { mutableStateOf(setOf<String>()) }
 
-        Column() {
-            Box(BaseModifiers.BaseBoxModifier) {
-                Column() {
-                    Text("배우고 싶은 과목")
+    val subjectOptions = listOf(
+        "프로그래밍",
+        "수학",
+        "영어",
+        "전공 과목",
+        "어학",
+        "자격증",
+        "취미 / 특기",
+        "기타"
+    )
 
-                    Button(onClick = { expanded = true }) {
-                        Text(wantLearn)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("지식 교환 매칭") }
+            )
+        },
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = BaseModifiers.BaseModifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            // 상단 설명
+            Text(
+                text = "배우고 싶은 과목과 알려줄 수 있는 과목을 선택하면\n서로 맞는 멘토/멘티를 찾아드려요.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            // 배우고 싶은 과목 카드
+            ElevatedCard(
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = BaseModifiers.BaseModifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "배우고 싶은 과목",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Button(
+                        onClick = { expandedLearn = true },
+                        modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
+                    ) {
+                        Text(wantLearn.ifBlank { "과목을 선택하세요" })
                     }
 
-
-                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        List(10, init = { it.toString() }).forEach { item ->
+                    DropdownMenu(
+                        expanded = expandedLearn,
+                        onDismissRequest = { expandedLearn = false }
+                    ) {
+                        subjectOptions.forEach { item ->
                             DropdownMenuItem(
                                 text = { Text(item) },
                                 onClick = {
                                     wantLearn = item
-                                    expanded = false
+                                    expandedLearn = false
                                 }
                             )
                         }
                     }
                 }
-
             }
 
-            Box(BaseModifiers.BaseBoxModifier) {
-                Column() {
-                    Text("알려줄 수 있는 과목")
+            // 알려줄 수 있는 과목 카드
+            ElevatedCard(
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = BaseModifiers.BaseModifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "알려줄 수 있는 과목",
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                    Button(onClick = { expanded2 = true }) {
-                        Text(wantTeach)
+                    Button(
+                        onClick = { expandedTeach = true },
+                        modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
+                    ) {
+                        Text(wantTeach.ifBlank { "과목을 선택하세요" })
                     }
 
-
-                    DropdownMenu(expanded = expanded2, onDismissRequest = { expanded2 = false }) {
-                        List(10, init = { it.toString() }).forEach { item ->
+                    DropdownMenu(
+                        expanded = expandedTeach,
+                        onDismissRequest = { expandedTeach = false }
+                    ) {
+                        subjectOptions.forEach { item ->
                             DropdownMenuItem(
                                 text = { Text(item) },
                                 onClick = {
                                     wantTeach = item
-                                    expanded2 = false
+                                    expandedTeach = false
                                 }
                             )
                         }
                     }
                 }
-
             }
-            Box(BaseModifiers.BaseBoxModifier) {
-                Column() {
-                    Text("가능한 날짜")
-                    Row() {
-                        Button(onClick = {}) { Text("월") }
-                        Button(onClick = {}) { Text("화") }
-                        Button(onClick = {}) { Text("수") }
-                        Button(onClick = {}) { Text("목") }
-                        Button(onClick = {}) { Text("금") }
-                        Button(onClick = {}) { Text("토") }
-                        Button(onClick = {}) { Text("일") }
+
+            // 가능한 날짜 카드
+            ElevatedCard(
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = BaseModifiers.BaseModifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "가능한 요일",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Row(
+                        modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        dayList.forEach { day ->
+                            val selected = day in selectedDays
+                            FilterChip(
+                                selected = selected,
+                                onClick = {
+                                    selectedDays =
+                                        if (selected) selectedDays - day else selectedDays + day
+                                },
+                                label = { Text(day) }
+                            )
+                        }
                     }
                 }
             }
-            Button(onClick = {}, modifier = BaseModifiers.BaseBtnModifier) {
+
+            Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
+
+            // 매칭 시작 버튼
+            Button(
+                onClick = {
+                    // TODO: 매칭 시작 로직 (wantLearn, wantTeach, selectedDays 사용)
+                },
+                modifier = BaseModifiers.BaseBtnModifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
                 Text("매칭 시작")
             }
         }
-
-
+    }
 }

@@ -1,56 +1,128 @@
 package com.example.studify.ui
 
-import android.service.autofill.OnClickAction
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Label
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TooltipScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun chatlist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
-    var error = vm.error
-    var chatlist = vm.chatlist
-    if (error.value != "") {
+fun chatlist(
+    vm: chatlistVM = hiltViewModel(),
+    navController: NavController
+) {
+    val error = vm.error
+    val chatlist = vm.chatlist   // Map / SnapshotStateMap 형식이라고 가정
+
+    // 에러 다이얼로그
+    if (!error.value.isNullOrEmpty()) {
         AlertDialog(
-            onDismissRequest = { error.value =""},
+            onDismissRequest = { error.value = "" },
             title = { Text("오류") },
-            text = { Text(error.value?: "") },
+            text = { Text(error.value ?: "") },
             confirmButton = {
-                TextButton (onClick = { error.value=""}) {
+                TextButton(onClick = { error.value = "" }) {
                     Text("확인")
                 }
             }
         )
     }
-    Scaffold (topBar = { Text("채팅방") }, bottomBar= { navigationbar(navController) }){
-        innerpadding->
-        Column(modifier= BaseModifiers.BaseBoxModifier.padding(innerpadding).fillMaxSize()) {
-            Box(BaseModifiers.BaseBoxModifier) { Text("채팅방") }
 
-            LazyColumn(modifier = BaseModifiers.BaseBoxModifier) {
-                chatlist.forEach({
-                    chat->
-                    item {
-                        Text(text = chat.value, modifier= BaseModifiers.BaseChatModifier.clickable {
-                        navController.navigate("chatingRoom/${chat.key}")
-                    }) }
-                })
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("채팅방") }
+            )
+        },
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = BaseModifiers.BaseModifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
 
+            Text(
+                text = "참여 중인 채팅방",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = "대화를 이어가고 싶은 채팅방을 선택하세요.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            if (chatlist.isEmpty()) {
+                Spacer(modifier = Modifier.height(80.dp))
+                Text(
+                    text = "참여 중인 채팅방이 없습니다.\n그룹에 참여하거나 채팅을 시작해 보세요.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
+                        items = chatlist.entries.toList(),
+                        key = { it.key }
+                    ) { entry ->
+                        ChatListItem(
+                            title = entry.value,
+                            onClick = {
+                                navController.navigate("chatingRoom/${entry.key}")
+                            }
+                        )
+                    }
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun ChatListItem(
+    title: String,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = BaseModifiers.BaseBoxModifier
+            .fillMaxWidth(),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = BaseModifiers.BaseModifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = null
+            )
         }
     }
 }
