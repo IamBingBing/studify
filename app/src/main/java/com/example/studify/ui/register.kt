@@ -141,14 +141,14 @@ fun register(
                         DropdownMenuItem(
                             text = { Text("남") },
                             onClick = {
-                                sex = 0
+                                vm.onSexSelected(0)
                                 vm.onExpandedChange(false)
                             }
                         )
                         DropdownMenuItem(
                             text = { Text("여") },
                             onClick = {
-                                sex = 1
+                                vm.onSexSelected(1)
                                 vm.onExpandedChange(false)
                             }
                         )

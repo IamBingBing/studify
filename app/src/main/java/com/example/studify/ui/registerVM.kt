@@ -20,13 +20,10 @@ class registerVM @Inject constructor(
     var sex = mutableStateOf(-1)
     var adress = mutableStateOf("")
     var username = mutableStateOf("")
-    var group = mutableStateOf("")
-    var userid = mutableStateOf("")  
-    var phone = mutableStateOf("")
+
+    var userid = mutableStateOf("")
     var pw = mutableStateOf("")
     var repw = mutableStateOf("")
-
-    var genderOptions = mutableStateOf(-1)
     var expanded = mutableStateOf(false)
 
     fun onExpandedChange(isExpanded: Boolean) {
