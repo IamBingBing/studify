@@ -12,12 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun chatlist(vm : chatlistVM = viewModel() ,  navController: NavController){
+fun chatlist(vm : chatlistVM = hiltViewModel() ,  navController: NavController){
 
     var chatlist = listOf("")
     Scaffold (topBar = { Text("채팅방") }, bottomBar= { navigationbar(navController) }){

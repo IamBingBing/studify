@@ -8,6 +8,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import org.json.JSONObject
 
 class ChatWebSocketClient : WebSocketListener() {
     private val client = OkHttpClient()
@@ -18,7 +19,7 @@ class ChatWebSocketClient : WebSocketListener() {
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
         super.onMessage(webSocket, bytes)
         var data = bytes.toByteArray().toString(Charsets.UTF_8)
-        val result:Map<String,Any> = Gson().fromJson(data, object: TypeToken<Map<String,Any>>(){}.type)
+        val result = JSONObject(data)
         result["GROUPID"]
     }
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
