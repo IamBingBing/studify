@@ -11,12 +11,12 @@ import javax.inject.Singleton
 @Singleton
 class noticeRepository @Inject constructor(private val studifyService: StudifyService
 ) {
-    fun requestNoticeList(groupId: Int): Single<AnnounceModel> {
-        val param = HashMap<String, Int>().apply {
-            this["GROUPID"] = groupId
+    fun requestNoticeData(groupId: Int): Single<AnnounceModel> {
+        val param = HashMap<String, String>().apply {
+            this["GROUPID"] = groupId.toString()
         }
 
-        return studifyService.requestAnnounce(param)
+        return studifyService.requestNoticeData(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

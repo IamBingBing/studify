@@ -12,25 +12,10 @@ import javax.inject.Singleton
 
 @Singleton
 class GroupRepository @Inject constructor(private val studifyService: StudifyService){
-    fun requestgroup(groupid:Int): Single<GroupModel>{
-        var params = HashMap<String, Int>().apply {
-            this["GROUPID"] = groupid
-        }
-        return studifyService.requestgroup(params)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-    fun requestgroupQnaData(groupid: Int) : Single<QnaModel>{
-        var params = HashMap<String, Any>().apply {
-            this["GROUPID"] = groupid
-        }
-        return studifyService.requestgroupQnaData(params)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
+
     fun requestGroupData(groupid: Int) : Single<GroupModel> {
-        var params = HashMap<String, Any>().apply {
-            this["GROUPID"] = groupid
+        var params = HashMap<String, String>().apply {
+            this["GROUPID"] = groupid.toString()
         }
         return studifyService.requestGroupData(params)
             .subscribeOn(Schedulers.io())
@@ -46,13 +31,13 @@ class GroupRepository @Inject constructor(private val studifyService: StudifySer
         hostUserId: Int,     // 방장 USERID
     ): Single<UpdateModel> {
 
-        val param = HashMap<String, Any>().apply {
+        val param = HashMap<String, String>().apply {
             this["GROUPNAME"] = groupName
-            this["MAX_LENGTH"] = maxLength
+            this["MAX_LENGTH"] = maxLength.toString()
             this["HASHTAG"] = hashtag
-            this["TENDENCY"] = tendency
+            this["TENDENCY"] = tendency.toString()
             this["PURPOSE"] = purpose
-            this["HOST"] = hostUserId
+            this["HOST"] = hostUserId.toString()
         }
 
         return studifyService.UpdateGroup(param)

@@ -11,9 +11,9 @@ import javax.inject.Singleton
 
 @Singleton
 class DateRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestDate(groupId: Int): Single<DateModel> {
-        val param = HashMap<String, Any>().apply {
-            this["GROUPID"] = groupId
+    fun requestDateData(groupId: Int): Single<DateModel> {
+        val param = HashMap<String, String>().apply {
+            this["GROUPID"] = groupId.toString()
         }
 
         return studifyService.requestDateData(param)
@@ -29,8 +29,8 @@ class DateRepository @Inject constructor(private val studifyService: StudifyServ
         location: String
     ): Single<UpdateModel> {
 
-        val param = HashMap<String, Any>().apply {
-            this["GROUPID"] = groupId
+        val param = HashMap<String, String>().apply {
+            this["GROUPID"] = groupId.toString()
             this["TITLE"] = title
             this["TIME"] = time
             this["CONTENT"] = content

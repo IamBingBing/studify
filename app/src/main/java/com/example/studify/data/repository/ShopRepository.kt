@@ -1,7 +1,6 @@
 package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
-import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ShopModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ShopReposiory @Inject constructor(private val studifyService: StudifyService) {
+class ShopRepository @Inject constructor(private val studifyService: StudifyService) {
     fun requestShop() : Single<ShopModel> {
-        val param = HashMap<String, Any>().apply {
+        val param = HashMap<String, String>().apply {
 
         }
         return studifyService.requestShopData(param)

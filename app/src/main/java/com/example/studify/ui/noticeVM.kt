@@ -29,7 +29,7 @@ class noticeVM @Inject constructor(application: Application, private val noticeR
     }
 
     fun loadNotices(groupId: Int) {
-        val disposable = noticeRepository.requestNoticeList(groupId)
+        val disposable = noticeRepository.requestNoticeData(groupId)
             .subscribe({ model: AnnounceModel ->
                 notices.clear()
 

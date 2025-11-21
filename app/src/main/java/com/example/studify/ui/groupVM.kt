@@ -3,24 +3,73 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.studify.data.StudifyService
+import com.example.studify.data.model.GroupModel
+import com.example.studify.data.repository.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @HiltViewModel
-class groupVM @Inject constructor(application: Application,studifyService: StudifyService):ViewModel() {
+class groupVM @Inject constructor(
+    application: Application,
+    private val groupRepository: GroupRepository
+) : ViewModel() {
 
-    // 그룹 기본 정보
-    var groupName = mutableStateOf("Ctrl + F")
-    var groupGoal = mutableStateOf("잠은 죽어서 자자")
-    var hashTags = mutableStateOf(listOf("프론트엔드개발", "알고리즘"))
+    val groupId = mutableStateOf<Int?>(null)
 
-    var currentTab = mutableStateOf(0)
+    val groupName = mutableStateOf("")
+    val groupGoal = mutableStateOf("")
+    val hashTags = mutableStateOf<List<String>>(emptyList())
 
+    // 🔥 여기 중요 — USERS 는 List<user>
+    val users = mutableStateOf<List<GroupModel.GroupResult.user>>(emptyList())
 
-    fun init() {
-        // TODO:
+    val errorMessage = mutableStateOf<String?>(null)
+
+    private val disposables = CompositeDisposable()
+
+    fun setGroupIdAndLoad(id: Int) {
+        groupId.value = id
+        loadGroup(id)
     }
 
+    fun loadGroup(id: Int? = groupId.value) {
+        val realId = id ?: return
 
+        errorMessage.value = null
+
+        val d = groupRepository.requestGroupData(realId)
+            .subscribe({ model ->
+
+                if (model.resultCode == "200" && !model.result.isNullOrEmpty()) {
+                    val result = model.result!!.first()
+
+                    groupName.value = result.groupname ?: ""
+                    groupGoal.value = result.purpose ?: ""
+
+                    val tagStr = result.hashtag ?: ""
+                    hashTags.value =
+                        tagStr.split(",", " ", "#")
+                            .map { it.trim() }
+                            .filter { it.isNotEmpty() }
+
+                    users.value = result.users ?: emptyList()
+
+                } else {
+                    errorMessage.value = model.errorMsg.ifBlank { "그룹 정보를 불러오지 못했습니다." }
+                    users.value = emptyList()
+                }
+            }, { e ->
+                errorMessage.value = "서버 통신 실패"
+                users.value = emptyList()
+                e.printStackTrace()
+            })
+
+        disposables.add(d)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.clear()
+    }
 }
