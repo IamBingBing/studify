@@ -10,9 +10,9 @@ data class ProgressModel (
     @SerializedName("result") @Expose var result: ProgressResult? =null
 ) {
     data class ProgressResult (
-        @SerializedName("GROUP_ID") @Expose var dateid : Int =-1,
-        @SerializedName("USER_ID") @Expose var location : Int = -1,
-        @SerializedName("PURPOSE") @Expose var time : List<Purpose>? = null
+        @SerializedName("GROUP_ID") @Expose var groupId : Int = -1,
+        @SerializedName("USER_ID") @Expose var userId : Int = -1,
+        @SerializedName("PURPOSE") @Expose var purposeList : List<Purpose>? = null
         ){
         data class Purpose(
             @SerializedName("PURPOSE") @Expose var purpose : String = "",

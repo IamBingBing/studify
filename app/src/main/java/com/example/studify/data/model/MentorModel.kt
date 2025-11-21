@@ -11,7 +11,7 @@ data class MentorModel (
     data class MentorResult (
         @SerializedName("MENTORID") @Expose var mentorid : Int? =null,
         @SerializedName("QNA") @Expose var qna : String = "",
-        @SerializedName("MENTOR") @Expose var mentor : String,
+        @SerializedName("MENTOR") @Expose var mentor : String = "",
         @SerializedName("MENTI") @Expose var menti : String = "",
         @SerializedName("TEACH") @Expose var teach : String = "",
 
