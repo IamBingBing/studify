@@ -33,9 +33,6 @@ interface StudifyService {
     @POST("api/shopdata.php")
     fun requestShopData (@FieldMap data : Map<String,String>): Single<ShopModel>
     @FormUrlEncoded
-    @POST("api/matchinguser.php")
-    fun requestMatchingUser(@FieldMap data : Map<String, String>): String
-    @FormUrlEncoded
     @POST("api/mentorqnadata.php")
     fun requestgroupMentorQnaData(@FieldMap data: Map<String, String>) : Single<QnaModel>
     @FormUrlEncoded
@@ -68,4 +65,14 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/updateChat.php")
     fun UpdateChat(@FieldMap data : Map<String, String>) : Single<UpdateModel>
+
+    @FormUrlEncoded
+    @POST("api/matchfast.php")
+    fun requestFastMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/matchgroup.php")
+    fun requestGroupMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/matchmentor.php")
+    fun requestMentorMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
 }
