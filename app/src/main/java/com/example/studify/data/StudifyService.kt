@@ -58,7 +58,7 @@ interface StudifyService {
     fun UpdateDate (@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/registerUser.php")
-    fun UpdateUser (@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    fun RegisterUser (@FieldMap data : Map<String, String>) : Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/addQna.php")
     fun UpdateQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>

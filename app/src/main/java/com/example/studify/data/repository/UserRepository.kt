@@ -30,7 +30,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun UpdateUser (
+    fun RegisterUser (
         id: String,
         pw: String,
         username: String,
@@ -46,7 +46,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["SEX"] = sex.toString()            // Int → String
             this["ADDRESS"] = address.toString()         // String
         }
-        return studifyService.UpdateUser(param)
+        return studifyService.RegisterUser(param)
     }
     fun requestUpdateUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
