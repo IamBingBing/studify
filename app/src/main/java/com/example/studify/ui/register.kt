@@ -19,6 +19,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,7 +47,7 @@ fun register(
     val BaseBtnModifier = Modifier.padding(10.dp)
     val BaseTextfillModifier = Modifier.padding(10.dp)
 
-    // VM state 바인딩
+
     var email by vm.email
     var sex by vm.sex
     var adress by vm.adress
@@ -54,6 +56,7 @@ fun register(
     var pw by vm.pw
     var repw by vm.repw
     val expanded by vm.expanded
+    val isSuccess by vm.registerSuccess.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -121,20 +124,30 @@ fun register(
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
-                Box(
-                    modifier = BaseTextfillModifier,
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    IconButton(
-                        onClick = { vm.onExpandedChange(!expanded) }
-                    ) {
-                        Icon(
-                            Icons.Default.MoreVert,
-                            contentDescription = "성별 선택"
-                        )
-                    }
 
-                    DropdownMenu(
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { vm.onExpandedChange(!expanded) },
+                    modifier = BaseTextfillModifier
+                ) {
+
+                    TextField(
+                        value = when (sex) {
+                            0 -> "남"
+                            1 -> "여"
+                            else -> "성별 선택"
+                        },
+                        onValueChange = { },
+                        readOnly = true,
+                        label = { Text("성별") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        },
+                        modifier = BaseModifiers.BaseModifier
+                            .menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { vm.onExpandedChange(false) }
                     ) {
@@ -155,6 +168,7 @@ fun register(
                     }
                 }
 
+
                 TextField(
                     modifier = BaseTextfillModifier,
                     value = adress,
@@ -166,15 +180,15 @@ fun register(
                 Button(
                     modifier = BaseBtnModifier,
                     onClick = {
-                        vm.requestRegister()
+                        vm.register()
 
                     }
                 ) {
                     Text("가입하기")
                 }
-                LaunchedEffect(vm.registerSuccess.collectAsState().value) {
-                    if (vm.registerSuccess.value) {
-                        navController.navigate("groupHome")
+                LaunchedEffect(isSuccess) {
+                    if (isSuccess) {
+                        navController.navigate("grouplist")
                     }
                 }
             }

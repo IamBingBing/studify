@@ -20,11 +20,13 @@ class registerVM @Inject constructor(
     var sex = mutableStateOf(-1)
     var adress = mutableStateOf("")
     var username = mutableStateOf("")
-
     var userid = mutableStateOf("")
     var pw = mutableStateOf("")
     var repw = mutableStateOf("")
     var expanded = mutableStateOf(false)
+
+    var refreshToken = mutableStateOf("")
+    var userId = mutableStateOf("")
 
     fun onExpandedChange(isExpanded: Boolean) {
         expanded.value = isExpanded
@@ -40,40 +42,42 @@ class registerVM @Inject constructor(
     private val _registerError = MutableStateFlow<String?>(null)
     val registerError = _registerError.asStateFlow()
 
+
     private val compositeDisposable = CompositeDisposable()
 
-    fun requestRegister() {
+    fun register() {
         if (pw.value != repw.value) {
             _registerSuccess.value = false
             _registerError.value = "비밀번호와 비밀번호 재입력이 서로 다릅니다."
-            return
+            requestRegister()
+        }
+    }
+
+    fun requestRegister(id :String = userid.value, pwd:String = pw.value, name : String = username.value, mail: String = email.value, gender :String = sex.value.toString(), add:String = adress.value)= userRepository.RegisterUser(
+        id = id,
+        pw = pwd,
+        username = name,
+        email = mail,
+        sex = gender,
+        address = add
+    ).subscribe({ response ->
+
+        if (response.resultCode == "200") {
+
+            val res = response.result
+            refreshToken.value = res?.refreshToken ?: ""
+            userId.value       = res?.userid ?: ""
+
+            _registerSuccess.value = true
+            _registerError.value = null
+
+        } else {
+            _registerSuccess.value = false
+            _registerError.value = response.errorMsg
         }
 
-        val disposable = userRepository.UpdateUser(
-            id = userid.value,
-            pw = pw.value,
-            username = username.value,
-            email = email.value,
-            sex = sex.value.toString(),
-            address = adress.value
-        ).subscribe({ response ->
-            if (response.resultCode == "200") {
-                _registerSuccess.value = true
-                _registerError.value = null
-            } else {
-                _registerSuccess.value = false
-                _registerError.value = response.errorMsg
-            }
-        }, { error ->
-            _registerSuccess.value = false
-            _registerError.value = error.message ?: error.toString()
-        })
-
-        compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
-    }
+    }, { error ->
+        _registerSuccess.value = false
+        _registerError.value = error.message ?: error.toString()
+    })
 }

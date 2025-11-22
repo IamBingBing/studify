@@ -2,6 +2,7 @@ package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.LoginModel
+import com.example.studify.data.model.RegisterModel
 import com.example.studify.data.model.UpdateModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,7 +38,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
         email: String,
         sex: String,
         address: String
-    ) : Single<UpdateModel> {
+    ) : Single<RegisterModel> {
         val param = HashMap<String, String>().apply {
             this["ID"] = id.toString()             // 이미 String
             this["PASSWORD"] = pw.toString()             // String
@@ -47,6 +48,8 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["ADDRESS"] = address.toString()         // String
         }
         return studifyService.RegisterUser(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
     fun requestUpdateUser(name: String, email: String, address: String, sex: Int): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
