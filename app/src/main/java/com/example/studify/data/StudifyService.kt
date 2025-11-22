@@ -7,6 +7,7 @@ import com.example.studify.data.model.DateModel
 import com.example.studify.data.model.GroupModel
 import com.example.studify.data.model.MentorModel
 import com.example.studify.data.model.QnaModel
+import com.example.studify.data.model.RegisterModel
 import com.example.studify.data.model.ShopModel
 import com.example.studify.data.model.UpdateModel
 import com.example.studify.data.req.GroupReqModel
@@ -55,7 +56,7 @@ interface StudifyService {
     fun UpdateDate (@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/registerUser.php")
-    fun RegisterUser (@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    fun RegisterUser (@FieldMap data : Map<String, String>) : Single<RegisterModel>
     @FormUrlEncoded
     @POST("api/addQna.php")
     fun UpdateQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
