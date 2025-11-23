@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
 class chatlistVM @Inject constructor(application: Application,  private val userRepository: UserRepository):ViewModel(){
-    var chatlist = mutableStateMapOf<Int,String>()
+    var chatlist = mutableStateMapOf<Long,String>()
     var error = mutableStateOf("")
     fun getChatlist()=userRepository.requestUserData()
 

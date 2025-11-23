@@ -11,7 +11,7 @@ data class GroupModel (
     @SerializedName("result") @Expose var result: List<GroupResult>? =null
 ) : Serializable {
     data class  GroupResult(
-        @SerializedName("GROUPID") @Expose var groupid: Int? = null,
+        @SerializedName("GROUPID") @Expose var groupid: Long? = null,
         @SerializedName("GROUPNAME") @Expose var groupname: String? = null,
         @SerializedName("MAX_LENGTH") @Expose var maxlength: Int? = null,
         @SerializedName("USERS") @Expose var users: List<user>? = null,
@@ -25,7 +25,7 @@ data class GroupModel (
         @SerializedName ("GROUPTYPE") @Expose var grouptype : Int = 0 //0 : 번개 1: 그룹 2: 멘토
     ):Serializable{
         data class user(
-            @SerializedName("USERID") @Expose var userid: Int? = null,
+            @SerializedName("USERID") @Expose var userid: Long? = null,
             @SerializedName("USERNAME") @Expose var username: String? = null,
             ):Serializable
     }

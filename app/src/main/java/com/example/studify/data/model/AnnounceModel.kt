@@ -9,7 +9,7 @@ data class AnnounceModel(
     @SerializedName("result")      @Expose var result: List<AnnounceContent> = emptyList()
 ) {
     data class AnnounceContent(
-        @SerializedName("ANNOUNCE_ID")      @Expose var announceId: Int? = null,
+        @SerializedName("ANNOUNCE_ID")      @Expose var announceId: Long? = null,
         @SerializedName("ANNOUNCE_NAME")    @Expose var announceName: String? = "",
         @SerializedName("ANNOUNCE_CONTENT") @Expose var announceContent: String? = "",
         @SerializedName("ANNOUNCE_DATE")    @Expose var announceDate: String? = null,

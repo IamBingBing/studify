@@ -26,7 +26,7 @@ fun writeArticle ( vm : writeArticleVM = viewModel(), navController: NavControll
     Column (modifier = BaseModifiers.BaseBoxModifier){
 
         Text("제목")
-        TextField(value = title , onValueChange = {title = it  },
+        TextField(value = title , onValueChange = {title = it},
             modifier= BaseModifiers.BaseTextfillModifier.align(alignment = Alignment.CenterHorizontally) )
 
         Text("내용")

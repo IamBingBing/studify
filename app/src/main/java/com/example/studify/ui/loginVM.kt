@@ -33,11 +33,11 @@ class loginVM @Inject constructor(application: Application,private val userRepos
         .subscribe ({
             loginModel ->
             if (loginModel.resultCode == "200"){
-                Preferences.putInt("USERID", loginModel.result!!.userid!!)
+                Preferences.putLong("USERID", loginModel.result!!.userid!!)
                 Preferences.putString("ID", loginModel.result!!.id.toString())
                 Preferences.putString("USERNAME", loginModel.result!!.username.toString())
                 Preferences.putInt("SEX", loginModel.result!!.sex!! )
-                Preferences.putString("GROUP", loginModel.result!!.grouplist.toString())
+                Preferences.putString("GROUPLIST", loginModel.result!!.grouplist.toString())
                 Preferences.putFloat("TENDENCY", loginModel.result!!.tendency)
                 Preferences.putInt("REPORT", loginModel.result!!.report!!)
                 Preferences.putString("ADDRESS", loginModel.result!!.address.toString())

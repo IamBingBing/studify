@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
 class grouplistVM @Inject constructor(application: Application,  private val userRepository: UserRepository):ViewModel(){
-    var grouplist = mutableStateMapOf<Int,String>()
+    var grouplist = mutableStateMapOf<Long,String>()
     var error = mutableStateOf("")
     fun getGrouplist()=userRepository.requestUserData()
         .subscribe({

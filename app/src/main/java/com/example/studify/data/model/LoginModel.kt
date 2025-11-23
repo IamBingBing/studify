@@ -11,11 +11,11 @@ data class LoginModel(
         @SerializedName("result") @Expose var result: Result? = null,
         ) {
     data class Result(
-        @SerializedName("USERID") @Expose var userid: Int? = null,
+        @SerializedName("USERID") @Expose var userid: Long? = null,
         @SerializedName("USERNAME") @Expose var username: String? = null,
         @SerializedName("ID") @Expose var id: String? = null,
         @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
-        @SerializedName("GROUP") @Expose var grouplist: List<group>? = null,
+        @SerializedName("GROUPLIST") @Expose var grouplist: List<group>? = null,
         @SerializedName("POINT") @Expose var point: Int? = null,
         @SerializedName("TENDENCY") @Expose var tendency: Float = 0f,
         @SerializedName("REPORT") @Expose var report:Int?= null,
@@ -25,11 +25,11 @@ data class LoginModel(
         @SerializedName("TOKEN") @Expose var token:String?=null
         ){
         data class chat (
-            @SerializedName("CHATID") @Expose var chatid: Int? = null,
+            @SerializedName("CHATID") @Expose var chatid: Long? = null,
             @SerializedName("ROOMNAME") @Expose var roomname: String = ""
         ): Serializable
         data class group (
-            @SerializedName("GROUPID") @Expose var groupid: Int? = null,
+            @SerializedName("GROUPID") @Expose var groupid: Long? = null,
             @SerializedName("GROUPNAME") @Expose var groupname: String = "",
         ):Serializable
     }

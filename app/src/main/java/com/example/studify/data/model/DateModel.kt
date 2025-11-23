@@ -10,7 +10,7 @@ data class DateModel (
     @SerializedName("result") @Expose var result: List<DateResult> = emptyList()
 ) {
     data class DateResult (
-        @SerializedName("DATEID") @Expose var dateid : Int? =null,
+        @SerializedName("DATEID") @Expose var dateid : Long? =null,
         @SerializedName("LOCATION") @Expose var location : String = "",
         @SerializedName("TIME") @Expose var time : String = "",
         @SerializedName("TITLE") @Expose var title : String = "",
