@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -18,7 +19,7 @@ class noticeVM @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val groupId = mutableStateOf(savedStateHandle["groupid"] ?: 0)
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")!!.toInt())
     val notices = mutableStateListOf<AnnounceModel.AnnounceContent>()
     val query = mutableStateOf("")
     val selectedNotice = mutableStateOf<AnnounceModel.AnnounceContent?>(null)
@@ -28,7 +29,9 @@ class noticeVM @Inject constructor(
 
     init {
         // ViewModel 생성되자마자, 현재 groupId 기준으로 공지 불러오기
+        Log.e("noticegroupid" , groupId.toString())
         loadNotices()
+
     }
 
     /** 현재 groupId 기준으로 공지 목록 불러오기 */
