@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.ProgressModel
+// ProgressModel 내부 클래스 import
+import com.example.studify.data.model.ProgressModel.ProgressResult.Purpose
 import com.example.studify.data.repository.ProgressRepository
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,26 +23,29 @@ class progressVM @Inject constructor(
 ) : ViewModel() {
 
     var mainGoal = mutableStateOf("")
-    var personalGoals = mutableStateListOf<ProgressModel.ProgressResult.Purpose>()
+    var personalGoals = mutableStateListOf<Purpose>()
     var progressPercent = mutableStateOf(0f)
 
     var showMainGoalDialog = mutableStateOf(false)
     var showPersonalGoalDialog = mutableStateOf(false)
-
-    private val groupId: Int = savedStateHandle.get<String>("groupId")?.toIntOrNull() ?: -1
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")?.toIntOrNull() ?: -1)
     private val disposables = CompositeDisposable()
 
     init {
-        if (groupId != -1) loadProgress()
+        if (groupId.value != -1) {
+            loadProgress()
+        }
     }
 
     fun loadProgress() {
-        val d = repository.getProgress(groupId)
+        val d = repository.getProgress(groupId.value)
             .subscribe({ model ->
                 if (model.resultCode == "200" && model.result != null) {
                     val list = model.result!!.purposeList
+
                     if (!list.isNullOrEmpty()) {
                         mainGoal.value = list[0].purpose
+
                         personalGoals.clear()
                         if (list.size > 1) {
                             personalGoals.addAll(list.subList(1, list.size))
@@ -48,26 +53,31 @@ class progressVM @Inject constructor(
                         calculateProgress()
                     }
                 }
-            }, {
-                Toast.makeText(application, "로딩 실패", Toast.LENGTH_SHORT).show()
+            }, { error ->
+                Toast.makeText(application, "로딩 실패: ${error.message}", Toast.LENGTH_SHORT).show()
             })
         disposables.add(d)
     }
 
     fun saveProgress() {
-        if (groupId == -1) return
-        val allGoals = ArrayList<ProgressModel.ProgressResult.Purpose>()
-        allGoals.add(ProgressModel.ProgressResult.Purpose(purpose = mainGoal.value, complit = false))
+        if (groupId.value == -1) return
+
+        val allGoals = ArrayList<Purpose>()
+        allGoals.add(Purpose(purpose = mainGoal.value, complit = false))
         allGoals.addAll(personalGoals)
 
         val jsonString = Gson().toJson(allGoals)
 
-        val d = repository.saveProgress(groupId, jsonString)
+        val d = repository.saveProgress(groupId.value, jsonString)
             .subscribe({ model ->
                 if (model.resultCode == "200") {
+                    Toast.makeText(application, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+                    calculateProgress()
+                } else {
+                    Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
                 }
-            }, {
-                Toast.makeText(application, "저장 실패", Toast.LENGTH_SHORT).show()
+            }, { error ->
+                Toast.makeText(application, "저장 실패: ${error.message}", Toast.LENGTH_SHORT).show()
             })
 
         disposables.add(d)
@@ -84,7 +94,7 @@ class progressVM @Inject constructor(
     }
 
     fun addPersonalGoal(text: String) {
-        personalGoals.add(ProgressModel.ProgressResult.Purpose(purpose = text, complit = false))
+        personalGoals.add(Purpose(purpose = text, complit = false))
         saveProgress()
     }
 

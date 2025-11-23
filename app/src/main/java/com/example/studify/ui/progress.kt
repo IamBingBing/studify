@@ -68,8 +68,8 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = if (mainGoal.isBlank()) "목표를 설정해주세요" else mainGoal,
-                        fontSize = 16.sp
+                        text = if (mainGoal.isBlank()) "" else mainGoal,
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -100,7 +100,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                     Spacer(Modifier.height(8.dp))
 
                     if (personalGoals.isEmpty()) {
-                        Text("등록된 목표가 없습니다.", fontSize = 14.sp)
+                        Text("", fontSize = 14.sp)
                     } else {
                         personalGoals.forEachIndexed { index, item ->
                             Row(
