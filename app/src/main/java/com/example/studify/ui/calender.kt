@@ -25,6 +25,10 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +43,20 @@ fun calender(
     val errorMessage by vm.errorMessage
 
     val groupId = vm.groupId.value
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                vm.loadAllSchedulesForGroup()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
 
     // Kizitonwose Calendar state 설정
     val currentMonth = remember { YearMonth.now() }

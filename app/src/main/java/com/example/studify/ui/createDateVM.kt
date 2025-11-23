@@ -17,7 +17,7 @@ class createDateVM @Inject constructor(
 ) : ViewModel() {
 
     val groupId = mutableStateOf(
-        savedStateHandle.get<String>("groupid") ?: "0"
+        savedStateHandle.get<String>("groupid")?.toLongOrNull() ?: 0L
     )
 
     val dateText = mutableStateOf("날짜를 선택해 주세요")   // "yyyy-MM-dd"
@@ -42,8 +42,8 @@ class createDateVM @Inject constructor(
     ) {
         val gid = groupId.value
 
-        if (gid.isBlank() || gid == "0") {
-            onError("유효하지 않은 그룹입니다.")
+        if (gid <= 0) {
+            onError("유효하지 않은 그룹 ID입니다.")
             return
         }
 
@@ -57,7 +57,7 @@ class createDateVM @Inject constructor(
         val fullTime = "$datePart $timePart:00"
 
         val disposable = dateRepository.updateDate(
-            groupId = gid,
+            groupId = gid.toString(),
             title = title.value,
             time = fullTime,
             content = memo.value,

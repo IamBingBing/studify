@@ -30,8 +30,6 @@ fun createDate(
     vm: createDateVM = hiltViewModel(),
     navController: NavController
 ) {
-    val groupVM: groupVM = hiltViewModel()
-    val groupId = groupVM.groupId.value
 
     val dateText by vm.dateText
     val title by vm.title
