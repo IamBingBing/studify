@@ -3,6 +3,7 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.AnnounceModel
 import com.example.studify.data.repository.noticeRepository
@@ -11,36 +12,54 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @HiltViewModel
-class noticeVM @Inject constructor(application: Application, private val noticeRepository: noticeRepository) : ViewModel() {
+class noticeVM @Inject constructor(
+    application: Application,
+    private val noticeRepository: noticeRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    // 전체 공지 목록
+    val groupId = mutableStateOf(savedStateHandle["groupid"] ?: 0)
     val notices = mutableStateListOf<AnnounceModel.AnnounceContent>()
-
-    // 검색어
     val query = mutableStateOf("")
-
-    // 클릭된 공지 (선택된 공지)
     val selectedNotice = mutableStateOf<AnnounceModel.AnnounceContent?>(null)
+    val errorMessage = mutableStateOf<String?>(null)
 
     private val disposables = CompositeDisposable()
 
     init {
-        loadNotices(groupId = 1)
+        // ViewModel 생성되자마자, 현재 groupId 기준으로 공지 불러오기
+        loadNotices()
     }
 
-    fun loadNotices(groupId: Int) {
-        val disposable = noticeRepository.requestNoticeData(groupId)
+    /** 현재 groupId 기준으로 공지 목록 불러오기 */
+    fun loadNotices(id: Int = groupId.value) {
+        if (id == 0) {
+            errorMessage.value = "유효하지 않은 그룹입니다."
+            notices.clear()
+            return
+        }
+
+        errorMessage.value = null
+
+        val disposable = noticeRepository.requestNoticeData(id)
             .subscribe({ model: AnnounceModel ->
                 notices.clear()
 
                 if (model.resultCode == "200") {
-                    notices.addAll(model.result)
+                    if (model.result.isNotEmpty()) {
+                        notices.addAll(model.result)
+                    } else {
+                        // 정상 응답인데 공지가 없는 경우
+                        errorMessage.value = "등록된 공지사항이 없습니다."
+                    }
                 } else {
-                    // TODO: 에러 메시지 처리 (model.errorMsg)
+                    errorMessage.value =
+                        model.errorMsg.ifBlank { "공지사항을 불러오지 못했습니다." }
                 }
             }, { error ->
                 error.printStackTrace()
-                // TODO: 네트워크 에러 처리
+                errorMessage.value = "네트워크 오류가 발생했습니다."
+                notices.clear()
             })
 
         disposables.add(disposable)
@@ -62,10 +81,8 @@ class noticeVM @Inject constructor(application: Application, private val noticeR
         }
     }
 
-    /** 공지 클릭 시 호출할 함수 */
     fun onNoticeClick(notice: AnnounceModel.AnnounceContent) {
         selectedNotice.value = notice
-        // 나중에 여기서 로그 남기거나, 상세 화면용으로 사용 가능
     }
 
     override fun onCleared() {

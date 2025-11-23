@@ -96,8 +96,12 @@ fun AppNavHost(navController: NavHostController) {
             
             mypage(navController = navController)
         }
-        composable(route="notice"){
-            
+        composable(route= "notice/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
             notice(navController = navController)
         }
         composable(route="noticeDetail/{noticeid}", arguments = listOf(
@@ -119,8 +123,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="profilepage"){
             profilepage(navController = navController)
         }
-        composable(route="progress"){
-            
+        composable(route= "progress/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
             //progress(navController = navController)
         }
         composable(route="qna"){
@@ -140,7 +148,12 @@ fun AppNavHost(navController: NavHostController) {
             entry -> val groupid = entry.arguments?.getString("groupid")
             groupHome(navController = navController)
         }
-        composable(route= "calender"){
+        composable(route= "calender/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
             calender(navController = navController)
         }
         composable(route="createDate"){
