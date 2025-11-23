@@ -36,7 +36,7 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
     fun sendMessage() = chatRepository.UpdateChat(roomid.value,sendmessage.value,Preferences.getString("USERNAME")!!)
         .subscribe(
             {result->
-                if (result.result == "200"){
+                if (result.resultCode == "200"){
                     sendmessage.value= ""
                 }
         },{ error ->

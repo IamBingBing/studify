@@ -62,7 +62,11 @@ fun matchMenu(
                         navController.navigate("matchingOptionFast"
                         )}
                     else {
-                        navController.navigate("Matchinging")
+                        navController.navigate("Matchinging"){
+                            popUpTo("matchMenu"){
+                                inclusive = true
+                            }
+                        }
                     }}
                 )
 
@@ -70,14 +74,22 @@ fun matchMenu(
                     title = "그룹 매칭",
                     description = "여러 명과\n함께 스터디",
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("matchingOptionGroup") }
+                    onClick = { navController.navigate("matchingOptionGroup"){
+                        popUpTo("matchMenu"){
+                            inclusive = true
+                        }
+                    } }
                 )
 
                 MatchMenuItem(
                     title = "지식 교환",
                     description = "멘토/멘티로\n지식 공유",
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("matchingOptionMentor") }
+                    onClick = { navController.navigate("matchingOptionMentor"){
+                        popUpTo("matchMenu"){
+                            inclusive = true
+                        }
+                    } }
                 )
             }
 

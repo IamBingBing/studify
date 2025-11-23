@@ -26,7 +26,7 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
                     Tab(
                         selected = tab == currentTab,
                         onClick = {
-                            navController.navigate(selectedTab.getValue(tab)+"/"+vm.groupId.value )
+                            navController.navigate(selectedTab.getValue(tab)+"/"+vm.groupId.value.toString() )
                             currentTab = tab
                         },
                         text = {
