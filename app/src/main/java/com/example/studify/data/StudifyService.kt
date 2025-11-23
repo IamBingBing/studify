@@ -48,10 +48,10 @@ interface StudifyService {
     @POST("api/datedata.php")
     fun requestDateData(@FieldMap data : Map<String, String>): Single<DateModel>
     @FormUrlEncoded
-    @POST("Mentordata.php")
+    @POST("api/Mentordata.php")
     fun requestMentorData(@FieldMap data: Map<String, String>): Single<MentorModel>
     @FormUrlEncoded
-    @POST( "addProgress.php")
+    @POST( "api/addProgress.php")
     fun UpdateProgress(@FieldMap data: Map<String, String>) : Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/getProgress.php")
