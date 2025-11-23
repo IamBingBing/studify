@@ -163,8 +163,13 @@ fun AppNavHost(navController: NavHostController) {
         composable (route= "grouplist"){
             grouplist(navController = navController)
         }
-        composable (route= "member") {
-                member(navController = navController)
+        composable(route= "member/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
+            member(navController = navController)
         }
     }
 }
