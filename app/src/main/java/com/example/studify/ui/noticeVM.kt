@@ -35,8 +35,8 @@ class noticeVM @Inject constructor(
     }
 
     /** 현재 groupId 기준으로 공지 목록 불러오기 */
-    fun loadNotices(id: Int = groupId.value) {
-        if (id == 0) {
+    fun loadNotices(id: Long = groupId.value) {
+        if (id == 0L) {
             errorMessage.value = "유효하지 않은 그룹입니다."
             notices.clear()
             return
@@ -44,7 +44,7 @@ class noticeVM @Inject constructor(
 
         errorMessage.value = null
 
-        val disposable = noticeRepository.requestNoticeData(id)
+        val disposable = noticeRepository.requestNoticeData(id.toString())
             .subscribe({ model: AnnounceModel ->
                 notices.clear()
 
