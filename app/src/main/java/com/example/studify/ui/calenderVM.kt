@@ -19,7 +19,7 @@ class calenderVM @Inject constructor(
 ) : ViewModel() {
 
     val groupId = mutableStateOf(
-        savedStateHandle.get<String>("groupid")?.toIntOrNull() ?: 0
+        savedStateHandle.get<String>("groupid")!!.toLong()
     )
 
     private val _allSchedules = mutableStateOf<List<DateModel.DateResult>>(emptyList())
@@ -41,14 +41,14 @@ class calenderVM @Inject constructor(
     /** 그룹 전체 일정 서버에서 한 번 가져오기 */
     fun loadAllSchedulesForGroup() {
         val realId = groupId.value
-        if (realId == 0) {
+        if (realId == 0L) {
             errorMessage.value = "유효하지 않은 그룹입니다."
             _allSchedules.value = emptyList()
             _schedulesByDay.value = emptyMap()
             return
         }
 
-        val d = dateRepository.requestDateData(realId)
+        val d = dateRepository.requestDateData(realId.toString())
             .subscribe({ model ->
                 if (model.resultCode == "200") {
                     val list = model.result
