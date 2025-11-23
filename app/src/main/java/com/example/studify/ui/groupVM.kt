@@ -17,7 +17,7 @@ class groupVM @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val groupId = mutableStateOf(savedStateHandle["groupid"] ?: 0)
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")?.toIntOrNull() ?: 0)
 
     val groupName = mutableStateOf("")
     val groupGoal = mutableStateOf("")
