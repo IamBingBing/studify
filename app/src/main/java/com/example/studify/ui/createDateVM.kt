@@ -22,19 +22,16 @@ class createDateVM @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    /** 달력에서 선택한 날짜를 세팅하는 함수 */
+    /** 달력에서 선택한 날짜를 세팅 */
     fun setDate(year: Int, month: Int, day: Int) {
         dateText.value = "%04d-%02d-%02d".format(year, month, day)
     }
 
-    /** 저장 가능한지 간단히 체크 (제목만 체크) */
-    fun canSave(): Boolean {
-        return title.value.isNotBlank()
-    }
+    fun canSave(): Boolean = title.value.isNotBlank()
 
     /** 일정 저장 */
     fun saveSchedule(
-        groupId: Int = 1,         // TODO: 나중에 NavArgument로 실제 그룹ID 넘기기
+        groupId: String,
         onSuccess: () -> Unit = {},
         onError: (String) -> Unit = {}
     ) {
@@ -43,10 +40,9 @@ class createDateVM @Inject constructor(
             return
         }
 
-        // TIME 컬럼에 넣을 문자열 만들기: "yyyy-MM-dd HH:mm:00"
-        val datePart = dateText.value           // 예: "2025-11-21"
-        val timePart = if (time.value.isBlank()) "00:00" else time.value  // 예: "09:30"
-        val fullTime = "$datePart $timePart:00" // 예: "2025-11-21 09:30:00"
+        val datePart = dateText.value
+        val timePart = if (time.value.isBlank()) "00:00" else time.value
+        val fullTime = "$datePart $timePart:00"
 
         val disposable = dateRepository.updateDate(
             groupId = groupId,
