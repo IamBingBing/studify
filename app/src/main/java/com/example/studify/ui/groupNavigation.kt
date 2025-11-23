@@ -17,7 +17,7 @@ import com.example.studify.Tool.BaseModifiers
 @Composable
 fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) {
     var groupName by vm.groupName
-    val selectedTab = mapOf(0 to "home", 1 to "calender",2 to "member",3 to "notice", 4 to "progress")
+    val selectedTab = mapOf(0 to "groupHome", 1 to "calender",2 to "member",3 to "notice", 4 to "progress")
     var currentTab by vm.currentTab
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = BaseModifiers.BaseModifier.padding(top = 15.dp)) {
             Text(groupName , fontSize = 40.sp)
@@ -26,7 +26,7 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
                     Tab(
                         selected = tab == currentTab,
                         onClick = {
-                            navController.navigate(selectedTab.getValue(tab))
+                            navController.navigate(selectedTab.getValue(tab)+"/"+vm.groupId.value )
                             currentTab = tab
                         },
                         text = {

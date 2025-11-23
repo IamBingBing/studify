@@ -10,7 +10,7 @@ data class ShopModel (
     @SerializedName("result") @Expose var result: List<shopResult>? =null
 )  {
     data class shopResult(
-        @SerializedName("GOOD_ID") @Expose var goodId: Int? = null,
+        @SerializedName("GOOD_ID") @Expose var goodId: Long? = null,
         @SerializedName("PRICE") @Expose var price: Int? = null,
         @SerializedName("GOOD_NAME") @Expose var goodName: String? = null,
         @SerializedName("DETAIL") @Expose var detail: String? = null

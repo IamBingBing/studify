@@ -37,6 +37,7 @@ import com.example.studify.ui.shop
 import com.example.studify.ui.writeArticle
 import com.example.studify.ui.createDate
 import com.example.studify.ui.grouplist
+import com.example.studify.ui.member
 
 @Composable
 @ExperimentalMaterial3Api
@@ -147,6 +148,9 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable (route= "grouplist"){
             grouplist(navController = navController)
+        }
+        composable (route= "member") {
+                member(navController = navController)
         }
     }
 }

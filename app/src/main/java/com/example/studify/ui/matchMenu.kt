@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.Tool.Preferences
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +58,12 @@ fun matchMenu(
                     title = "번개 매칭",
                     description = "지금 바로\n빠르게 만나기",
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("matchingOptionFast") }
+                    onClick = { if( !Preferences.getBoolean("fastmatch")) {
+                        navController.navigate("matchingOptionFast"
+                        )}
+                    else {
+                        navController.navigate("Matchinging")
+                    }}
                 )
 
                 MatchMenuItem(

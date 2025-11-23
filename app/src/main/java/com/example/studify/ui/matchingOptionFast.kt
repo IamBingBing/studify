@@ -19,7 +19,14 @@ fun matchingOptionFast(
 ) {
     val startTime = vm.startTime
     val endTime = vm.endTime
-
+    if (vm.match.value) {
+        navController.navigate("Matchinging") {
+            popUpTo("login") {
+                vm.match.value = false
+                inclusive = true
+            }
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -95,7 +102,7 @@ fun matchingOptionFast(
             // 매칭 시작 버튼
             Button(
                 onClick = {
-                    // TODO: 매칭 시작 로직
+                    vm.matchstart()
                 },
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()
