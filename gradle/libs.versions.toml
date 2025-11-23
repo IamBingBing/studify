@@ -1,14 +1,14 @@
 [versions]
 activityCompose = "1.9.3"
 adapterRxjava2 = "2.6.4"
-agp = "8.8.0"
-converterGson = "2.6.4"
+agp = "8.13.0"
+converterGson = "2.9.0"
 glide = "5.0.5"
 gson = "2.8.6"
-hilt = "2.51.1"
-hiltCompiler = "1.2.0"
+hilt = "2.57.1"
+hiltCompiler = "2.57.1"
 installreferrer = "2.2"
-kotlin = "1.9.23"
+kotlin = "2.2.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -17,10 +17,10 @@ appcompat = "1.7.0"
 lifecycleViewmodelCompose = "2.8.5"
 material = "1.12.0"
 navigationCompose = "2.8.0"
-okhttp = "4.9.0"
+okhttp = "4.12.0"
 retrofit = "2.9.0"
 retrofit2Rxjava2Adapter = "1.0.0"
-
+ksp = "2.2.20-2.0.4"
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
