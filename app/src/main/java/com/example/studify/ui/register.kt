@@ -3,6 +3,7 @@ package com.example.studify.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -57,7 +58,7 @@ fun register(
     var repw by vm.repw
     val expanded by vm.expanded
     val isSuccess by vm.registerSuccess.collectAsState()
-
+var authCode by vm.authcode
     val scrollState = rememberScrollState()
 
     Box(
@@ -80,14 +81,30 @@ fun register(
                     fontSize = 22.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
+                Row(modifier = BaseTextfillModifier) {
+                    TextField(
+                        modifier = BaseTextfillModifier,
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("한경대 이메일") },
+                        singleLine = true
+                    )
+                    Button(onClick = {}) { Text("인증번호 받기") }
+                }
 
-                TextField(
-                    modifier = BaseTextfillModifier,
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("한경대 이메일") },
-                    singleLine = true
-                )
+                Row(modifier = BaseTextfillModifier) {
+                    TextField(
+                        modifier = BaseTextfillModifier
+                            .weight(1f)
+                            .padding(end = 8.dp),
+                        value = authCode,
+                        onValueChange = { authCode = it },
+                        label = { Text("인증번호 입력칸") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    Button(onClick = {}) { Text("인증번호 확인하기") }
+                }
 
                 TextField(
                     modifier = BaseTextfillModifier,

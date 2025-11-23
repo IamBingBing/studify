@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
-
+import android.util.Patterns
 @HiltViewModel
 class registerVM @Inject constructor(
     application: Application,
@@ -24,6 +24,8 @@ class registerVM @Inject constructor(
     var pw = mutableStateOf("")
     var repw = mutableStateOf("")
     var expanded = mutableStateOf(false)
+
+    var authcode = mutableStateOf("")
 
     var refreshToken = mutableStateOf("")
     var userId = mutableStateOf("")
@@ -49,8 +51,15 @@ class registerVM @Inject constructor(
         if (pw.value != repw.value) {
             _registerSuccess.value = false
             _registerError.value = "비밀번호와 비밀번호 재입력이 서로 다릅니다."
-            requestRegister()
+
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(email.value).matches()){
+            _registerSuccess.value = false
+            _registerError.value = "올바른 이메일 형식이 아닙니다."
+            return
         }
+
+        else{requestRegister()}
+
     }
 
     fun requestRegister(id :String = userid.value, pwd:String = pw.value, name : String = username.value, mail: String = email.value, gender :String = sex.value.toString(), add:String = adress.value)= userRepository.RegisterUser(
