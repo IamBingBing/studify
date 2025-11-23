@@ -155,7 +155,7 @@ fun AppNavHost(navController: NavHostController) {
             }
         )){
                 entry -> val groupid = entry.arguments?.getString("groupid")
-            calender(navController = navController)
+            calender (navController = navController)
         }
         composable(route="createDate"){
             createDate(navController = navController)

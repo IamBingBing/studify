@@ -20,7 +20,7 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
         val groupName by vm.groupName
         val groupId = vm.groupId.value.toString()
 
-        val tabs = listOf("Home", "Calendar", "Member", "Notice", "Progress")
+        val tabs = listOf("groupHome", "calender", "member", "notice", "progress")
 
         var selectedTab by vm.currentTab
 
