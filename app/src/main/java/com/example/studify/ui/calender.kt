@@ -38,6 +38,8 @@ fun calender(
     val selectedDateSchedules by vm.selectedDateSchedules
     val errorMessage by vm.errorMessage
 
+    val groupId = vm.groupId.value
+
     // Kizitonwose Calendar state 설정
     val currentMonth = remember { YearMonth.now() }
     val firstMonth = remember { currentMonth.minusMonths(12) }
@@ -58,7 +60,7 @@ fun calender(
         bottomBar = { navigationbar(navController = navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("createDate") },
+                onClick = { navController.navigate("createDate/$groupId") },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("+")

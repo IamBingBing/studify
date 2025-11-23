@@ -157,7 +157,12 @@ fun AppNavHost(navController: NavHostController) {
                 entry -> val groupid = entry.arguments?.getString("groupid")
             calender (navController = navController)
         }
-        composable(route="createDate"){
+        composable(route= "createDate/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
             createDate(navController = navController)
         }
         composable (route= "grouplist"){

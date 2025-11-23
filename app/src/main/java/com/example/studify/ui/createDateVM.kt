@@ -3,6 +3,7 @@ package com.example.studify.ui
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import com.example.studify.data.repository.DateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -11,8 +12,13 @@ import javax.inject.Inject
 @HiltViewModel
 class createDateVM @Inject constructor(
     application: Application,
-    private val dateRepository: DateRepository
+    private val dateRepository: DateRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val groupId = mutableStateOf(
+        savedStateHandle.get<String>("groupid") ?: "0"
+    )
 
     val dateText = mutableStateOf("날짜를 선택해 주세요")   // "yyyy-MM-dd"
     val title = mutableStateOf("")
@@ -31,10 +37,16 @@ class createDateVM @Inject constructor(
 
     /** 일정 저장 */
     fun saveSchedule(
-        groupId: String,
         onSuccess: () -> Unit = {},
         onError: (String) -> Unit = {}
     ) {
+        val gid = groupId.value
+
+        if (gid.isBlank() || gid == "0") {
+            onError("유효하지 않은 그룹입니다.")
+            return
+        }
+
         if (!canSave()) {
             onError("일정 제목을 입력해 주세요.")
             return
@@ -45,7 +57,7 @@ class createDateVM @Inject constructor(
         val fullTime = "$datePart $timePart:00"
 
         val disposable = dateRepository.updateDate(
-            groupId = groupId,
+            groupId = gid,
             title = title.value,
             time = fullTime,
             content = memo.value,

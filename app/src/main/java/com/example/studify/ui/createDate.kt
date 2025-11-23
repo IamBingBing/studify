@@ -1,6 +1,8 @@
 package com.example.studify.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -20,6 +22,7 @@ import com.example.studify.Tool.BaseModifiers
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
+import android.util.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,11 +110,13 @@ fun createDate(
             )
         }
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = BaseModifiers.BaseModifier
                 .padding(innerPadding)
                 .padding(16.dp)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -210,7 +215,6 @@ fun createDate(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // 🔥 위치 입력
             OutlinedTextField(
                 value = location,
                 onValueChange = { vm.location.value = it },
@@ -229,22 +233,22 @@ fun createDate(
                 label = { Text("메모") },
                 modifier = BaseModifiers.BaseTextfillModifier
                     .fillMaxWidth()
-                    .heightIn(min = 120.dp),
+                    .heightIn(min = 80.dp),
                 maxLines = 5
             )
 
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(24.dp))
 
             //  저장 버튼
             Button(
                 onClick = {
                     vm.saveSchedule(
-                        groupId = groupId,
                         onSuccess = {
+                            Log.d("createDate", "일정 저장 성공")
                             navController.popBackStack()
                         },
-                        onError = {
-                            // TODO: 에러 처리
+                        onError = { msg ->
+                            Log.e("createDate", "일정 저장 실패: $msg")
                         }
                     )
                 },
