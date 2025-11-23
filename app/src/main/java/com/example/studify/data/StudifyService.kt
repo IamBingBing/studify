@@ -60,7 +60,7 @@ interface StudifyService {
     @POST("api/getProfile.php")
     fun requestGetProfile(@FieldMap data: Map<String, String>): Single<ProfileModel>
     @FormUrlEncoded
-    @POST("addDate.php")
+    @POST("api/addDate.php")
     fun UpdateDate (@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/registerUser.php")

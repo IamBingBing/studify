@@ -60,7 +60,7 @@ fun calender(
         bottomBar = { navigationbar(navController = navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("createDate/$groupId") },
+                onClick = { navController.navigate("createDate/${vm.groupId.value}") },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("+")
