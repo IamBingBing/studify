@@ -72,13 +72,13 @@ interface StudifyService {
     fun UpdateChat(@FieldMap data : Map<String, String>) : Single<UpdateModel>
 
     @FormUrlEncoded
-    @POST("api/matchfast.php")
+    @POST("api/matchFast.php")
     fun requestFastMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
-    @POST("api/matchgroup.php")
+    @POST("api/matchGroup.php")
     fun requestGroupMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
-    @POST("api/matchmentor.php")
+    @POST("api/matchMentor.php")
     fun requestMentorMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("productDetail.php")
