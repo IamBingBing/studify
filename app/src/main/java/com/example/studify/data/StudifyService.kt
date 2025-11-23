@@ -76,4 +76,8 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/matchmentor.php")
     fun requestMentorMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("productDetail.php")
+    fun requestProductDetail(@FieldMap param: HashMap<String, String>): Single<ShopModel>
+
 }

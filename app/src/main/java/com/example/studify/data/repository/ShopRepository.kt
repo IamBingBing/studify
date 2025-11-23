@@ -10,11 +10,21 @@ import javax.inject.Singleton
 
 @Singleton
 class ShopRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestShop() : Single<ShopModel> {
-        val param = HashMap<String, String>().apply {
 
-        }
+    /** 상점 목록 조회 */
+    fun requestShop(): Single<ShopModel> {
+        val param = HashMap<String, String>()
         return studifyService.requestShopData(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    /** 상품 상세 조회 */
+    fun requestProductDetail(goodId: Int): Single<ShopModel> {
+        val param = HashMap<String, String>()
+        param["GOOD_ID"] = goodId.toString()
+
+        return studifyService.requestProductDetail(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

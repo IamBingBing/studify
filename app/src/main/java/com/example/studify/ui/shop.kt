@@ -3,40 +3,15 @@ package com.example.studify.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,39 +19,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
 
-
-data class Gifticon(val name: String, val price: String, val imageResId: Int)
-
-val sampleGifticons = listOf(
-    Gifticon("스타벅스 아메리카노", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("투썸플레이스 케이크", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("올리브영 상품권", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("BHC 치킨", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("메가박스 예매권", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("배스킨라빈스 파인트", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("교보문고 상품권", "500포인트", R.drawable.ic_launcher_background),
-    Gifticon("편의점 상품권", "500포인트", R.drawable.ic_launcher_background)
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
+
     var showPointInfoScreen by remember { mutableStateOf(false) }
-    var goodname by vm.goodname
-    var price by vm.price
-    var good_id by vm.good_ID
-    var detail by vm.detail
-    var itemmap by vm.items
-    val itemList = vm.items.toList()
+    val itemList = vm.items
 
     if (showPointInfoScreen) {
         BackHandler { showPointInfoScreen = false }
@@ -101,9 +56,7 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text("포인트는 이렇게 획득할 수 있어요!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text("1. 스터디 매칭에 성공하면 500 포인트를 드립니다.")
-                Text("2. Q&A 게시판에서 다른 사람의 질문에 답변을 달면 50 포인트를 드립니다.")
-                Text("3. 출석 체크를 하면 매일 10 포인트를 드립니다.")
+
             }
         }
 
@@ -122,6 +75,7 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // 상단 광고 자리
                     item(span = { GridItemSpan(4) }) {
                         Card(modifier = BaseModifiers.BaseModifier.fillMaxWidth()) {
                             Box(
@@ -135,7 +89,13 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                             }
                         }
                     }
-                    items(itemList) { (name, price) ->
+
+                    // 상품 목록
+                    items(itemList) { item ->
+                        val name  = item.goodName ?: ""
+                        val price = item.price ?: 0
+                        val goodId = item.goodId ?: 0
+
                         Card(
                             modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -144,7 +104,6 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = BaseModifiers.BaseModifier.padding(8.dp)
                             ) {
-                                // 이미지가 없으니 기본 이미지 사용
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_launcher_background),
                                     contentDescription = name,
@@ -166,39 +125,20 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                                     color = Color.Gray,
                                     textAlign = TextAlign.Center
                                 )
+
                                 Button(
                                     onClick = {
-                                        navController.navigate("productDetail")
-                                    }
-                                ) { Text("구매하기") }
+                                        navController.navigate("productDetail/$goodId")
+                                    },
+                                    modifier = BaseModifiers.BaseModifier.padding(top = 4.dp)
+                                ) {
+                                    Text("구매하기")
+                                }
                             }
                         }
                     }
-                        // -------------------------------------------------
-                    }
-
                 }
-                /*Column(
-                    modifier = BaseModifiers.BaseModifier,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(onClick = { showPointInfoScreen = true }) {
-                        Text("포인트 획득 방법")
-                    }
-                    Card(
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        Text(
-                            text = "잔여 포인트: 1,234P",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            modifier = BaseModifiers.BaseModifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-                    }
-                }*/
             }
-
-
         }
     }
-
+}

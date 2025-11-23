@@ -107,8 +107,13 @@ fun AppNavHost(navController: NavHostController) {
             entry -> val noticeid = entry.arguments?.getString("noticeid")
             noticeDetail(navController = navController)
         }
-        composable(route="productDetail"){
-            productDetail(navController = navController)
+        composable(
+            route = "productDetail/{goodId}", arguments = listOf(
+                navArgument("goodId") { type = NavType.IntType }
+            )
+        ) { entry ->
+            val goodId = entry.arguments?.getInt("goodId") ?: 0
+            productDetail(navController = navController, goodId = goodId)
         }
         composable(route="profilepage"){
             profilepage(navController = navController)
