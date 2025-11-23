@@ -38,6 +38,7 @@ import com.example.studify.ui.writeArticle
 import com.example.studify.ui.createDate
 import com.example.studify.ui.grouplist
 import com.example.studify.ui.member
+import com.example.studify.ui.progress
 
 @Composable
 @ExperimentalMaterial3Api
@@ -129,7 +130,7 @@ fun AppNavHost(navController: NavHostController) {
             }
         )){
                 entry -> val groupid = entry.arguments?.getString("groupid")
-            //progress(navController = navController)
+            progress(navController = navController)
         }
         composable(route="qna"){
             qna(navController = navController)
