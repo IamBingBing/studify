@@ -51,7 +51,7 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
                     Tab(
                         selected = index == selectedTab,
                         onClick = {
-                            navController.navigate("${tabs[index].lowercase()}/$groupId")
+                            navController.navigate("${tabs[index]}/$groupId")
                             selectedTab = index
                         },
                         text = {
