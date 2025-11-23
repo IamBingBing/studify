@@ -2,6 +2,7 @@ package com.example.studify.ui
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.GroupModel
 import com.example.studify.data.repository.GroupRepository
@@ -12,25 +13,22 @@ import javax.inject.Inject
 @HiltViewModel
 class groupVM @Inject constructor(
     application: Application,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val groupId = mutableStateOf<Int?>(null)
+    val groupId = mutableStateOf(savedStateHandle["groupid"] ?: 0)
 
     val groupName = mutableStateOf("")
     val groupGoal = mutableStateOf("")
     val hashTags = mutableStateOf<List<String>>(emptyList())
-
     val currentTab = mutableStateOf(0)
     val users = mutableStateOf<List<GroupModel.GroupResult.user>>(emptyList())
-
     val errorMessage = mutableStateOf<String?>(null)
-
     private val disposables = CompositeDisposable()
 
-    fun setGroupIdAndLoad(id: Int) {
-        groupId.value = id
-        loadGroup(id)
+    init {
+        loadGroup(groupId.value)
     }
 
     fun loadGroup(id: Int? = groupId.value) {
