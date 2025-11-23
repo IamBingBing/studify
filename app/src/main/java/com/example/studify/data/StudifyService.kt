@@ -6,6 +6,7 @@ import com.example.studify.data.model.ChatModel
 import com.example.studify.data.model.DateModel
 import com.example.studify.data.model.GroupModel
 import com.example.studify.data.model.MentorModel
+import com.example.studify.data.model.ProgressModel
 import com.example.studify.data.model.QnaModel
 import com.example.studify.data.model.RegisterModel
 import com.example.studify.data.model.ShopModel
@@ -52,14 +53,17 @@ interface StudifyService {
     @POST( "addProgress.php")
     fun UpdateProgress(@FieldMap data: Map<String, String>) : Single<UpdateModel>
     @FormUrlEncoded
+    @POST("api/getProgress.php")
+    fun requestGetProgress(@FieldMap data: Map<String, String>): Single<ProgressModel>
+    @FormUrlEncoded
     @POST("addDate.php")
     fun UpdateDate (@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/registerUser.php")
     fun RegisterUser (@FieldMap data : Map<String, String>) : Single<RegisterModel>
     @FormUrlEncoded
-    @POST("api/addQna.php")
-    fun UpdateQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    @POST("api/addqna.php")
+    fun requestAddQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/addGroup.php")
     fun UpdateGroup(@FieldMap data : Map<String, String>) : Single<UpdateModel>

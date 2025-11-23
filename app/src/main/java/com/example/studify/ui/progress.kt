@@ -18,20 +18,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-/*
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) {
+fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
+
     val mainGoal by vm.mainGoal
     val personalGoals = vm.personalGoals
-    val personalGoalsDone = false
     val progressPercent by vm.progressPercent
     var showMainGoalDialog by vm.showMainGoalDialog
     var showPersonalGoalDialog by vm.showPersonalGoalDialog
 
     Scaffold(
         topBar = { groupNavigation(navController = navController) },
-        bottomBar = { navigationbar(navController) }) { innerPadding ->
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
+
         Column(
             modifier = BaseModifiers.BaseBoxModifier
                 .padding(innerPadding)
@@ -42,19 +44,19 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
         ) {
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // [1] 주요 목표 카드
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(Modifier.padding(16.dp)) {
-
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("주요 목표", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
                         Text(
                             text = "+",
                             fontSize = 24.sp,
@@ -64,11 +66,9 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
                                 .padding(4.dp)
                         )
                     }
-
                     Spacer(Modifier.height(8.dp))
-
                     Text(
-                        text = if (mainGoal.isBlank()) "아직 설정된 목표가 없습니다." else mainGoal,
+                        text = if (mainGoal.isBlank()) "목표를 설정해주세요" else mainGoal,
                         fontSize = 16.sp
                     )
                 }
@@ -76,19 +76,18 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // [2] 개인 목표 리스트 카드
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(Modifier.padding(16.dp)) {
-
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("개인 목표", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
                         Text(
                             text = "+",
                             fontSize = 24.sp,
@@ -98,26 +97,21 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
                                 .padding(4.dp)
                         )
                     }
-
                     Spacer(Modifier.height(8.dp))
 
                     if (personalGoals.isEmpty()) {
-                        Text("아직 등록된 개인 목표가 없습니다.", fontSize = 14.sp)
+                        Text("등록된 목표가 없습니다.", fontSize = 14.sp)
                     } else {
-                        personalGoals.forEachIndexed { index, text ->
+                        personalGoals.forEachIndexed { index, item ->
                             Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
+                                Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Checkbox(
-                                    checked = personalGoalsDone[index],
-                                    onCheckedChange = {
-                                        vm.personalGoalsDone[index] = !vm.personalGoalsDone[index]
-                                    }
+                                    checked = item.complit,
+                                    onCheckedChange = { vm.toggleGoal(index) }
                                 )
-                                Text(text, fontSize = 16.sp)
+                                Text(item.purpose, fontSize = 16.sp)
                             }
                         }
                     }
@@ -126,11 +120,12 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
 
             Spacer(Modifier.height(24.dp))
 
+            // [3] 진도율 표시 및 버튼
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("진도: ${progressPercent.toInt()}%", fontWeight = FontWeight.Bold)
+                Text("달성률: ${progressPercent.toInt()}%", fontWeight = FontWeight.Bold)
 
                 Spacer(Modifier.height(8.dp))
 
@@ -142,14 +137,11 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
                         .clip(RoundedCornerShape(8.dp))
                 )
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Button(
                     onClick = {
-                        val total = personalGoalsDone.size
-                        val done = personalGoalsDone.count { it }
-                        vm.progressPercent.value =
-                            if (total == 0) 0f else (done.toFloat() / total.toFloat() * 100f)
+                        vm.calculateProgress()
                     },
                     modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
                 ) {
@@ -160,27 +152,27 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
             Spacer(Modifier.height(24.dp))
         }
 
+        // [다이얼로그 1] 주요 목표
         if (showMainGoalDialog) {
             var text by remember { mutableStateOf(mainGoal) }
-
             AlertDialog(
                 onDismissRequest = { showMainGoalDialog = false },
                 title = { Text("주요 목표 설정") },
                 text = {
-                    TextField(
+                    OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        modifier = BaseModifiers.BaseTextfillModifier.fillMaxWidth(),
-                        placeholder = { Text("목표를 입력하세요") }
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("예: 토익 900점") },
+                        singleLine = true
                     )
                 },
                 confirmButton = {
-                    TextButton(
-                        onClick = {
-                            vm.mainGoal.value = text
-                            showMainGoalDialog = false
-                        }
-                    ) { Text("저장") }
+                    TextButton(onClick = {
+                        vm.mainGoal.value = text
+                        vm.saveProgress()
+                        showMainGoalDialog = false
+                    }) { Text("저장") }
                 },
                 dismissButton = {
                     TextButton(onClick = { showMainGoalDialog = false }) { Text("취소") }
@@ -188,30 +180,28 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
             )
         }
 
+        // [다이얼로그 2] 개인 목표
         if (showPersonalGoalDialog) {
             var text by remember { mutableStateOf("") }
-
             AlertDialog(
                 onDismissRequest = { showPersonalGoalDialog = false },
                 title = { Text("개인 목표 추가") },
                 text = {
-                    TextField(
+                    OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        modifier = BaseModifiers.BaseTextfillModifier.fillMaxWidth(),
-                        placeholder = { Text("예: 기출 10문제 풀기") }
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("예: 기출 10문제 풀기") },
+                        singleLine = true
                     )
                 },
                 confirmButton = {
-                    TextButton(
-                        onClick = {
-                            if (text.isNotBlank()) {
-                                vm.personalGoals.add(text)
-                                vm.personalGoalsDone.add(false)
-                            }
-                            showPersonalGoalDialog = false
+                    TextButton(onClick = {
+                        if (text.isNotBlank()) {
+                            vm.addPersonalGoal(text)
                         }
-                    ) { Text("추가") }
+                        showPersonalGoalDialog = false
+                    }) { Text("추가") }
                 },
                 dismissButton = {
                     TextButton(onClick = { showPersonalGoalDialog = false }) { Text("취소") }
@@ -219,4 +209,4 @@ fun progress(vm : progressVM =  hiltViewModel() , navController: NavController) 
             )
         }
     }
-}*/
+}
