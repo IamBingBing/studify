@@ -19,7 +19,7 @@ class noticeVM @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")!!.toInt())
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")!!.toLong())
     val notices = mutableStateListOf<AnnounceModel.AnnounceContent>()
     val query = mutableStateOf("")
     val selectedNotice = mutableStateOf<AnnounceModel.AnnounceContent?>(null)

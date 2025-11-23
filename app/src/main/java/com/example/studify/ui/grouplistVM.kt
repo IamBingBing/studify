@@ -18,7 +18,7 @@ class grouplistVM @Inject constructor(application: Application,  private val use
                 result->
             grouplist.clear()
             result.result?.grouplist?.forEach { group->
-                grouplist.put(group.groupid!!,group.groupname)
+                grouplist[group.groupid!!]=group.groupname
             }
         },{
                 errorMsg->

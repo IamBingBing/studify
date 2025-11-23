@@ -15,7 +15,7 @@ data class LoginModel(
         @SerializedName("USERNAME") @Expose var username: String? = null,
         @SerializedName("ID") @Expose var id: String? = null,
         @SerializedName("SEX") @Expose var sex: Int? = null, //0 : 남자 1: 여자
-        @SerializedName("GROUPLIST") @Expose var grouplist: List<group>? = null,
+        @SerializedName("GROUPLIST") @Expose var grouplist:List<group>? = null,
         @SerializedName("POINT") @Expose var point: Int? = null,
         @SerializedName("TENDENCY") @Expose var tendency: Float = 0f,
         @SerializedName("REPORT") @Expose var report:Int?= null,
@@ -29,7 +29,7 @@ data class LoginModel(
             @SerializedName("ROOMNAME") @Expose var roomname: String = ""
         ): Serializable
         data class group (
-            @SerializedName("GROUPID") @Expose var groupid: Long? = null,
+            @SerializedName("GROUPID") @Expose var groupid: Long? = -1,
             @SerializedName("GROUPNAME") @Expose var groupname: String = "",
         ):Serializable
     }

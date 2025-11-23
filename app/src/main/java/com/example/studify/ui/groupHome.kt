@@ -55,7 +55,7 @@ fun groupHome(
             Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 Text("- 그룹이름: $groupName")
                 Text("- 목표/다짐: $groupGoal")
-                Text("- 목적: ${hashTags.joinToString(" ") { "#$it" }}")
+                Text("- 목적: ${hashTags}")
             }
 
             Spacer(Modifier.height(12.dp))

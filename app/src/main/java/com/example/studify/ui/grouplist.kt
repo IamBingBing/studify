@@ -16,11 +16,11 @@ import com.example.studify.Tool.BaseModifiers
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun grouplist(
-    vm: chatlistVM = hiltViewModel(),
+    vm: grouplistVM = hiltViewModel(),
     navController: NavController
 ) {
     val error = vm.error
-    val groupList = vm.chatlist   // 이미 “참여 중인 그룹만” 들어있다고 가정
+    val groupList = vm.grouplist   // 이미 “참여 중인 그룹만” 들어있다고 가정
 
     // 에러 메시지
     if (!error.value.isNullOrEmpty()) {

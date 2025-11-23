@@ -13,9 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class GroupRepository @Inject constructor(private val studifyService: StudifyService){
 
-    fun requestGroupData(groupid: Int) : Single<GroupModel> {
+    fun requestGroupData() : Single<GroupModel> {
         var params = HashMap<String, String>().apply {
-            this["GROUPID"] = groupid.toString()
         }
         return studifyService.requestGroupData(params)
             .subscribeOn(Schedulers.io())
