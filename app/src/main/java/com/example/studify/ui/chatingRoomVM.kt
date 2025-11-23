@@ -2,6 +2,7 @@ package com.example.studify.ui
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,9 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
                 if (result.result == "200"){
                     sendmessage.value= ""
                 }
-        })
+        },{ error ->
+                Log.e("CHATROOM", error.toString())
+            }
+        )
 
 }

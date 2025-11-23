@@ -83,5 +83,5 @@ class qnaVM @Inject constructor(
         disposables.clear()
     }
 
-    data class QnaItem(val id: Int, val title: String, val content: String, val answer: String)
+    data class QnaItem(val id: Long, val title: String, val content: String, val answer: String)
 }
