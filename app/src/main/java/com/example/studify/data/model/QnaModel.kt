@@ -10,7 +10,7 @@ data class QnaModel (
     @SerializedName("result") @Expose var result: List<QnaResult>? = emptyList()
 ) {
     data class QnaResult (
-        @SerializedName("QNA_ID") @Expose var qnaid : Int? =null,
+        @SerializedName("QNA_ID") @Expose var qnaid : Long? =null,
         @SerializedName("QNA_TITLE") @Expose var qnatitle : String = "",
         @SerializedName("QNA_CONTENT") @Expose var qnacontent : String = "",
         @SerializedName("QNA_ANSWER") @Expose var qnaanswer : String = "",

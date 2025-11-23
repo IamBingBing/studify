@@ -2,6 +2,7 @@ package com.example.studify.ui
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +33,15 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
     var sendmessage = mutableStateOf<String>("")
     var error = mutableStateOf("")
 
-    fun sendMessage(){
-        chatRepository.UpdateChat(roomid.value,sendmessage.value,Preferences.getString("USERNAME")!!)
-        sendmessage.value= ""
-    }
+    fun sendMessage() = chatRepository.UpdateChat(roomid.value,sendmessage.value,Preferences.getString("USERNAME")!!)
+        .subscribe(
+            {result->
+                if (result.resultCode == "200"){
+                    sendmessage.value= ""
+                }
+        },{ error ->
+                Log.e("CHATROOM", error.toString())
+            }
+        )
+
 }

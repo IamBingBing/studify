@@ -16,27 +16,59 @@ import com.example.studify.Tool.BaseModifiers
 @ExperimentalMaterial3Api
 @Composable
 fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) {
-    var groupName by vm.groupName
-    val selectedTab = mapOf(0 to "home", 1 to "calender",2 to "member",3 to "notice", 4 to "progress")
-    var currentTab by vm.currentTab
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = BaseModifiers.BaseModifier.padding(top = 15.dp)) {
-            Text(groupName , fontSize = 40.sp)
-            TabRow(selectedTabIndex = currentTab) {
-                selectedTab.keys.forEach { tab ->
+
+        val groupName by vm.groupName
+        val groupId = vm.groupId.value.toString()
+
+        val tabs = listOf("groupHome", "calender", "member", "notice", "progress")
+
+        var selectedTab by vm.currentTab
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            // 🏷️ 그룹 제목
+            Text(
+                text = groupName,
+                fontSize = 30.sp,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            // 🔽 탭 UI
+            TabRow(
+                selectedTabIndex = selectedTab,
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary
+            ) {
+
+                tabs.forEachIndexed { index, title ->
                     Tab(
-                        selected = tab == currentTab,
+                        selected = index == selectedTab,
                         onClick = {
-                            navController.navigate(selectedTab.getValue(tab))
-                            currentTab = tab
+                            navController.navigate("${tabs[index]}/$groupId")
+                            selectedTab = index
                         },
                         text = {
                             Text(
-                                selectedTab.getValue(tab)
+                                text = title,
+                                fontSize = 15.sp,
+                                style = if (index == selectedTab)
+                                    MaterialTheme.typography.titleMedium
+                                else MaterialTheme.typography.bodyMedium
                             )
                         }
                     )
                 }
             }
-            Spacer(Modifier.height(12.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
+
+
 }

@@ -26,29 +26,15 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun calender(
     vm: calenderVM = hiltViewModel(),
     navController: NavController
 ) {
-    // 🔥 같은 화면에서 groupVM도 같이 가져오기
-    val groupVM: groupVM = hiltViewModel()
-
-    // groupVM 에서 현재 그룹 ID 읽기
-    val groupId = groupVM.groupId.value
-
-    // groupId가 설정되면 그걸로 일정 로딩
-    LaunchedEffect(groupId) {
-        if (groupId != null) {
-            vm.setGroupId(groupId)
-            vm.loadAllSchedulesForGroup()
-        }
-    }
-
-    // === 여기부터 캘린더 UI ===
-
-    val schedulesByDay = vm.schedulesByDay           // Map<LocalDate, List<DateResult>>
-    val selectedDate by vm.selectedDate              // LocalDate?
+    // VM에서 상태 읽기
+    val schedulesByDay = vm.schedulesByDay                   // Map<LocalDate, List<DateResult>>
+    val selectedDate by vm.selectedDate                      // LocalDate?
     val selectedDateSchedules by vm.selectedDateSchedules
     val errorMessage by vm.errorMessage
 
@@ -65,10 +51,11 @@ fun calender(
         firstDayOfWeek = daysOfWeek.first()
     )
 
-    // 날짜 클릭 시 다이얼로그 띄울지 여부
     var showDetailDialog by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = { groupNavigation(navController = navController) },
+        bottomBar = { navigationbar(navController = navController) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate("createDate") },
@@ -85,7 +72,7 @@ fun calender(
                 .fillMaxSize()
         ) {
 
-            // 에러 메시지
+            // 에러 메시지 표시
             if (!errorMessage.isNullOrEmpty()) {
                 Text(
                     text = errorMessage ?: "",
@@ -136,7 +123,7 @@ fun calender(
                         }
                     }
                 },
-                monthHeader = { /* 위에서 MonthHeader를 따로 쓰고 있어서 여기서는 필요 없음 */ }
+                monthHeader = { /* 위에서 MonthHeader 사용하니까 여기선 비워둠 */ }
             )
         }
 
@@ -186,7 +173,6 @@ private fun DayCell(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // 날짜 숫자
             Text(
                 text = day.date.dayOfMonth.toString(),
                 style = MaterialTheme.typography.bodyMedium,
@@ -197,7 +183,6 @@ private fun DayCell(
                 }
             )
 
-            // 일정 있는 날만 점 표시
             if (hasSchedule && isFromThisMonth) {
                 Spacer(Modifier.height(2.dp))
                 Box(

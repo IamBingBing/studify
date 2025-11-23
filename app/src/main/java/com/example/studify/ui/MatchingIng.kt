@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,32 +24,41 @@ import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
-fun MatchingIng(vm : MatchingIngVM = viewModel(), navController: NavController) {
-    Column(
-        modifier = BaseModifiers.BaseBoxModifier.fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(80.dp),
-            color = Color(0xFF4A80F5), // 파란색
-            strokeWidth = 8.dp
-        )
+fun MatchingIng( navController: NavController) {
+    Scaffold(bottomBar = { navigationbar(navController) }) {
+        padding->
+        Column(
+            modifier = BaseModifiers.BaseBoxModifier.padding(padding).fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(80.dp),
+                color = Color(0xFF4A80F5), // 파란색
+                strokeWidth = 8.dp
+            )
 
-        Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-        Text(
-            text = "매칭 중입니다.",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
+            Text(
+                text = "매칭 중입니다.",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "잠시만 기다려주시기 바랍니다.",
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
+            Text(
+                text = "잠시만 기다려주시기 바랍니다.",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button (
+                onClick = { navController.popBackStack() }
+            ) {
+                Text("돌아가기")
+            }
+        }
     }
 }

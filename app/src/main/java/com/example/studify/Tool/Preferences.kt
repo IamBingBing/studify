@@ -22,6 +22,15 @@ object Preferences {
             apply()
         }
     }
+    fun putLong(key:String?, value :Long?){
+        getSharedPreferences().edit(){
+            putLong(key,value!!)
+            apply()
+        }
+    }
+    fun getLong(key:String?):Long{
+        return getSharedPreferences().getLong(key,0)
+    }
 
     fun getString(key: String?): String? {
         return getSharedPreferences().getString(key, null)

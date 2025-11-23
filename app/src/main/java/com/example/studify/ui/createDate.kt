@@ -27,11 +27,14 @@ fun createDate(
     vm: createDateVM = hiltViewModel(),
     navController: NavController
 ) {
+    val groupVM: groupVM = hiltViewModel()
+    val groupId = groupVM.groupId.value
+
     val dateText by vm.dateText
     val title by vm.title
     val time by vm.time
     val memo by vm.memo
-    val location by vm.location   // 🔥 위치 상태
+    val location by vm.location
 
     // 날짜 초기값 세팅
     val initialDate = remember(dateText) {
@@ -236,11 +239,12 @@ fun createDate(
             Button(
                 onClick = {
                     vm.saveSchedule(
+                        groupId = groupId,
                         onSuccess = {
                             navController.popBackStack()
                         },
                         onError = {
-                            // TODO: 에러 처리 (스낵바 등)
+                            // TODO: 에러 처리
                         }
                     )
                 },

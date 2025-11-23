@@ -1,40 +1,58 @@
 package com.example.studify.ui
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.studify.Tool.Preferences
-import com.example.studify.data.StudifyService
 import com.example.studify.data.model.ShopModel
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.example.studify.data.repository.ShopRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-
 @HiltViewModel
-class shopVM @Inject constructor( appliction: Application , studifyService: StudifyService) : ViewModel(){
-    var detail = mutableStateOf("")
-    var good_ID = mutableStateOf<Int>(0)
-    var price = mutableStateOf<Int>(0)
-    var items = mutableStateMapOf<String, Int>( "편의점 5000원 쿠폰" to 500,
-        "BHC치킨 10000원 쿠폰" to 500)
-    var goodname = mutableStateOf("")
+class shopVM @Inject constructor(
+    application: Application,
+    private val shopRepository: ShopRepository
+) : ViewModel() {
 
+    // 상품 리스트
+    val items = mutableStateListOf<ShopModel.shopResult>()
 
-}
+    // 로딩 / 에러 상태
+    val isLoading = mutableStateOf(false)
+    val errorMsg  = mutableStateOf<String?>(null)
 
+    private val disposables = CompositeDisposable()
 
-/*private requestAnnouce ( groupid )<model> {
+    init {
+        requestShop()
+    }
 
-    model.result.foreach(){
-        it -> it[0]
-        if ( it.result.is_pin  )
-        notices.add(it.result.announcename , it.result.is_pin)
+    fun requestShop() {
+        isLoading.value = true
+        errorMsg.value = null
+
+        val d = shopRepository.requestShop()
+            .subscribe({ model ->
+                isLoading.value = false
+
+                if (model.resultCode == "200" && model.result != null) {
+                    items.clear()
+                    items.addAll(model.result!!)
+                } else {
+                    errorMsg.value = model.errorMsg
+                }
+            }, { e ->
+                isLoading.value = false
+                errorMsg.value = e.message
+            })
+
+        disposables.add(d)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.clear()
     }
 }
-*/
-

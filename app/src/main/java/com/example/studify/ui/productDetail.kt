@@ -2,9 +2,9 @@ package com.example.studify.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,19 +13,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun productDetail(
     vm: productDetailVM = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    goodId: Int
 ) {
     val productName by vm.productName
     val productImage by vm.productImageRes
     val productPrice by vm.productPrice
     val productDescription by vm.productDescription
+
+    // 처음 들어올 때 상품 정보 로드
+    LaunchedEffect(goodId) {
+        vm.loadProduct(goodId)
+    }
 
     Scaffold(
         topBar = {
@@ -52,7 +58,9 @@ fun productDetail(
         ) {
 
             Image(
-                painter = painterResource(id = productImage),
+                painter = painterResource(
+                    id = if (productImage == 0) R.drawable.ic_launcher_background else productImage
+                ),
                 contentDescription = productName,
                 modifier = Modifier
                     .size(200.dp)
@@ -92,7 +100,7 @@ fun productDetail(
                 onClick = {
                     vm.requestBuy(
                         onSuccess = {
-                            // TODO: 구매 성공 후 처리
+                            // TODO: 구매 성공 처리
                         },
                         onError = {
                             // TODO: 에러 처리

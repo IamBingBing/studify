@@ -6,6 +6,8 @@ import com.example.studify.data.model.ChatModel
 import com.example.studify.data.model.DateModel
 import com.example.studify.data.model.GroupModel
 import com.example.studify.data.model.MentorModel
+import com.example.studify.data.model.ProfileModel
+import com.example.studify.data.model.ProgressModel
 import com.example.studify.data.model.QnaModel
 import com.example.studify.data.model.RegisterModel
 import com.example.studify.data.model.ShopModel
@@ -46,11 +48,17 @@ interface StudifyService {
     @POST("api/datedata.php")
     fun requestDateData(@FieldMap data : Map<String, String>): Single<DateModel>
     @FormUrlEncoded
-    @POST("Mentordata.php")
+    @POST("api/Mentordata.php")
     fun requestMentorData(@FieldMap data: Map<String, String>): Single<MentorModel>
     @FormUrlEncoded
-    @POST( "addProgress.php")
+    @POST( "api/addProgress.php")
     fun UpdateProgress(@FieldMap data: Map<String, String>) : Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/getProgress.php")
+    fun requestGetProgress(@FieldMap data: Map<String, String>): Single<ProgressModel>
+    @FormUrlEncoded
+    @POST("api/getProfile.php")
+    fun requestGetProfile(@FieldMap data: Map<String, String>): Single<ProfileModel>
     @FormUrlEncoded
     @POST("addDate.php")
     fun UpdateDate (@FieldMap data: Map<String, String>): Single<UpdateModel>
@@ -58,8 +66,8 @@ interface StudifyService {
     @POST("api/registerUser.php")
     fun RegisterUser (@FieldMap data : Map<String, String>) : Single<RegisterModel>
     @FormUrlEncoded
-    @POST("api/addQna.php")
-    fun UpdateQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    @POST("api/addqna.php")
+    fun requestAddQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/addGroup.php")
     fun UpdateGroup(@FieldMap data : Map<String, String>) : Single<UpdateModel>
@@ -68,12 +76,16 @@ interface StudifyService {
     fun UpdateChat(@FieldMap data : Map<String, String>) : Single<UpdateModel>
 
     @FormUrlEncoded
-    @POST("api/matchfast.php")
+    @POST("api/matchFast.php")
     fun requestFastMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
-    @POST("api/matchgroup.php")
+    @POST("api/matchGroup.php")
     fun requestGroupMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
-    @POST("api/matchmentor.php")
+    @POST("api/matchMentor.php")
     fun requestMentorMatch(@FieldMap data : Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/productDetail.php")
+    fun requestProductDetail(@FieldMap param: HashMap<String, String>): Single<ShopModel>
+
 }

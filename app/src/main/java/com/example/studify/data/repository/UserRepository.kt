@@ -2,6 +2,7 @@ package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.LoginModel
+import com.example.studify.data.model.ProfileModel
 import com.example.studify.data.model.RegisterModel
 import com.example.studify.data.model.UpdateModel
 import io.reactivex.Single
@@ -59,6 +60,14 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["SEX"] = sex.toString()
         }
         return studifyService.requestUpdateUser(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+    fun requestOtherProfile(targetId: Int): Single<ProfileModel> {
+        val param = HashMap<String, String>().apply {
+            this["TARGET_ID"] = targetId.toString()
+        }
+        return studifyService.requestGetProfile(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

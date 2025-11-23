@@ -37,6 +37,8 @@ import com.example.studify.ui.shop
 import com.example.studify.ui.writeArticle
 import com.example.studify.ui.createDate
 import com.example.studify.ui.grouplist
+import com.example.studify.ui.member
+import com.example.studify.ui.progress
 
 @Composable
 @ExperimentalMaterial3Api
@@ -95,8 +97,12 @@ fun AppNavHost(navController: NavHostController) {
             
             mypage(navController = navController)
         }
-        composable(route="notice"){
-            
+        composable(route= "notice/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
             notice(navController = navController)
         }
         composable(route="noticeDetail/{noticeid}", arguments = listOf(
@@ -107,15 +113,24 @@ fun AppNavHost(navController: NavHostController) {
             entry -> val noticeid = entry.arguments?.getString("noticeid")
             noticeDetail(navController = navController)
         }
-        composable(route="productDetail"){
-            productDetail(navController = navController)
+        composable(
+            route = "productDetail/{goodId}", arguments = listOf(
+                navArgument("goodId") { type = NavType.IntType }
+            )
+        ) { entry ->
+            val goodId = entry.arguments?.getInt("goodId") ?: 0
+            productDetail(navController = navController, goodId = goodId)
         }
         composable(route="profilepage"){
             profilepage(navController = navController)
         }
-        composable(route="progress"){
-            
-            //progress(navController = navController)
+        composable(route= "progress/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
+            progress(navController = navController)
         }
         composable(route="qna"){
             qna(navController = navController)
@@ -134,14 +149,22 @@ fun AppNavHost(navController: NavHostController) {
             entry -> val groupid = entry.arguments?.getString("groupid")
             groupHome(navController = navController)
         }
-        composable(route= "calender"){
-            calender(navController = navController)
+        composable(route= "calender/{groupid}", arguments = listOf(
+            navArgument("groupid"){
+                type = NavType.StringType
+            }
+        )){
+                entry -> val groupid = entry.arguments?.getString("groupid")
+            calender (navController = navController)
         }
         composable(route="createDate"){
             createDate(navController = navController)
         }
         composable (route= "grouplist"){
             grouplist(navController = navController)
+        }
+        composable (route= "member") {
+                member(navController = navController)
         }
     }
 }

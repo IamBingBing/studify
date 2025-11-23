@@ -21,21 +21,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.material3.Scaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavController) {
-    var userName by vm.userName
-    var studyStyle by vm.studyStyle
-    var mannerScore by vm.mannerScore
-    var reviewTags = vm.reviewTags
-    var studyHistory by vm.studyHistory
+
+    val name by vm.name
+    val email by vm.email
+    val sex by vm.sex
+    val address by vm.address
+    val point by vm.point
 
     Scaffold(
-        topBar = {groupNavigation(navController = navController) }, bottomBar = { navigationbar(navController) }) {
-        innerPadding ->
+        topBar = { groupNavigation(navController = navController) },
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
+
         Column(
             modifier = BaseModifiers.BaseBoxModifier
                 .fillMaxSize()
@@ -51,17 +53,17 @@ fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavControll
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            ProfileInfoRow(label = "이름", value = userName)
-            ProfileInfoRow(label = "학습 스타일", value = studyStyle)
-            ProfileInfoRow(label = "매너 점수", value = "$mannerScore 점")
-            ProfileInfoRow(label = "스터디 내역", value = studyHistory)
-            ProfileInfoRow(label = "칭찬 리뷰", value = reviewTags.joinToString())
-
+            ProfileInfoRow(label = "이름", value = name)
+            ProfileInfoRow(label = "성별", value = sex)
+            ProfileInfoRow(label = "보유 포인트", value = point)
+            ProfileInfoRow(label = "이메일", value = email)
+            ProfileInfoRow(label = "지역", value = address)
         }
     }
 }
+
 @Composable
-public fun ProfileInfoRow(label: String, value: String) {
+fun ProfileInfoRow(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

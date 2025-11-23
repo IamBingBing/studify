@@ -4,8 +4,11 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.studify.Tool.Preferences
 import com.example.studify.data.repository.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.json.JSONArray
+import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,40 +52,33 @@ class createGroupVM @Inject constructor(
     }
 
     // 생성 가능한지 검사
-    fun canCreate(): Boolean {
+    fun canCreate() :Boolean {
         val nameOk = groupName.value.isNotBlank()
         val membersOk = (maxMembers.value.toIntOrNull() ?: 0) in 1..30
         val purposeOk = selectedPurpose.value != null
 
+        if (nameOk && membersOk && purposeOk){
+            requestCreate()
+        }
         return nameOk && membersOk && purposeOk
     }
 
-    fun requestCreate(
-        onSuccess: (newGroupId: String) -> Unit,
-        onError: (String) -> Unit
-    ) {
-        if (!canCreate()) {
-            onError("필수 항목을 확인해 주세요.")
-            return
-        }
+    fun requestCreate() = groupRepository.createGroup(
+        groupName = groupName.value,
+        maxLength = maxMembers.value.toIntOrNull() ?: 1,
+        hashtag = selectedPurpose.value ?: "",
+        tendency = intensity.value,
+        purpose = groupGoal.value
+    ).subscribe({ result ->
+        if (result.resultCode == "200") {
+            val newGroupId = result.result
+            val grouplist= JSONArray (Preferences.getString("GROUPLIST"))
+            grouplist.put(newGroupId)
+            Preferences.putString("GROUPLIST",grouplist.toString())
+        } else {
 
-        groupRepository.createGroup(
-            groupName = groupName.value,
-            maxLength = maxMembers.value.toIntOrNull() ?: 1,
-            hashtag = selectedPurpose.value ?: "",
-            tendency = intensity.value,
-            purpose = groupGoal.value
-        ).subscribe({ result ->
-            if (result.resultCode == "200") {
-                // 새로 생성된 그룹 ID (addGroup.php 에서 echo한 값)
-                val newGroupId = result.result
-                onSuccess(newGroupId)
-            } else {
-                onError(result.errorMsg.ifBlank { "그룹 생성에 실패했습니다." })
-            }
-        }, { e ->
-            e.printStackTrace()
-            onError("서버 통신 중 오류가 발생했습니다.")
-        })
-    }
+        }
+    }, { e ->
+        e.printStackTrace()
+    })
 }

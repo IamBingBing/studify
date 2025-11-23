@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class noticeRepository @Inject constructor(private val studifyService: StudifyService
 ) {
-    fun requestNoticeData(groupId: Int): Single<AnnounceModel> {
+    fun requestNoticeData(groupId: String): Single<AnnounceModel> {
         val param = HashMap<String, String>().apply {
             this["GROUPID"] = groupId.toString()
         }
