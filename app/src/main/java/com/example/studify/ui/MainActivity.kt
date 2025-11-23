@@ -21,18 +21,24 @@ import javax.inject.Inject
 @ExperimentalMaterial3Api
 class MainActivity : androidx.activity.ComponentActivity(){
     @Inject lateinit var chatRepository: ChatRepository
-    private val socket = ChatWebSocketClient(){
-        msg-> lifecycleScope.launch {
-            chatRepository.insertMessage(msg)
-    }
-    }
+    @Inject lateinit var chatWebSocketClient: ChatWebSocketClient
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
          setContent {
+
              val navController = rememberNavController()
              AppNavHost(navController=navController)
          }
 
     }
+
+    override fun onStart() {
+        super.onStart()
+        chatWebSocketClient.connect()
+        chatWebSocketClient.sendLogin()
+    }
+
+
 }

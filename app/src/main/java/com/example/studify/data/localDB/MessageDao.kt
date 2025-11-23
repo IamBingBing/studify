@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,8 +12,7 @@ interface MessageDao {
     suspend fun insertMessage(message: Message)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages : List<Message>)
-    @Query("""
-        SELECT * FROM message WHERE CHATID = :chatid
-    """)
-    fun getMessageByRoom(chatid : String): Flow<List<Message>>
+    @Query(" SELECT * FROM message WHERE CHATID = :chatid ")
+    fun getMessageByRoom(chatid : Long): Flow<List<Message>>
+
 }

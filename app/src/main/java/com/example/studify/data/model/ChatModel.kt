@@ -12,10 +12,9 @@ data class ChatModel (
     @SerializedName("result") @Expose var list: List<StfChat>? =null
 ) : Serializable {
     data class  StfChat(
-        @SerializedName("ID") @Expose var ID: Long? = null,
-        @SerializedName("GROUPID") @Expose var GROUPID: Long? = null,
+        @SerializedName("CHATID") @Expose var chatid: Long? = null,
         @SerializedName("CHATNAME") @Expose var CHATNAME: String? = null,
         @SerializedName("CHAT") @Expose var CHAT: String? = null,
-        @SerializedName("TIME") @Expose var TIME : Timestamp? = null
+        @SerializedName("TIME") @Expose var TIME : String? = null
     ):Serializable
 }
