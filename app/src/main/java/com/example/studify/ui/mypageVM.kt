@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.studify.Tool.Preferences
+import com.example.studify.data.model.LoginModel
 import com.example.studify.data.repository.UserRepository
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -33,19 +36,32 @@ class mypageVM @Inject constructor(
     private fun loadUserInfoFromPreferences() {
         name.value = Preferences.getString("USERNAME") ?: ""
         email.value = Preferences.getString("EMAIL") ?: ""
-        group.value = Preferences.getString("GROUP") ?: ""
         address.value = Preferences.getString("ADDRESS") ?: ""
 
         val sexInt = Preferences.getInt("SEX")
-        sex.value = when (sexInt) {
-            0 -> "남자"
-            1 -> "여자"
-            else -> "기타"
-        }
+        sex.value = if (sexInt == 0) "남자" else "여자"
 
         val pointInt = Preferences.getInt("POINT")
         point.value = "${pointInt}P"
 
+        val groupJson = Preferences.getString("GROUPLIST")
+
+        if (!groupJson.isNullOrBlank() && groupJson != "null" && groupJson != "[]") {
+            try {
+                val type = object : TypeToken<List<LoginModel.Result.group>>() {}.type
+                val groupList: List<LoginModel.Result.group> = Gson().fromJson(groupJson, type)
+
+                val names = groupList
+                    .mapNotNull { it.groupname }
+                    .filter { it.isNotBlank() }
+
+                group.value = if (names.isEmpty()) "없음" else names.joinToString(", ")
+            } catch (e: Exception) {
+                group.value = "정보 없음"
+            }
+        } else {
+            group.value = "없음"
+        }
     }
 
     fun saveUserInfo() {
