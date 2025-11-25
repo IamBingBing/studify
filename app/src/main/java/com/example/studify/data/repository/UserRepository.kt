@@ -1,6 +1,7 @@
 package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
+import com.example.studify.data.model.EmailAuthModel
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ProfileModel
 import com.example.studify.data.model.RegisterModel
@@ -68,6 +69,14 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             this["TARGET_ID"] = targetId.toString()
         }
         return studifyService.requestGetProfile(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+    fun requestEmailCode(email: String): Single<EmailAuthModel> {
+        val param = HashMap<String, String>().apply {
+            this["EMAIL"] = email
+        }
+        return studifyService.requestEmailCode(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

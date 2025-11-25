@@ -14,6 +14,7 @@ import com.example.studify.data.model.ShopModel
 import com.example.studify.data.model.UpdateModel
 import com.example.studify.data.req.GroupReqModel
 import io.reactivex.Single
+import com.example.studify.data.model.EmailAuthModel
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
@@ -88,4 +89,7 @@ interface StudifyService {
     @POST("api/productDetail.php")
     fun requestProductDetail(@FieldMap param: HashMap<String, String>): Single<ShopModel>
 
+    @FormUrlEncoded
+    @POST("sendemail.php")
+    fun requestEmailCode(@FieldMap data: Map<String, String>): Single<EmailAuthModel>
 }
