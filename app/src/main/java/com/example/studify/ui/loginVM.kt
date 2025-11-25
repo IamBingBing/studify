@@ -8,6 +8,7 @@ import com.example.studify.Tool.Preferences
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.repository.UserRepository
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.json.JSONArray
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class loginVM @Inject constructor(application: Application,private val userRepos
                 Preferences.putString("ID", loginModel.result!!.id.toString())
                 Preferences.putString("USERNAME", loginModel.result!!.username.toString())
                 Preferences.putInt("SEX", loginModel.result!!.sex!! )
-                Preferences.putString("GROUPLIST", loginModel.result!!.grouplist.toString())
+                Preferences.putString("GROUPLIST", Gson().toJson( loginModel.result!!.grouplist))
                 Preferences.putFloat("TENDENCY", loginModel.result!!.tendency)
                 Preferences.putInt("REPORT", loginModel.result!!.report!!)
                 Preferences.putString("ADDRESS", loginModel.result!!.address.toString())

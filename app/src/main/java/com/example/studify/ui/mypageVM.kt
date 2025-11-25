@@ -11,6 +11,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import org.json.JSONArray
+import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,24 +45,17 @@ class mypageVM @Inject constructor(
 
         val pointInt = Preferences.getInt("POINT")
         point.value = "${pointInt}P"
-
-        val groupJson = Preferences.getString("GROUPLIST")
-
-        if (!groupJson.isNullOrBlank() && groupJson != "null" && groupJson != "[]") {
-            try {
-                val type = object : TypeToken<List<LoginModel.Result.group>>() {}.type
-                val groupList: List<LoginModel.Result.group> = Gson().fromJson(groupJson, type)
-
-                val names = groupList
-                    .mapNotNull { it.groupname }
-                    .filter { it.isNotBlank() }
-
-                group.value = if (names.isEmpty()) "없음" else names.joinToString(", ")
-            } catch (e: Exception) {
-                group.value = "정보 없음"
-            }
-        } else {
+        val groupJson = JSONArray(Preferences.getString("GROUPLIST"))
+        if (groupJson.length() == 0){
             group.value = "없음"
+        }
+        else {
+            (0 until groupJson.length()).forEach { key ->
+                val type = object : TypeToken<LoginModel.Result.group>() {}.type
+                val groupmodel: LoginModel.Result.group =
+                    Gson().fromJson(groupJson.getString(key), type)
+                group.value = group.value + groupmodel.groupname + ","
+            }
         }
     }
 
