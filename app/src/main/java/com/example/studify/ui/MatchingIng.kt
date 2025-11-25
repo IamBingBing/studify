@@ -55,7 +55,8 @@ fun MatchingIng( navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button (
-                onClick = { navController.popBackStack() }
+                onClick = { navController.navigate("matchMenu"){
+                } }
             ) {
                 Text("돌아가기")
             }
