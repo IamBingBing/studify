@@ -40,11 +40,6 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
         .subscribe(
             {result->
                 if (result.resultCode == "200"){
-
-                    scope.launch {
-                        chatRepository.insertMessage(Message(0,roomid.value.toLong(),Preferences.getString("USERNAME")!!,sendmessage.value,
-                            LocalDateTime.now().toString()))
-                    }
                     sendmessage.value= ""
                 }
         },{ error ->

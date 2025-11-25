@@ -26,7 +26,7 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
             jsonObject.getLong("CHATID"),
             jsonObject["CHATNAME"] as String,
             jsonObject["CHAT"] as String,
-            jsonObject["TIME"] as String )
+            jsonObject["SENDERTIME"] as String )
         messageHandler.onNewMessage(msg)
     }
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
