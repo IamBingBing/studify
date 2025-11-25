@@ -92,4 +92,8 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("sendemail.php")
     fun requestEmailCode(@FieldMap data: Map<String, String>): Single<EmailAuthModel>
+
+    @FormUrlEncoded
+    @POST("api/addNotice.php")
+    fun addNotice(@FieldMap data: Map<String, String>): Single<UpdateModel>
 }

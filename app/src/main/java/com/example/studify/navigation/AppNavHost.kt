@@ -138,7 +138,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="shop"){
             shop(navController = navController)
         }
-        composable(route="writeArticle"){
+        composable(
+            route = "writeArticle/{groupid}",
+            arguments = listOf(
+                navArgument("groupid") { type = NavType.StringType }
+            )
+        ) {
             writeArticle(navController = navController)
         }
         composable(route= "groupHome/{groupid}", arguments = listOf(

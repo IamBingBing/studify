@@ -2,6 +2,7 @@ package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.AnnounceModel
+import com.example.studify.data.model.UpdateModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,6 +18,22 @@ class noticeRepository @Inject constructor(private val studifyService: StudifySe
         }
 
         return studifyService.requestNoticeData(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun addNotice(
+        groupId: String,
+        title: String,
+        content: String
+    ): Single<UpdateModel> {
+        val param = HashMap<String, String>().apply {
+            this["GROUPID"] = groupId
+            this["TITLE"] = title
+            this["CONTENT"] = content
+        }
+
+        return studifyService.addNotice(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
