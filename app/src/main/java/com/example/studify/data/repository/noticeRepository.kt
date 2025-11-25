@@ -25,15 +25,28 @@ class noticeRepository @Inject constructor(private val studifyService: StudifySe
     fun addNotice(
         groupId: String,
         title: String,
-        content: String
+        content: String,
+        isPin: Boolean
     ): Single<UpdateModel> {
+
         val param = HashMap<String, String>().apply {
-            this["GROUPID"] = groupId
-            this["TITLE"] = title
-            this["CONTENT"] = content
+            this["GROUPID"]          = groupId
+            this["ANNOUNCE_NAME"]    = title
+            this["ANNOUNCE_CONTENT"] = content
+            this["IS_PIN"]           = if (isPin) "1" else "0"
         }
 
         return studifyService.addNotice(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun requestNoticeDetail(announceId: Long): Single<AnnounceModel> {
+        val param = HashMap<String, String>().apply {
+            this["ANNOUNCE_ID"] = announceId.toString()
+        }
+
+        return studifyService.requestNoticeDetail(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

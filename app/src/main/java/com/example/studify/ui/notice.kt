@@ -13,6 +13,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.data.model.AnnounceModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,6 +24,19 @@ fun notice(
     vm: noticeVM = hiltViewModel(),
     navController: NavController
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                vm.loadNotices()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     val query by vm.query
     val notices = vm.filteredNotices()
     val errorMessage by vm.errorMessage
@@ -54,7 +71,9 @@ fun notice(
                             notice = noticeItem,
                             onClick = {
                                 vm.onNoticeClick(noticeItem)
-                                navController.navigate("noticeDetail")
+                                noticeItem.announceId?.let { id ->
+                                    navController.navigate("noticeDetail/$id")
+                                }
                             }
                         )
                     }
@@ -104,7 +123,7 @@ fun notice(
             // ----- 공지 작성 버튼 -----
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("writeArticle")
+                    navController.navigate("writeArticle/${vm.groupId.value}")
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
