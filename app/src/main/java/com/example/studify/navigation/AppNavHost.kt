@@ -121,14 +121,19 @@ fun AppNavHost(navController: NavHostController) {
             val goodId = entry.arguments?.getInt("goodId") ?: 0
             productDetail(navController = navController, goodId = goodId)
         }
-        composable(route="profilepage"){
+        composable(route="profilepage/{userId}",
+            arguments = listOf(
+                navArgument("userId") {type = NavType.StringType}
+            )
+        ){
             profilepage(navController = navController)
         }
         composable(route= "progress/{groupid}", arguments = listOf(
             navArgument("groupid"){
                 type = NavType.StringType
             }
-        )){
+        )
+        ){
                 entry -> val groupid = entry.arguments?.getString("groupid")
             progress(navController = navController)
         }

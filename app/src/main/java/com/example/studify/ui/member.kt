@@ -1,5 +1,6 @@
 package com.example.studify.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,7 +44,13 @@ fun member(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(users) { user ->
-                    MemberRow(name = user.username ?: "이름 없음")
+                    val userId = user.userid
+                    MemberRow(name = user.username ?: "이름 없음",
+                        onClick = {
+                            userId.let { id ->
+                                navController.navigate("profilepage/$id")
+                            }
+                        })
                 }
             }
         }
@@ -51,9 +58,15 @@ fun member(
 }
 
 @Composable
-fun MemberRow(name: String) {
+fun MemberRow(
+    name: String,
+    onClick: () -> Unit
+) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable { onClick() },
         tonalElevation = 1.dp
     ) {
         Column(modifier = Modifier.padding(12.dp)) {

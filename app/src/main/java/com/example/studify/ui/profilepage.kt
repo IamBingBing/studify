@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,8 +40,20 @@ fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavControll
     val point by vm.point
 
     Scaffold(
-        topBar = { groupNavigation(navController = navController) },
-        bottomBar = { navigationbar(navController) }
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("상세 프로필") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "뒤로가기",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            )
+        }
     ) { innerPadding ->
 
         Column(
@@ -46,12 +64,6 @@ fun profilepage(vm : profilepageVM = hiltViewModel(), navController: NavControll
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "상세 프로필",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
 
             ProfileInfoRow(label = "이름", value = name)
             ProfileInfoRow(label = "성별", value = sex)
