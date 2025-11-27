@@ -5,10 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.studify.data.StudifyService
+import com.example.studify.data.repository.MatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
-class matchingOptionMentorVM @Inject constructor(application: Application, studifyService: StudifyService):ViewModel(){
+class matchingOptionMentorVM @Inject constructor(application: Application,private val matchRepository: MatchRepository):ViewModel(){
     var wantlearn = mutableStateOf("")
     var wantteach = mutableStateOf("")
+
+    fun requesetmatch(wl : String = wantlearn.value, wt : String = wantteach.value) = matchRepository.requestMentorMatch(wl,wt)
+        .subscribe()
 }

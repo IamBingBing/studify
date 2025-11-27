@@ -39,7 +39,6 @@ fun matchingOptionMentor(
     var wantLearn by vm.wantlearn
     var wantTeach by vm.wantteach
 
-    // 로컬 상태: 가능한 요일 (필요하면 VM으로 빼도 됨)
     val dayList = listOf("월", "화", "수", "목", "금", "토", "일")
     var selectedDays by remember { mutableStateOf(setOf<String>()) }
 

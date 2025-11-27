@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -125,8 +126,12 @@ fun matchingOptionGroup(
                 )
 
                 Slider(
-                    state = tendency.value,
-                    modifier = BaseModifiers.BaseModifier.fillMaxWidth()
+                    value = tendency.value,
+                    modifier = BaseModifiers.BaseTextfillModifier
+                        .height(56.dp)
+                        .width(280.dp) ,
+                    valueRange = 0f..100f,
+                    onValueChange = {tendency.value = it}
                 )
 
                 Row(

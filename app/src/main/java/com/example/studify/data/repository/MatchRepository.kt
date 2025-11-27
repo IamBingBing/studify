@@ -19,17 +19,19 @@ class MatchRepository @Inject constructor(private val studifyService: StudifySer
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun requestGroupMatch() : Single<UpdateModel>{
+    fun requestGroupMatch(purpose: String, tendency : String) : Single<UpdateModel>{
         val params = HashMap<String,String>().apply {
-
+            this["PURPOSE"] = purpose;
+            this["TENDENCY"] = tendency
         }
         return studifyService.requestGroupMatch(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun requestMentorMatch() : Single<UpdateModel>{
+    fun requestMentorMatch(wantlearn: String, wantteach:String) : Single<UpdateModel>{
         val params = HashMap<String,String>().apply {
-
+            this["WANTLEARN"]= wantlearn
+            this["WANTTEACH"]=wantteach
         }
         return studifyService.requestMentorMatch(params)
             .subscribeOn(Schedulers.io())
