@@ -34,7 +34,7 @@ class profilepageVM @Inject constructor(
     }
 
     fun loadProfile(id: Int) {
-        val d = repository.requestOtherProfile(id)
+        val d = repository.requestGetProfile(id)
             .subscribe({ model ->
                 if (model.resultCode == "200" && model.result != null) {
                     val r = model.result!!

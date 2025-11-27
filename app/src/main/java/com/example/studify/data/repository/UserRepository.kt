@@ -64,7 +64,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun requestOtherProfile(targetId: Int): Single<ProfileModel> {
+    fun requestGetProfile(targetId: Int): Single<ProfileModel> {
         val param = HashMap<String, String>().apply {
             this["TARGET_ID"] = targetId.toString()
         }

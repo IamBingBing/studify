@@ -1,6 +1,7 @@
 package com.example.studify.data
 
 import com.example.studify.data.model.AnnounceModel
+import com.example.studify.data.model.BookModel
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ChatModel
 import com.example.studify.data.model.DateModel
@@ -101,4 +102,7 @@ interface StudifyService {
     @POST("api/noticeDetail.php")
     fun requestNoticeDetail(@FieldMap data: Map<String, String>): Single<AnnounceModel>
 
+    @FormUrlEncoded
+    @POST("api/guideBooks.php")
+    fun requestGuideBooks(@FieldMap data: Map<String, String>): Single<BookModel>
 }
