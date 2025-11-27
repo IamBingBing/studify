@@ -10,13 +10,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.StudifyService
+import com.example.studify.data.repository.MatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 @ExperimentalMaterial3Api
-class matchingOptionGroupVM @Inject constructor(application: Application, studifyService: StudifyService): ViewModel(){
+class matchingOptionGroupVM @Inject constructor(application: Application, private val matchRepository: MatchRepository): ViewModel(){
     var days = mutableStateMapOf<String,Boolean>("월" to false,"화" to false,"수" to false,"목" to false,"금" to false,"토" to false,"일" to false)
-    var purpose = mutableStateOf("토익")
-    val tendency = mutableStateOf<SliderState>(SliderState(0f))
+    var purpose = mutableStateOf("")
+    val tendency = mutableStateOf(0f)
+
+    fun requestmatch(pp :String= purpose.value, td : String= tendency.value.toString()) = matchRepository.requestGroupMatch(pp,td)
+        .subscribe({
+
+        })
 }
