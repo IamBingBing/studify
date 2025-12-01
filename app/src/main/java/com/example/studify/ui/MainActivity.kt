@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import java.io.Console
 import java.util.logging.Logger
 import javax.inject.Inject
+import com.example.studify.ui.AppTheme
 
 @AndroidEntryPoint
 @ExperimentalMaterial3Api
@@ -27,9 +28,11 @@ class MainActivity : androidx.activity.ComponentActivity(){
         super.onCreate(savedInstanceState)
 
          setContent {
+             AppTheme {
 
-             val navController = rememberNavController()
-             AppNavHost(navController=navController)
+                 val navController = rememberNavController()
+                 AppNavHost(navController = navController)
+             }
          }
 
     }

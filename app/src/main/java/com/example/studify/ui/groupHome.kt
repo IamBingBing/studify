@@ -50,11 +50,14 @@ fun groupHome(
                 }
             }
 
-            sectionTitle("그룹정보")
-            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text("- 그룹이름: $groupName")
-                Text("- 목표/다짐: $groupGoal")
-                Text("- 목적: $hashTags")
+            sectionTitle("그룹 정보")
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text("• 그룹이름: $groupName", style = MaterialTheme.typography.bodyMedium)
+                Text("• 목표/다짐: $groupGoal", style = MaterialTheme.typography.bodyMedium)
+                Text("• 목적: $hashTags", style = MaterialTheme.typography.bodyMedium)
+
             }
 
             Spacer(Modifier.height(12.dp))
@@ -66,16 +69,22 @@ fun groupHome(
                     Text("등록된 일정이 없습니다.")
                 } else {
                     dates.forEach { item ->
-                        val timeText = item.time.ifBlank { "-" }
-                        val locationText = item.location.ifBlank { "-" }
+                        val rawTime = item.time.orEmpty()
+                        val formattedTime = when {
+                            rawTime.length >= 16 -> rawTime.substring(5, 16)  // "11-23 09:00"
+                            else -> rawTime
+                        }
 
+                        val locationText = item.location.ifBlank { "-" }
+                        val titleText = item.title.ifBlank { "(제목 없음)" }
+
+                        // 2) 최종 출력 포맷
+                        val line = "• $titleText : $formattedTime | $locationText"
+
+                        // 3) 출력
                         Text(
-                            text = "$timeText · $locationText",
+                            text = line,
                             style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = item.title,
-                            style = MaterialTheme.typography.bodySmall
                         )
 
                         Spacer(Modifier.height(6.dp))
@@ -94,18 +103,18 @@ fun groupHome(
                 } else {
                     announcements.forEachIndexed { index, announcement ->
                         if (index > 0) {
-                            HorizontalDivider()
+                            //HorizontalDivider()
                             Spacer(Modifier.height(8.dp))
                         }
                         val title = announcement.announceName ?: "(제목 없음)"
-                        val titleText = if (announcement.isPin == true) "[필독] $title" else title
+                        val titleText = if (announcement.isPin == true) "• [필독] $title" else "• $title"
 
                         Text(
                             titleText,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (announcement.isPin == true)
-                                MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface
+                            style = MaterialTheme.typography.bodyMedium,
+                            /*color = if (announcement.isPin == true)
+                                MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onSurface*/
                         )
                     }
                 }
