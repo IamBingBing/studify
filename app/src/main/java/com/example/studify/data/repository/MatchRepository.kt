@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 
 class MatchRepository @Inject constructor(private val studifyService: StudifyService) {
-    fun requestFastMatch(start :Int, end :Int) : Single<UpdateModel>{
+    fun requestFastMatch(start :String, end :String) : Single<UpdateModel>{
         val params = HashMap<String,String>().apply {
-            this["STARTTIME"] = start.toString()
-            this["ENDTIME"] = end.toString()
+            this["STARTTIME"] = start
+            this["ENDTIME"] = end
         }
         return studifyService.requestFastMatch(params)
             .subscribeOn(Schedulers.io())
