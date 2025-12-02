@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.studify.Tool.MatchingCase
+import com.example.studify.ui.Guideline
 import com.example.studify.ui.MatchingIng
 import com.example.studify.ui.calender
 import com.example.studify.ui.chatingRoom
@@ -185,6 +186,12 @@ fun AppNavHost(navController: NavHostController) {
         )){
                 entry -> val groupid = entry.arguments?.getString("groupid")
             member(navController = navController)
+        }
+        composable(
+            route = "guideline/{groupGoal}",
+            arguments = listOf(navArgument("groupGoal") { type = NavType.StringType })
+        ) {
+            Guideline(navController = navController)
         }
     }
 }

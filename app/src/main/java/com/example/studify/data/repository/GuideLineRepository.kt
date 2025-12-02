@@ -9,11 +9,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GuideLineRepository @Inject constructor(private val studifyService: StudifyService) {
+class GuideLineRepository @Inject constructor(
+    private val studifyService: StudifyService
+) {
 
-    fun getRecommendations(goal: String): Single<BookModel> {
+    fun getRecommendations(keyword: String): Single<BookModel> {
         val param = HashMap<String, String>().apply {
-            this["GOAL"] = goal
+            this["KEYWORD"] = keyword
         }
         return studifyService.requestGuideBooks(param)
             .subscribeOn(Schedulers.io())

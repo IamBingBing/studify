@@ -19,11 +19,12 @@ fun groupHome(
     vm: groupVM = hiltViewModel(),
     navController: NavController
 ) {
-    // VM에서 상태 읽어오기
     val groupName by vm.groupName
     val groupGoal by vm.groupGoal
     val hashTags by vm.hashTags
     val errorMessage by vm.errorMessage
+    val dates by vm.dates
+    val announcements by vm.announce
 
     Scaffold(
         topBar = { groupNavigation(navController = navController) },
@@ -34,7 +35,6 @@ fun groupHome(
             modifier = BaseModifiers.BaseModifier.padding(innerPadding)
         ) {
 
-            // 에러표시
             if (!errorMessage.isNullOrEmpty()) {
                 Box(
                     modifier = Modifier
@@ -50,43 +50,74 @@ fun groupHome(
                 }
             }
 
-
-            sectionTitle("그룹정보")
-            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text("- 그룹이름: $groupName")
-                Text("- 목표/다짐: $groupGoal")
-                Text("- 목적: ${hashTags}")
-            }
-
-            Spacer(Modifier.height(12.dp))
-            SectionDivider()
-
-
-            sectionTitle("스터디 일정")
-            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text("11/15(토) 10:30 · 한경대 도서관 스터디룸 5")
-                Text("참석 1/20", style = MaterialTheme.typography.bodySmall)
-            }
-
-            Spacer(Modifier.height(12.dp))
-            SectionDivider()
-
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            sectionTitle("그룹 정보")
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                sectionTitle("공지")
+                Text("• 그룹이름: $groupName", style = MaterialTheme.typography.bodyMedium)
+                Text("• 목표/다짐: $groupGoal", style = MaterialTheme.typography.bodyMedium)
+                Text("• 목적: $hashTags", style = MaterialTheme.typography.bodyMedium)
+
             }
 
+            Spacer(Modifier.height(12.dp))
+            SectionDivider()
+
+            sectionTitle("캘린더 일정")
             Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text("[핀 고정] 이번 주 교재 3장까지")
-                HorizontalDivider()
-                Spacer(Modifier.height(8.dp))
-                Text("최신 공지: 지각 10분 이내 합류 가능")
+                if (dates.isEmpty()) {
+                    Text("등록된 일정이 없습니다.")
+                } else {
+                    dates.forEach { item ->
+                        val rawTime = item.time.orEmpty()
+                        val formattedTime = when {
+                            rawTime.length >= 16 -> rawTime.substring(5, 16)  // "11-23 09:00"
+                            else -> rawTime
+                        }
+
+                        val locationText = item.location.ifBlank { "-" }
+                        val titleText = item.title.ifBlank { "(제목 없음)" }
+
+                        // 2) 최종 출력 포맷
+                        val line = "• $titleText : $formattedTime | $locationText"
+
+                        // 3) 출력
+                        Text(
+                            text = line,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+
+                        Spacer(Modifier.height(6.dp))
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+            SectionDivider()
+
+            sectionTitle("공지")
+
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                if (announcements.isEmpty()) {
+                    Text("공지사항이 없습니다.")
+                } else {
+                    announcements.forEachIndexed { index, announcement ->
+                        if (index > 0) {
+                            //HorizontalDivider()
+                            Spacer(Modifier.height(8.dp))
+                        }
+                        val title = announcement.announceName ?: "(제목 없음)"
+                        val titleText = if (announcement.isPin == true) "• [필독] $title" else "• $title"
+
+                        Text(
+                            titleText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            /*color = if (announcement.isPin == true)
+                                MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onSurface*/
+                        )
+                    }
+                }
             }
         }
     }

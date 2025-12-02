@@ -27,7 +27,7 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 20.dp),
+                .padding(top = 50.dp, bottom = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -67,7 +67,6 @@ fun groupNavigation(vm: groupVM= hiltViewModel(), navController: NavController) 
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
         }
 
 

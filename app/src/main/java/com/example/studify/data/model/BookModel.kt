@@ -13,4 +13,11 @@ data class BookModel(
         @SerializedName("author") @Expose var author: String = "",
         @SerializedName("desc") @Expose var description: String = ""
     )
+    data class BookInfo(
+        @SerializedName("title") @Expose var title: String? = null,
+        @SerializedName("author") @Expose var author: String? = null,
+        @SerializedName("publisher") @Expose var publisher: String? = null,
+        @SerializedName("pub_year") @Expose var pubYear: String? = null,
+        @SerializedName("isbn") @Expose var isbn: String? = null
+    )
 }
