@@ -111,9 +111,7 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
 
                 Button(
                     onClick = {
-                        vm.requestCreate(
-
-                        )
+                        vm.requestCreate({navController.navigate("grouplist")})
                     },
                     enabled = vm.canCreate(),
                     modifier = BaseModifiers.BaseBtnModifier

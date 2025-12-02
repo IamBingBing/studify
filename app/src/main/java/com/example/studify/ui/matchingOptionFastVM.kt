@@ -25,8 +25,11 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
         .subscribe({
             result->
             if(result.resultCode == "200" ){
-                Preferences.putBoolean("fastmatch" , true);
+
                 match.value = true;
             }
         })
+    fun ismatch(){
+
+    }
 }

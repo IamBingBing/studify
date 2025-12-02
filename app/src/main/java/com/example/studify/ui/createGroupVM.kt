@@ -57,13 +57,10 @@ class createGroupVM @Inject constructor(
         val membersOk = (maxMembers.value.toIntOrNull() ?: 0) in 1..30
         val purposeOk = selectedPurpose.value != null
 
-        if (nameOk && membersOk && purposeOk){
-            requestCreate()
-        }
         return nameOk && membersOk && purposeOk
     }
 
-    fun requestCreate() = groupRepository.createGroup(
+    fun requestCreate( navto : ()-> Unit) = groupRepository.createGroup(
         groupName = groupName.value,
         maxLength = maxMembers.value.toIntOrNull() ?: 1,
         hashtag = selectedPurpose.value ?: "",
@@ -75,6 +72,7 @@ class createGroupVM @Inject constructor(
             val grouplist= JSONArray (Preferences.getString("GROUPLIST"))
             grouplist.put(newGroupId)
             Preferences.putString("GROUPLIST",grouplist.toString())
+            navto()
         } else {
 
         }
