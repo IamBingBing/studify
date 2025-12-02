@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.Tool.studylist
 
 @Composable
 fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavController) {
@@ -28,7 +29,7 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
     var selectedPurpose by vm.selectedPurpose
 
     // 목적 리스트
-    val purposeList = vm.availablePurpose
+    val purposeList = studylist.contents;
 
     // 선택창 보이기 여부
     val showPicker by vm.showPicker

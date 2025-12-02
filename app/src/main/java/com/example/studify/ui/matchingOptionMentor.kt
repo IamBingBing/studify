@@ -1,13 +1,21 @@
 package com.example.studify.ui
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -16,17 +24,22 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.Tool.studylist
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,24 +51,14 @@ fun matchingOptionMentor(
     var expandedTeach by remember { mutableStateOf(false) }
     var wantLearn by vm.wantlearn
     var wantTeach by vm.wantteach
-
-    val dayList = listOf("월", "화", "수", "목", "금", "토", "일")
-    var selectedDays by remember { mutableStateOf(setOf<String>()) }
+    var showPicker by remember { mutableStateOf(false)}
+    var selectedPurpose by remember { mutableStateOf("") }
     if (vm.matchcomplete.value){
         navController.navigate("grouplist"){
 
         }
     }
-    val subjectOptions = listOf(
-        "프로그래밍",
-        "수학",
-        "영어",
-        "전공 과목",
-        "어학",
-        "자격증",
-        "취미 / 특기",
-        "기타"
-    )
+    val subjectOptions = studylist.contents
 
     Scaffold(
         topBar = {
@@ -141,23 +144,22 @@ fun matchingOptionMentor(
                         Text(wantTeach.ifBlank { "과목을 선택하세요" })
                     }
 
-                    DropdownMenu(
-                        expanded = expandedTeach,
-                        onDismissRequest = { expandedTeach = false }
-                    ) {
-                        subjectOptions.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(item) },
-                                onClick = {
-                                    wantTeach = item
-                                    expandedTeach = false
-                                }
-                            )
-                        }
+                    PurposeField(
+                        selectedPurpose = wantLearn,
+                        onClick = { showPicker = true }
+                    )
+
+                    if (showPicker) {
+                        PurposePickerDialog(
+                            list = studylist.contents,
+                            selected = selectedPurpose,
+                            onSelect = { expandedTeach = it },
+                            onDismiss = { showPicker=false }
+                        )
                     }
                 }
             }
-
+            """
             // 가능한 날짜 카드
             ElevatedCard(
                 modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
@@ -191,7 +193,7 @@ fun matchingOptionMentor(
                     }
                 }
             }
-
+            """
             Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
 
             // 매칭 시작 버튼
@@ -205,6 +207,71 @@ fun matchingOptionMentor(
             ) {
                 Text("매칭 시작")
             }
+        }
+    }
+    @Composable
+    fun PurposePickerDialog(
+        list: List<String>,
+        selected: String?,
+        onSelect: (String) -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("스터디 목적 선택") },
+            confirmButton = {
+                TextButton(onClick = onDismiss) { Text("닫기") }
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    list.forEach { item ->
+                        val selectedCheck = (selected == item)
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable { onSelect(item) },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selectedCheck,
+                                onClick = { onSelect(item) }
+                            )
+                            Text(item)
+                        }
+                    }
+                }
+            }
+        )
+    }
+    @Composable
+    fun PurposeField(
+        selectedPurpose: String?,
+        onClick: () -> Unit
+    ) {
+        Box(
+            modifier = BaseModifiers.BaseBoxModifier
+                .height(56.dp)
+                .width(280.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(horizontal = 12.dp)
+                .clickable { onClick() },
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = selectedPurpose ?: "# 스터디 목적 선택",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

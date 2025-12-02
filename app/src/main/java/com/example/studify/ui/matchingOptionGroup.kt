@@ -1,14 +1,22 @@
 package com.example.studify.ui
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -17,18 +25,25 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.Tool.studylist
 
+
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun matchingOptionGroup(
@@ -40,13 +55,9 @@ fun matchingOptionGroup(
     val tendency = vm.tendency
     val days = vm.days
 
-    val purposeOptions = listOf(
-        "과제 / 시험 대비",
-        "정기 스터디",
-        "취업 / 자격증",
-        "취미 / 친목",
-        "기타"
-    )
+    val purposeOptions = studylist.contents
+    var showPicker by remember { mutableStateOf(false)}
+    var selectedPurpose by remember { mutableStateOf("") }
 
     Column(
         modifier = BaseModifiers.BaseModifier
@@ -88,19 +99,18 @@ fun matchingOptionGroup(
                     Text(purpose.ifBlank { "목적을 선택하세요" })
                 }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    purposeOptions.forEach { item ->
-                        DropdownMenuItem(
-                            text = { Text(item) },
-                            onClick = {
-                                purpose = item
-                                expanded = false
-                            }
-                        )
-                    }
+                PurposeField(
+                    selectedPurpose = purpose,
+                    onClick = { showPicker = true }
+                )
+
+                if (showPicker) {
+                    PurposePickerDialog(
+                        list = studylist.contents,
+                        selected = selectedPurpose,
+                        onSelect = { purpose = it },
+                        onDismiss = { showPicker=false }
+                    )
                 }
             }
         }
@@ -193,4 +203,71 @@ fun matchingOptionGroup(
             Text("매칭 시작")
         }
     }
+    @Composable
+    fun PurposePickerDialog(
+        list: List<String>,
+        selected: String?,
+        onSelect: (String) -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("스터디 목적 선택") },
+            confirmButton = {
+                TextButton(onClick = onDismiss) { Text("닫기") }
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    list.forEach { item ->
+                        val selectedCheck = (selected == item)
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable { onSelect(item) },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selectedCheck,
+                                onClick = { onSelect(item) }
+                            )
+                            Text(item)
+                        }
+                    }
+                }
+            }
+        )
+    }
+    @Composable
+    fun PurposeField(
+        selectedPurpose: String?,
+        onClick: () -> Unit
+    ) {
+        Box(
+            modifier = BaseModifiers.BaseBoxModifier
+                .height(56.dp)
+                .width(280.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(horizontal = 12.dp)
+                .clickable { onClick() },
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = selectedPurpose ?: "# 스터디 목적 선택",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
 }
+
+
