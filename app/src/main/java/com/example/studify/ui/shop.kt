@@ -62,7 +62,7 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
     } else {
         Box(modifier = BaseModifiers.BaseModifier.fillMaxSize()) {
             Scaffold(
-                topBar = { TopAppBar(title = { Text("상점") }) },
+                topBar = { CenterAlignedTopAppBar(title = { Text("상점", fontWeight = FontWeight.Bold) }) },
                 bottomBar = { navigationbar(navController = navController) }
             ) { paddingValues ->
                 LazyVerticalGrid(
@@ -97,7 +97,11 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
 
                         Card(
                             modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -121,6 +125,7 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
 
                                 Text(
                                     text = "${price}포인트",
+                                    fontSize = 10.sp,
                                     color = Color.Gray,
                                     textAlign = TextAlign.Center
                                 )
@@ -129,9 +134,12 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                                     onClick = {
                                         navController.navigate("productDetail/$goodId")
                                     },
-                                    modifier = BaseModifiers.BaseModifier.padding(top = 4.dp)
+                                    modifier = BaseModifiers.BaseModifier
+                                        .padding(top = 4.dp)
+                                        .wrapContentWidth(),
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
-                                    Text("구매하기")
+                                    Text("선택")
                                 }
                             }
                         }

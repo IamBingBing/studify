@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import androidx.compose.ui.graphics.Color
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
@@ -134,5 +136,5 @@ private fun sectionTitle(title: String) {
 
 @Composable
 private fun SectionDivider() {
-    HorizontalDivider(thickness = 8.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+    HorizontalDivider(thickness = 8.dp, color = Color(0xFFDDEDEF))
 }

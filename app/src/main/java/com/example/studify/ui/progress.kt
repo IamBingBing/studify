@@ -48,7 +48,10 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
             // [1] 주요 목표 카드
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
                     Row(
@@ -79,7 +82,10 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
             // [2] 개인 목표 리스트 카드
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
                     Row(

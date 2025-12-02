@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -39,7 +40,8 @@ fun grouplist(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("참여 그룹") }
+                title = { Text("참여 그룹", fontWeight = FontWeight.Bold) },
+
             )
         },
         bottomBar = { navigationbar(navController) }
@@ -95,7 +97,11 @@ private fun GroupListItem(
 ) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
-        onClick = onClick
+        onClick = onClick,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,      //카드 배경
+            contentColor = MaterialTheme.colorScheme.onSurface       //글씨 색
+        )
     ) {
         Row(
             modifier = Modifier

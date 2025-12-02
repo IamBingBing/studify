@@ -20,7 +20,9 @@ fun navigationbar(navController: NavController) {
     var current by remember { mutableStateOf("") }
 
 
-        NavigationBar (windowInsets = NavigationBarDefaults.windowInsets ){
+        NavigationBar (containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            windowInsets = NavigationBarDefaults.windowInsets ){
             NavigationBarItem(
                 selected = current == "grouplist",
                 onClick = {
@@ -32,7 +34,7 @@ fun navigationbar(navController: NavController) {
                 icon = {
                     Icon(Icons.Default.Home, contentDescription = null)
                        },
-                label = { Text("grouplist") }
+                label = { Text("그룹") }
             )
 
 
@@ -45,7 +47,7 @@ fun navigationbar(navController: NavController) {
                     current ="matchMenu"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
-                label = { Text("matchMenu") }
+                label = { Text("매칭") }
             )
             NavigationBarItem(
                 selected = current == "shop",
@@ -56,7 +58,7 @@ fun navigationbar(navController: NavController) {
                     current = "shop"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
-                label = { Text("shop") }
+                label = { Text("상점") }
             )
             NavigationBarItem(
                 selected = current == "mypage",
@@ -67,7 +69,7 @@ fun navigationbar(navController: NavController) {
                     current = "mypage"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
-                label = { Text("mypage") }
+                label = { Text("마이페이지") }
             )
             NavigationBarItem(
                 selected = current == "chatlist",
@@ -78,7 +80,7 @@ fun navigationbar(navController: NavController) {
                     current = "chatlist"
                 },
                 icon = { Icon(Icons.Default.Person , contentDescription = null) },
-                label = { Text("chatlist") }
+                label = { Text("채팅") }
             )
         }
 

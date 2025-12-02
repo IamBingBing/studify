@@ -101,7 +101,7 @@ fun notice(
                         .padding(start = 15.dp, end = 15.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextField(
+                    textField(
                         value = query,
                         onValueChange = { vm.onQueryChange(it) },
                         placeholder = { Text("검색어 입력") },

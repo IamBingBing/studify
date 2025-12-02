@@ -79,13 +79,13 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
-                TextField(
+                textField(
                     value = loginid,
                     onValueChange = { loginid = it },
                     label = { Text("ID") },
                     singleLine = true
                 )
-                TextField(
+                textField(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Password") },
