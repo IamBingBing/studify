@@ -25,9 +25,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "grouplist",
                 onClick = {
                     navController.navigate("grouplist"){
-                        popUpTo(0){
-                            inclusive = true
-                        }
+                        popUpTo("groupHome")
                     }
                     current = "grouplist"
                           },
@@ -42,9 +40,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "matchMenu",
                 onClick = {
                     navController.navigate("matchMenu"){
-                        popUpTo(0){
-                            inclusive = true
-                        }
+                        popUpTo("groupHome")
                     }
                     current ="matchMenu"
                 },
@@ -55,9 +51,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "shop",
                 onClick = {
                     navController.navigate("shop"){
-                        popUpTo(0){
-                            inclusive = true
-                        }
+                        popUpTo("groupHome")
                     }
                     current = "shop"
                 },
@@ -68,9 +62,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "mypage",
                 onClick = {
                     navController.navigate("mypage"){
-                        popUpTo(0){
-                            inclusive = true
-                        }
+                        popUpTo("groupHome")
                     }
                     current = "mypage"
                 },
@@ -81,9 +73,7 @@ fun navigationbar(navController: NavController) {
                 selected = current == "chatlist",
                 onClick = {
                     navController.navigate("chatlist"){
-                        popUpTo(0){
-                            inclusive = true
-                        }
+                        popUpTo("groupHome")
                     }
                     current = "chatlist"
                 },
