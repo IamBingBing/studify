@@ -95,7 +95,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation("com.kizitonwose.calendar:view:2.9.0")
     implementation ("com.kizitonwose.calendar:compose:2.9.0")
-
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation ("androidx.room:room-runtime:2.8.4")
     ksp("androidx.room:room-compiler:2.8.4")

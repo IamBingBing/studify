@@ -143,7 +143,7 @@ fun matchingOptionGroup(
                 }
             }
         }
-
+        """
         // 가능한 요일 카드
         ElevatedCard(
             modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
@@ -178,7 +178,7 @@ fun matchingOptionGroup(
                 }
             }
         }
-
+        """
         Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
 
         // 매칭 시작 버튼
