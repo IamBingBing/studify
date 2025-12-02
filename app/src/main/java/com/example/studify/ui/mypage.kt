@@ -84,6 +84,19 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
                 ) {
                     Text("정보 수정")
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // [추가] AI 책 추천(가이드라인) 버튼
+                OutlinedButton(
+                    onClick = {
+                        // 1번 그룹의 목표("토익 900점")를 가지고 이동한다고 가정
+                        // (실제로는 사용자가 선택하거나 입력하게 할 수도 있음)
+                        navController.navigate("guideline/토익 900점")
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("AI에게 학습가이드 추천받기")
+                }
             }
         }
     }
