@@ -2,6 +2,7 @@ package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
 import com.example.studify.data.model.UpdateModel
+import com.example.studify.data.model.isMatchModel
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,6 +35,12 @@ class MatchRepository @Inject constructor(private val studifyService: StudifySer
             this["WANTTEACH"]=wantteach
         }
         return studifyService.requestMentorMatch(params)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+    fun ismatching (): Single<isMatchModel>{
+        val params = HashMap<String,String>()
+        return studifyService.requestismatch(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

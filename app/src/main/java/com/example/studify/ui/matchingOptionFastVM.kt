@@ -21,12 +21,23 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
     var match = mutableStateOf(false)
     var start = startTime.hour*60 + startTime.minute
     var end = endTime.hour*60+endTime.minute
+    var matchingcomplete = mutableStateOf(false)
+    init {
+        ismatching();
+    }
+    fun ismatching() = matchRepository.ismatching()
+        .subscribe({ it ->
+            if (it.resultCode == "200"){
+                match.value= it.result
+            }
+        })
     fun matchstart(startt:Int = start, endd :Int=end)= matchRepository.requestFastMatch(startt , endd)
         .subscribe({
             result->
-            if(result.resultCode == "200" ){
-                Preferences.putBoolean("fastmatch" , true);
-                match.value = true;
+            if(result.resultCode == "201" ){
+
             }
+        },{
+
         })
 }

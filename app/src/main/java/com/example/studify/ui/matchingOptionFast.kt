@@ -19,11 +19,21 @@ fun matchingOptionFast(
 ) {
     val startTime = vm.startTime
     val endTime = vm.endTime
-    if (vm.match.value) {
-        navController.navigate("Matchinging") {
-            popUpTo("login") {
-                vm.match.value = false
-                inclusive = true
+    if (vm.match.value ) {
+        if (vm.matchingcomplete.value){
+            navController.navigate("chatlist") {
+                popUpTo("grouplist") {
+                    vm.match.value = false
+                    inclusive = true
+                }
+            }
+        }
+        else {
+            navController.navigate("Matchinging") {
+                popUpTo("grouplist") {
+                    vm.match.value = false
+                    inclusive = true
+                }
             }
         }
     }
@@ -102,7 +112,7 @@ fun matchingOptionFast(
             // 매칭 시작 버튼
             Button(
                 onClick = {
-                    vm.matchstart()
+                    vm.matchstart();
                 },
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()

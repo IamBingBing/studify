@@ -12,7 +12,12 @@ import javax.inject.Inject
 class matchingOptionMentorVM @Inject constructor(application: Application,private val matchRepository: MatchRepository):ViewModel(){
     var wantlearn = mutableStateOf("")
     var wantteach = mutableStateOf("")
-
+    var matchcomplete = mutableStateOf(false)
     fun requesetmatch(wl : String = wantlearn.value, wt : String = wantteach.value) = matchRepository.requestMentorMatch(wl,wt)
-        .subscribe()
+        .subscribe({
+            it->
+            if (it.resultCode =="200"){
+                matchcomplete.value = true;
+            }
+        })
 }

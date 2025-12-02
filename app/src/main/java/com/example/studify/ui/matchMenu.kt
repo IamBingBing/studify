@@ -15,7 +15,7 @@ import com.example.studify.Tool.Preferences
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun matchMenu(
-    vm: matchMenuVM = hiltViewModel(),
+    vm: matchingOptionFastVM = hiltViewModel(),
     navController: NavController
 ) {
     Scaffold(
@@ -58,16 +58,14 @@ fun matchMenu(
                     title = "번개 매칭",
                     description = "지금 바로\n빠르게 만나기",
                     modifier = Modifier.weight(1f),
-                    onClick = { if( !Preferences.getBoolean("fastmatch")) {
-                        navController.navigate("matchingOptionFast"
-                        )}
-                    else {
-                        navController.navigate("Matchinging"){
-                            popUpTo("matchMenu"){
-                                inclusive = true
-                            }
+                    onClick = {
+                        if (!vm.match.value){
+                            navController.navigate("matchingOptionFast")
                         }
-                    }}
+                        else {
+                            navController.navigate("MatchingIng")
+                        }
+                    }
                 )
 
                 MatchMenuItem(

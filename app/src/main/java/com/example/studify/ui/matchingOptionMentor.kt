@@ -41,7 +41,11 @@ fun matchingOptionMentor(
 
     val dayList = listOf("월", "화", "수", "목", "금", "토", "일")
     var selectedDays by remember { mutableStateOf(setOf<String>()) }
+    if (vm.matchcomplete.value){
+        navController.navigate("grouplist"){
 
+        }
+    }
     val subjectOptions = listOf(
         "프로그래밍",
         "수학",
@@ -193,7 +197,7 @@ fun matchingOptionMentor(
             // 매칭 시작 버튼
             Button(
                 onClick = {
-                    // TODO: 매칭 시작 로직 (wantLearn, wantTeach, selectedDays 사용)
+                    vm.requesetmatch()
                 },
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()

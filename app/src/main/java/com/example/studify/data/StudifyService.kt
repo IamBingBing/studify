@@ -16,6 +16,7 @@ import com.example.studify.data.model.UpdateModel
 import com.example.studify.data.req.GroupReqModel
 import io.reactivex.Single
 import com.example.studify.data.model.EmailAuthModel
+import com.example.studify.data.model.isMatchModel
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
@@ -105,4 +106,7 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/guideBooks.php")
     fun requestGuideBooks(@FieldMap data: Map<String, String>): Single<BookModel>
+    @FormUrlEncoded
+    @POST("api/ismatch.php")
+    fun requestismatch(@FieldMap data: Map<String, String>): Single<isMatchModel>
 }

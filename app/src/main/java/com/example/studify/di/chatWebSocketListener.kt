@@ -19,15 +19,24 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
-        val jsonObject= JSONObject(text)
-        Log.e("websocket",text)
-        val msg = Message(
-            0,
-            jsonObject.getLong("CHATID"),
-            jsonObject["CHATNAME"] as String,
-            jsonObject["CHAT"] as String,
-            jsonObject["SENDERTIME"] as String )
-        messageHandler.onNewMessage(msg)
+        val jsonObject = JSONObject(text)
+        if (jsonObject.getString("CHANNEL") == "chatserver") {
+
+
+            Log.e("websocket", text)
+            val msg = Message(
+                0,
+                jsonObject.getLong("CHATID"),
+                jsonObject["CHATNAME"] as String,
+                jsonObject["CHAT"] as String,
+                jsonObject["SENDERTIME"] as String
+            )
+            messageHandler.onNewMessage(msg)
+        }
+        else if(jsonObject.getString("CHANNEL") == "fastmatch") {
+
+        }
+
     }
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
