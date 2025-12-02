@@ -99,11 +99,6 @@ fun matchingOptionGroup(
                     Text(purpose.ifBlank { "목적을 선택하세요" })
                 }
 
-                PurposeField(
-                    selectedPurpose = purpose,
-                    onClick = { showPicker = true }
-                )
-
                 if (showPicker) {
                     PurposePickerDialog(
                         list = studylist.contents,
@@ -243,30 +238,6 @@ fun matchingOptionGroup(
                 }
             }
         )
-    }
-    @Composable
-    fun PurposeField(
-        selectedPurpose: String?,
-        onClick: () -> Unit
-    ) {
-        Box(
-            modifier = BaseModifiers.BaseBoxModifier
-                .height(56.dp)
-                .width(280.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = MaterialTheme.shapes.small
-                )
-                .padding(horizontal = 12.dp)
-                .clickable { onClick() },
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text(
-                text = selectedPurpose ?: "# 스터디 목적 선택",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
     }
 }
 

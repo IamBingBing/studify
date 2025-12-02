@@ -51,7 +51,6 @@ fun matchingOptionMentor(
     var expandedTeach by remember { mutableStateOf(false) }
     var wantLearn by vm.wantlearn
     var wantTeach by vm.wantteach
-    var showPicker by remember { mutableStateOf(false)}
     var selectedPurpose by remember { mutableStateOf("") }
     if (vm.matchcomplete.value){
         navController.navigate("grouplist"){
@@ -105,19 +104,14 @@ fun matchingOptionMentor(
                         Text(wantLearn.ifBlank { "과목을 선택하세요" })
                     }
 
-                    DropdownMenu(
-                        expanded = expandedLearn,
-                        onDismissRequest = { expandedLearn = false }
-                    ) {
-                        subjectOptions.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(item) },
-                                onClick = {
-                                    wantLearn = item
-                                    expandedLearn = false
-                                }
-                            )
-                        }
+                    if (expandedLearn) {
+                        PurposePickerDialog(
+                            list = studylist.contents,
+                            selected = selectedPurpose,
+                            onSelect = { wantLearn = it
+                                expandedTeach = false},
+                            onDismiss = { expandedLearn=false }
+                        )
                     }
                 }
             }
@@ -138,23 +132,21 @@ fun matchingOptionMentor(
                     )
 
                     Button(
-                        onClick = { expandedTeach = true },
+                        onClick = { expandedTeach= true },
                         modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
                     ) {
                         Text(wantTeach.ifBlank { "과목을 선택하세요" })
                     }
 
-                    PurposeField(
-                        selectedPurpose = wantLearn,
-                        onClick = { showPicker = true }
-                    )
 
-                    if (showPicker) {
+                    if (expandedTeach) {
                         PurposePickerDialog(
                             list = studylist.contents,
                             selected = selectedPurpose,
-                            onSelect = { expandedTeach = it },
-                            onDismiss = { showPicker=false }
+                            onSelect = {
+                                wantTeach = it
+                                       expandedTeach = false},
+                            onDismiss = { expandedTeach=false }
                         )
                     }
                 }
@@ -249,29 +241,5 @@ fun matchingOptionMentor(
                 }
             }
         )
-    }
-    @Composable
-    fun PurposeField(
-        selectedPurpose: String?,
-        onClick: () -> Unit
-    ) {
-        Box(
-            modifier = BaseModifiers.BaseBoxModifier
-                .height(56.dp)
-                .width(280.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = MaterialTheme.shapes.small
-                )
-                .padding(horizontal = 12.dp)
-                .clickable { onClick() },
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text(
-                text = selectedPurpose ?: "# 스터디 목적 선택",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
     }
 }

@@ -73,9 +73,7 @@ fun matchMenu(
                     description = "여러 명과\n함께 스터디",
                     modifier = Modifier.weight(1f),
                     onClick = { navController.navigate("matchingOptionGroup"){
-                        popUpTo("matchMenu"){
-                            inclusive = true
-                        }
+                        popUpTo("matchMenu")
                     } }
                 )
 
@@ -84,9 +82,7 @@ fun matchMenu(
                     description = "멘토/멘티로\n지식 공유",
                     modifier = Modifier.weight(1f),
                     onClick = { navController.navigate("matchingOptionMentor"){
-                        popUpTo("matchMenu"){
-                            inclusive = true
-                        }
+                        popUpTo("matchMenu")
                     } }
                 )
             }
