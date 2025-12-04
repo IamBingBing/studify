@@ -99,7 +99,7 @@ private fun GroupListItem(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,      //카드 배경
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,      //카드 배경
             contentColor = MaterialTheme.colorScheme.onSurface       //글씨 색
         )
     ) {
