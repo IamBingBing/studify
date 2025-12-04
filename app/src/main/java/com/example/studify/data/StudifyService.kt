@@ -109,4 +109,8 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/ismatch.php")
     fun requestismatch(@FieldMap data: Map<String, String>): Single<isMatchModel>
+
+    @FormUrlEncoded
+    @POST("api/searchbook.php")
+    fun requestSearchBook(@FieldMap param: HashMap<String, String>): Single<BookModel>
 }
