@@ -163,6 +163,9 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
             var text by remember { mutableStateOf(mainGoal) }
             AlertDialog(
                 onDismissRequest = { showMainGoalDialog = false },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 title = { Text("주요 목표 설정") },
                 text = {
                     OutlinedTextField(
@@ -191,6 +194,9 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
             var text by remember { mutableStateOf("") }
             AlertDialog(
                 onDismissRequest = { showPersonalGoalDialog = false },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 title = { Text("개인 목표 추가") },
                 text = {
                     OutlinedTextField(

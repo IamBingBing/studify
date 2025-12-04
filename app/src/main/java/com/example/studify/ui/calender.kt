@@ -230,6 +230,10 @@ private fun ScheduleDetailDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+
         confirmButton = {
             TextButton(onClick = onDismiss) {
                 Text("닫기")
