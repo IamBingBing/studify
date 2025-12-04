@@ -136,5 +136,5 @@ private fun sectionTitle(title: String) {
 
 @Composable
 private fun SectionDivider() {
-    HorizontalDivider(thickness = 8.dp, color = Color(0xFFDDEDEF))
+    HorizontalDivider(thickness = 8.dp, color = Color(0xFFDFE5F3))
 }

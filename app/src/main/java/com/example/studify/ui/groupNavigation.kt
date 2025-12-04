@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.graphics.Color
 
-private val TopNavColor = Color(0xFF6BB8C2)
+private val TopNavColor = Color(0xFF4662BD)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +55,7 @@ fun groupNavigation(
                 text = groupName,
                 fontSize = 30.sp,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color(0xFFF4F5FC),
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
