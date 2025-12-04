@@ -193,6 +193,7 @@ fun matchingOptionMentor(
                 onClick = {
                     vm.requesetmatch()
                 },
+                enabled = wantLearn != "" && wantTeach !="",
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()
                     .height(52.dp)

@@ -50,7 +50,6 @@ fun matchingOptionGroup(
     vm: matchingOptionGroupVM = hiltViewModel(),
     navController: NavController
 ) {
-    var expanded by remember { mutableStateOf(false) }
     var purpose by vm.purpose
     val tendency = vm.tendency
     val days = vm.days
@@ -93,7 +92,7 @@ fun matchingOptionGroup(
                 )
 
                 Button(
-                    onClick = { expanded = true },
+                    onClick = { showPicker= true },
                     modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
                 ) {
                     Text(purpose.ifBlank { "목적을 선택하세요" })
@@ -103,7 +102,9 @@ fun matchingOptionGroup(
                     PurposePickerDialog(
                         list = studylist.contents,
                         selected = selectedPurpose,
-                        onSelect = { purpose = it },
+                        onSelect = {
+                            purpose = it
+                            showPicker=false  },
                         onDismiss = { showPicker=false }
                     )
                 }
@@ -191,6 +192,7 @@ fun matchingOptionGroup(
             onClick = {
                 // TODO: 매칭 시작 로직
             },
+            enabled = purpose != "",
             modifier = BaseModifiers.BaseBtnModifier
                 .fillMaxWidth()
                 .height(52.dp)

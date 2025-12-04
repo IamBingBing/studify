@@ -9,19 +9,15 @@ data class BookModel(
     @SerializedName("error_msg") @Expose var errorMsg: String = "",
     @SerializedName("result") @Expose var result: List<BookInfo>? = null
 ) : Serializable {
-    data class BookItem(
-        @SerializedName("title") @Expose var title: String = "",
-        @SerializedName("author") @Expose var author: String = "",
-        @SerializedName("desc") @Expose var description: String = ""
-    )
 
     data class BookInfo(
-        @SerializedName("title") @Expose var title: String? = null,
+        @SerializedName("title") @Expose var title: String? = "",
         @SerializedName("author") @Expose var author: String? = null,
         @SerializedName("publisher") @Expose var publisher: String? = null,
         @SerializedName("pub_year") @Expose var pubYear: String? = null,
         @SerializedName("isbn") @Expose var isbn: String? = null,
         @SerializedName("price") @Expose var price: String? = null,
-        @SerializedName("image") @Expose var image: String? = null
+        @SerializedName("image") @Expose var image: String? = null,
+        @SerializedName("desc") @Expose var description: String = ""
     ) : Serializable
 }

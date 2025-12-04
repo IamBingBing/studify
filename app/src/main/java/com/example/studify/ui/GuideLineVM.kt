@@ -21,7 +21,7 @@ class GuideLineVM @Inject constructor(
 
     val groupGoal = savedStateHandle.get<String>("groupGoal") ?: "목표 없음"
     var isLoading = mutableStateOf(false)
-    var bookList = mutableStateListOf<BookModel.BookItem>()
+    var bookList = mutableStateListOf<BookModel.BookInfo>()
 
     private val disposables = CompositeDisposable()
 
