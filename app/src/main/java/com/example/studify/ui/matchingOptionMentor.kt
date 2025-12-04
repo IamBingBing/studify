@@ -109,7 +109,7 @@ fun matchingOptionMentor(
                             list = studylist.contents,
                             selected = selectedPurpose,
                             onSelect = { wantLearn = it
-                                expandedTeach = false},
+                                expandedLearn = false},
                             onDismiss = { expandedLearn=false }
                         )
                     }

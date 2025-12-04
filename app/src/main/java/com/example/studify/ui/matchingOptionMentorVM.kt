@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -19,5 +20,5 @@ class matchingOptionMentorVM @Inject constructor(application: Application,privat
             if (it.resultCode =="200"){
                 matchcomplete.value = true;
             }
-        })
+        },{error-> Log.e("mentor",error.toString())})
 }

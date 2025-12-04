@@ -22,7 +22,7 @@ fun grouplist(
 ) {
     val error = vm.error
     val groupList = vm.grouplist   // 이미 “참여 중인 그룹만” 들어있다고 가정
-
+    val mentorlist = vm.mentorlist
     // 에러 메시지
     if (!error.value.isNullOrEmpty()) {
         AlertDialog(
@@ -81,6 +81,32 @@ fun grouplist(
                             name = entry.value,
                             onClick = {
                                 navController.navigate("groupHome/${entry.key}")
+                            }
+                        )
+                    }
+                }
+            }
+            if (mentorlist.isEmpty()) {
+                Spacer(modifier = Modifier.height(80.dp))
+                Text(
+                    text = "참여 중인 그룹이 없습니다.\n그룹에 참여해 보세요!",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                // 참여 중인 그룹 리스트
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
+                        items = mentorlist.entries.toList(),
+                        key = { it.key }
+                    ) { entry ->
+                        GroupListItem(
+                            name = entry.value,
+                            onClick = {
+                                navController.navigate("mentor/${entry.key}")
                             }
                         )
                     }

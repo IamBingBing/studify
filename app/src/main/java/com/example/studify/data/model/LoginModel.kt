@@ -22,7 +22,8 @@ data class LoginModel(
         @SerializedName("ADDRESS") @Expose var address:String?= null,
         @SerializedName("EMAIL") @Expose var email:String?=null,
         @SerializedName("CHATLIST") @Expose var chatlist: List<chat>?=null,
-        @SerializedName("TOKEN") @Expose var token:String?=null
+        @SerializedName("TOKEN") @Expose var token:String?=null,
+        @SerializedName("MENTOR") @Expose var mentorlist :List<mentor>?=null,
         ){
         data class chat (
             @SerializedName("CHATID") @Expose var chatid: Long? = null,
@@ -32,5 +33,9 @@ data class LoginModel(
             @SerializedName("GROUPID") @Expose var groupid: Long? = -1,
             @SerializedName("GROUPNAME") @Expose var groupname: String = "",
         ):Serializable
+        data class mentor (
+            @SerializedName("MENTORID") @Expose var mentorid: Long? = -1,
+            @SerializedName("MENTORNAME") @Expose var mentorname: String = "",
+        )
     }
 }

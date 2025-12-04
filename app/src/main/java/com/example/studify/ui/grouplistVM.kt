@@ -12,6 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class grouplistVM @Inject constructor(application: Application,  private val userRepository: UserRepository):ViewModel(){
     var grouplist = mutableStateMapOf<Long,String>()
+    var mentorlist = mutableStateMapOf<Long,String>()
     var error = mutableStateOf("")
     fun getGrouplist()=userRepository.requestUserData()
         .subscribe({
@@ -19,6 +20,10 @@ class grouplistVM @Inject constructor(application: Application,  private val use
             grouplist.clear()
             result.result?.grouplist?.forEach { group->
                 grouplist[group.groupid!!]=group.groupname
+            }
+            result.result?.mentorlist?.forEach {
+                mentor->
+                mentorlist[mentor.mentorid!!] = mentor.mentorname
             }
         },{
                 errorMsg->
