@@ -70,7 +70,7 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.End
         ) {
-        Image(modifier = BaseModifiers.BaseModifier.size(400.dp, 400.dp),painter = painterResource(id = R.drawable.logo) , contentDescription = null)
+        Image(modifier = BaseModifiers.BaseModifier.size(400.dp, 400.dp),painter = painterResource(id = R.drawable.logo1) , contentDescription = null)
         Box(modifier = BaseModifiers.BaseModifier
             .size(280.dp, 280.dp)
             .align(alignment = Alignment.CenterHorizontally)) {
