@@ -52,7 +52,7 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
 
                 Spacer(Modifier.height(16.dp))
 
-                TextField(
+                textField(
                     value = groupName,
                     onValueChange = { groupName = it },
                     label = { Text("그룹 이름") },
@@ -61,7 +61,7 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
 
                 Spacer(Modifier.height(6.dp))
 
-                TextField(
+                textField(
                     value = groupGoal,
                     onValueChange = { groupGoal = it },
                     label = { Text("목표/다짐(텍스트)") },
@@ -73,7 +73,7 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
 
                 Spacer(Modifier.height(6.dp))
 
-                TextField(
+                textField(
                     value = maxMembers,
                     onValueChange = { input ->
                         if (input.all { it.isDigit() } && (input.toIntOrNull() ?: 0) <= 30) {
@@ -85,12 +85,18 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
                     modifier = BaseModifiers.BaseTextfillModifier
                 )
 
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(12.dp))
 
-                PurposeField(
-                    selectedPurpose = selectedPurpose,
-                    onClick = { vm.openPicker() }
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    PurposeField(
+                        selectedPurpose = selectedPurpose,
+                        onClick = { vm.openPicker() }
+                    )
+                }
+
 
                 if (showPicker) {
                     PurposePickerDialog(
@@ -130,9 +136,9 @@ fun PurposeField(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = BaseModifiers.BaseBoxModifier
-            .height(56.dp)
+        modifier = Modifier
             .width(280.dp)
+            .height(56.dp)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline,
@@ -159,6 +165,9 @@ fun PurposePickerDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("스터디 목적 선택") },
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         confirmButton = {
             TextButton(onClick = onDismiss) { Text("닫기") }
         },
@@ -176,12 +185,20 @@ fun PurposePickerDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
-                            .clickable { onSelect(item) },
+                            .clickable { onSelect(item)
+                                onDismiss()
+                                       },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
                             selected = selectedCheck,
-                            onClick = { onSelect(item) }
+                            onClick = { onSelect(item)
+                                onDismiss()
+                            },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = MaterialTheme.colorScheme.primary,
+                                unselectedColor = MaterialTheme.colorScheme.outline
+                        )
                         )
                         Text(item)
                     }

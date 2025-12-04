@@ -111,7 +111,11 @@ private fun MatchMenuItem(
 ) {
     ElevatedCard(
         modifier = modifier.height(160.dp),
-        onClick = onClick
+        onClick = onClick,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     ) {
         Column(
             modifier = Modifier
