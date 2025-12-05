@@ -189,13 +189,14 @@ fun AppNavHost(navController: NavHostController) {
             member(navController = navController)
         }
         composable(
-            route = "guideline/{groupGoal}",
-            arguments = listOf(navArgument("groupGoal") { type = NavType.StringType })
+            route = "guideline/{groupid}",
+            arguments = listOf(navArgument("groupid") { type = NavType.StringType })
         ) {
             Guideline(navController = navController)
         }
-        composable(route = "searchbook") {
-            // searchbook 컴포저블 함수 호출 (import 필요)
+        composable(route = "searchbook/{groupGoal}",
+            arguments = listOf(navArgument("groupid") { type = NavType.StringType })
+        ) {
             searchbook(navController = navController)
         }
     }
