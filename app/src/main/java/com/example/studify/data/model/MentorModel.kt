@@ -14,6 +14,6 @@ data class MentorModel (
         @SerializedName("MENTOR") @Expose var mentor : String = "",
         @SerializedName("MENTI") @Expose var menti : String = "",
         @SerializedName("TEACH") @Expose var teach : String = "",
-
+        @SerializedName("LEARN") @Expose var learn : String = "",
         )
 }
