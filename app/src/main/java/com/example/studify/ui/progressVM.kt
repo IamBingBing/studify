@@ -1,13 +1,13 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.ProgressModel
-// ProgressModel 내부 클래스 import
 import com.example.studify.data.model.ProgressModel.ProgressResult.Purpose
 import com.example.studify.data.repository.ProgressRepository
 import com.google.gson.Gson
@@ -28,56 +28,75 @@ class progressVM @Inject constructor(
 
     var showMainGoalDialog = mutableStateOf(false)
     var showPersonalGoalDialog = mutableStateOf(false)
-    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")?.toIntOrNull() ?: -1)
+
+    // ✅ 수정: String으로 받기 (Repository도 String 받음)
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid") ?: "-1")
+
     private val disposables = CompositeDisposable()
 
     init {
-        if (groupId.value != -1) {
+        // VM 생성 시 ID 확인 로그
+        Log.d("ProgressVM", "진입 GroupID: ${groupId.value}")
+        if (groupId.value != "-1") {
             loadProgress()
         }
     }
 
+    // ✅ 수정: String 그대로 전달 (Int 변환 불필요!)
     fun loadProgress() {
-        val d = repository.getProgress(groupId.value)
+        if (groupId.value == "-1") return
+
+        val d = repository.getProgress(groupId.value)  // ← String 그대로 전달!
             .subscribe({ model ->
                 if (model.resultCode == "200" && model.result != null) {
                     val list = model.result!!.purposeList
 
                     if (!list.isNullOrEmpty()) {
+                        // 0번 인덱스: 주요 목표
                         mainGoal.value = list[0].purpose
 
+                        // 1번~끝: 개인 목표
                         personalGoals.clear()
                         if (list.size > 1) {
                             personalGoals.addAll(list.subList(1, list.size))
                         }
                         calculateProgress()
+                        Log.d("ProgressVM", "로딩 성공: ${list.size}개 항목")
                     }
                 }
             }, { error ->
-                Toast.makeText(application, "로딩 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+                Log.e("ProgressVM", "로딩 실패: ${error.message}")
             })
         disposables.add(d)
     }
 
+    // ✅ 수정: String 그대로 전달 (Int 변환 불필요!)
     fun saveProgress() {
-        if (groupId.value == -1) return
+        if (groupId.value == "-1") {
+            Toast.makeText(application, "그룹 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val allGoals = ArrayList<Purpose>()
+        // 주요 목표 추가 (완료 여부는 무관하므로 false)
         allGoals.add(Purpose(purpose = mainGoal.value, complit = false))
+        // 개인 목표들 추가
         allGoals.addAll(personalGoals)
 
         val jsonString = Gson().toJson(allGoals)
+        Log.d("ProgressVM", "저장 시도: $jsonString")
 
-        val d = repository.saveProgress(groupId.value, jsonString)
+        val d = repository.saveProgress(groupId.value, jsonString)  // ← String 그대로 전달!
             .subscribe({ model ->
                 if (model.resultCode == "200") {
-                    Toast.makeText(application, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+                    // 저장 성공!
+                    Log.d("ProgressVM", "저장 완료")
                     calculateProgress()
                 } else {
-                    Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(application, "저장 에러: ${model.errorMsg}", Toast.LENGTH_SHORT).show()
                 }
             }, { error ->
-                Toast.makeText(application, "저장 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(application, "통신 실패: ${error.message}", Toast.LENGTH_SHORT).show()
             })
 
         disposables.add(d)

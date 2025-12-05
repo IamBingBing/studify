@@ -29,6 +29,12 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
     var showMainGoalDialog by vm.showMainGoalDialog
     var showPersonalGoalDialog by vm.showPersonalGoalDialog
 
+    // ✅ 수정: 화면에 들어올 때마다 데이터를 서버에서 새로 가져옵니다
+    // 이 코드가 없으면 다른 페이지 갔다 왔을 때 내용이 사라져 보일 수 있습니다
+    LaunchedEffect(Unit) {
+        vm.loadProgress()
+    }
+
     Scaffold(
         topBar = { groupNavigation(navController = navController) },
         bottomBar = { navigationbar(navController) }
@@ -50,7 +56,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
@@ -71,7 +77,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = if (mainGoal.isBlank()) "" else mainGoal,
+                        text = if (mainGoal.isBlank()) "목표를 설정해주세요" else mainGoal,
                         fontSize = 14.sp
                     )
                 }
@@ -84,7 +90,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
@@ -106,7 +112,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                     Spacer(Modifier.height(8.dp))
 
                     if (personalGoals.isEmpty()) {
-                        Text("", fontSize = 14.sp)
+                        Text("목표가 없습니다.", fontSize = 14.sp)
                     } else {
                         personalGoals.forEachIndexed { index, item ->
                             Row(

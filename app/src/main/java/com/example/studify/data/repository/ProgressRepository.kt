@@ -12,16 +12,16 @@ import javax.inject.Singleton
 @Singleton
 class ProgressRepository @Inject constructor(private val studifyService: StudifyService) {
 
-    fun getProgress(groupId: Int): Single<ProgressModel> {
-        val param = HashMap<String, String>().apply { this["GROUPID"] = groupId.toString() }
+    fun getProgress(groupId: String): Single<ProgressModel> {
+        val param = HashMap<String, String>().apply { this["GROUPID"] = groupId }
         return studifyService.requestGetProgress(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun saveProgress(groupId: Int, purposeJson: String): Single<UpdateModel> {
+    fun saveProgress(groupId: String, purposeJson: String): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
-            this["GROUPID"] = groupId.toString()
+            this["GROUPID"] = groupId
             this["PURPOSE"] = purposeJson
         }
         return studifyService.UpdateProgress(param)
