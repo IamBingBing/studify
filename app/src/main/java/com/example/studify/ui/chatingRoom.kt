@@ -32,7 +32,7 @@ fun chatingRoom(
 ) {
     val messages = vm.message.collectAsState()        // vm.message: State<List<Chat>>
     var sendMessage by vm.sendmessage // vm.sendmessage: MutableState<String>
-    val myName = Preferences.getString("USERNAME")
+    val myName = Preferences.getLong("USERID")
 
     Scaffold(
         topBar = {
@@ -56,7 +56,7 @@ fun chatingRoom(
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 items(messages.value) { entry ->
-                    val isMine = myName == entry.CHATNAME
+                    val isMine = myName == entry.USERID
 
                     Column(
                         modifier = Modifier

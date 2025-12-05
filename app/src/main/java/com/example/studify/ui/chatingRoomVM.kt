@@ -35,7 +35,9 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
             )
     var sendmessage = mutableStateOf<String>("")
     var error = mutableStateOf("")
-
+    init {
+        requestMessage()
+    }
     fun sendMessage() = chatRepository.UpdateChat(roomid.value,sendmessage.value,Preferences.getString("USERNAME")!!)
         .subscribe(
             {result->
@@ -46,5 +48,26 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
                 Log.e("CHATROOM", error.toString())
             }
         )
-
+    fun requestMessage () = chatRepository.requestChat(roomid.value)
+        .subscribe(
+            {
+                result->
+                if(result.resultCode == "200"){
+                    scope.launch {
+                        chatRepository.insertMessages(result.list!!.map { msg ->
+                            Message(
+                                msg.chatid!!,
+                                msg.CHATNAME!!,
+                                msg.CHAT!!,
+                                msg.TIME!!,
+                                msg.USERID!!
+                            )
+                        })
+                    }
+                }
+            },
+            {error->
+                Log.e("CHATROOM",error.toString())
+            }
+        )
 }

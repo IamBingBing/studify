@@ -34,15 +34,8 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
         set(Calendar.SECOND , 0)
     }.time)
     var matchingcomplete = mutableStateOf(false)
-    init {
-        ismatching();
-    }
-    fun ismatching() = matchRepository.ismatching()
-        .subscribe({ it ->
-            if (it.resultCode == "200"){
-                match.value= it.result
-            }
-        })
+
+
     fun matchstart(startt:String = start, endd :String=end)= matchRepository.requestFastMatch(startt , endd)
         .subscribe({
             result->

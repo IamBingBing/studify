@@ -15,6 +15,7 @@ data class ChatModel (
         @SerializedName("CHATID") @Expose var chatid: Long? = null,
         @SerializedName("CHATNAME") @Expose var CHATNAME: String? = null,
         @SerializedName("CHAT") @Expose var CHAT: String? = null,
+        @SerializedName("USERID") @Expose var USERID: Long? = null,
         @SerializedName("TIME") @Expose var TIME : String? = null
     ):Serializable
 }

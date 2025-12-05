@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.sql.Timestamp
-@Entity(tableName = "message")
+@Entity(tableName = "message",
+    primaryKeys = ["CHATID","TIME"]
+)
 data class Message (
-    @PrimaryKey(autoGenerate = true)
-    val id : Long = 0L,
     @ColumnInfo(name = "CHATID")
     val CHATID : Long,
     @ColumnInfo(name = "CHATNAME")
@@ -15,5 +15,7 @@ data class Message (
     @ColumnInfo(name = "CHAT")
     val CHAT : String,
     @ColumnInfo("TIME")
-    val TIME : String
+    val TIME : String,
+    @ColumnInfo("USERID")
+    val USERID : Long
 )

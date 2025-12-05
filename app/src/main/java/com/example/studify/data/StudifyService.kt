@@ -27,7 +27,7 @@ interface StudifyService {
     @POST("api/login.php")
     fun requestLogin(@FieldMap data: Map<String, String>): Single<LoginModel>
     @FormUrlEncoded
-    @POST("api/chat.php")
+    @POST("api/chatdata.php")
     fun requestchat(@FieldMap data: Map<String, String>): Single<ChatModel>
     @FormUrlEncoded
     @POST("api/userdata.php")
@@ -109,6 +109,9 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/ismatch.php")
     fun requestismatch(@FieldMap data: Map<String, String>): Single<isMatchModel>
+    @FormUrlEncoded
+    @POST("api/ismentormatch.php")
+    fun requestismentormatch(@FieldMap data: Map<String, String>): Single<isMatchModel>
 
     @FormUrlEncoded
     @POST("api/searchbook.php")

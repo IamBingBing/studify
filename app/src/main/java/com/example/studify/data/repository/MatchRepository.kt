@@ -44,4 +44,10 @@ class MatchRepository @Inject constructor(private val studifyService: StudifySer
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+    fun ismentormatching (): Single<isMatchModel>{
+        val params = HashMap<String,String>()
+        return studifyService.requestismentormatch(params)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

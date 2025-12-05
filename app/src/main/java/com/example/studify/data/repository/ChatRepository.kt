@@ -46,6 +46,9 @@ class ChatRepository @Inject constructor(private val studifyService: StudifyServ
         messageDao.insertMessage(msg)
         Log.e("insertmessage",msg.toString());
     }
+    suspend fun insertMessages(msg:List<Message>){
+        messageDao.insertMessages(msg)
+    }
     override fun onNewMessage(message: Message) {
         scope.launch {
             insertMessage(message)

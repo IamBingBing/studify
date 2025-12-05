@@ -25,11 +25,11 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
 
             Log.e("websocket", text)
             val msg = Message(
-                0,
                 jsonObject.getLong("CHATID"),
                 jsonObject["CHATNAME"] as String,
                 jsonObject["CHAT"] as String,
-                jsonObject["SENDERTIME"] as String
+                jsonObject["TIME"] as String,
+                jsonObject["USERID"] as Long
             )
             messageHandler.onNewMessage(msg)
         }
