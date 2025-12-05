@@ -15,6 +15,5 @@ data class DateModel (
         @SerializedName("TIME") @Expose var time : String = "",
         @SerializedName("TITLE") @Expose var title : String = "",
         @SerializedName("CONTENT") @Expose var content : String = "",
-
         )
 }

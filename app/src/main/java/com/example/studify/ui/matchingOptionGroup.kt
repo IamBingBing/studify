@@ -64,6 +64,13 @@ fun matchingOptionGroup(
             }
         } })
     }
+    if (vm.matchcomplete.value){
+        navController.navigate("grouplist"){
+            popUpTo("grouplist"){
+                inclusive = true
+            }
+        }
+    }
     Column(
         modifier = BaseModifiers.BaseModifier
             .fillMaxSize()
