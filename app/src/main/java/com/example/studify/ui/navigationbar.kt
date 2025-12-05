@@ -2,8 +2,12 @@ package com.example.studify.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,7 +61,7 @@ fun navigationbar(navController: NavController) {
                     }
                     current = "shop"
                 },
-                icon = { Icon(Icons.Default.Person , contentDescription = null) },
+                icon = { Icon(Icons.Default.ShoppingCart , contentDescription = null) },
                 label = { Text("상점") }
             )
             NavigationBarItem(
@@ -68,7 +72,7 @@ fun navigationbar(navController: NavController) {
                     }
                     current = "mypage"
                 },
-                icon = { Icon(Icons.Default.Person , contentDescription = null) },
+                icon = { Icon(Icons.Default.Info , contentDescription = null) },
                 label = { Text("마이페이지") }
             )
             NavigationBarItem(
@@ -79,7 +83,7 @@ fun navigationbar(navController: NavController) {
                     }
                     current = "chatlist"
                 },
-                icon = { Icon(Icons.Default.Person , contentDescription = null) },
+                icon = { Icon(Icons.Default.Email , contentDescription = null) },
                 label = { Text("채팅") }
             )
         }
