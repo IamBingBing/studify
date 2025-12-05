@@ -89,19 +89,14 @@ class registerVM @Inject constructor(
         _registerSuccess.value = false
         _registerError.value = error.message ?: error.toString()
     })
-    // 이메일 인증번호 요청 함수
+
     fun requestEmailCode(email: String) {
-        // 여기에 실제 서버 통신 코드를 넣거나,
-        // 일단 테스트를 위해 로그만 찍어둡니다.
         println("이메일 전송 요청: $email")
     }
 
-    // 인증번호 확인 함수
-    fun verifyEmailCode(email: String, code: String) {
-        // 여기에 인증번호 확인 로직 구현
-        println("인증번호 확인 요청: $email, $code")
 
-        // (테스트용) 확인 버튼 누르면 성공했다고 가정
-        // _registerSuccess.value = true
+    fun verifyEmailCode(email: String, code: String) {
+
+        println("인증번호 확인 요청: $email, $code")
     }
 }
