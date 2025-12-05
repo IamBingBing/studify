@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.compose.runtime.collectAsState
 import com.example.studify.Tool.BaseModifiers
 
 @Composable
@@ -33,7 +32,6 @@ fun register(
     vm: registerVM = hiltViewModel(),
     navController: NavController
 ) {
-    // 변수 연결
     var email by vm.email
     var authCode by vm.authcode
     var sex by vm.sex
@@ -44,11 +42,12 @@ fun register(
     var repw by vm.repw
 
     val isSuccess by vm.registerSuccess.collectAsState()
-    var isCodeSent by remember { mutableStateOf(false) }
+    val isCodeSent by vm.isCodeSent
+    val errorMsg by vm.registerError.collectAsState()
 
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val accent = Color(0xFF4F46E5) // 파란색 포인트 컬러
+    val accent = Color(0xFF4F46E5)
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -58,7 +57,7 @@ fun register(
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFF0F172A), Color(0xFF020617))
+                        colors = listOf(Color(0xFFF9FAFB), Color(0xFFF9FAFB))
                     )
                 )
                 .statusBarsPadding()
@@ -72,10 +71,9 @@ fun register(
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // [헤더]
                 Text(
                     text = "회원가입",
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
@@ -91,16 +89,15 @@ fun register(
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
-                        // --- [1. 이메일 & 인증번호 요청] ---
                         ModernFieldLabel("학교 이메일", required = true)
 
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically // 높이 중앙 정렬
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             TextField(
                                 modifier = Modifier
-                                    .weight(1f) // [핵심] 입력창이 남은 공간 다 차지
+                                    .weight(1f)
                                     .padding(end = 8.dp),
                                 value = email,
                                 onValueChange = { email = it },
@@ -109,18 +106,15 @@ fun register(
                                 colors = inputColors()
                             )
 
-                            // [핵심] 디자인 예시처럼 테두리 버튼 사용
                             OutlinedButton(
                                 onClick = {
                                     if (email.isNotEmpty()) {
                                         vm.requestEmailCode(email)
-                                        isCodeSent = true
                                         keyboardController?.hide()
                                     }
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(1.dp, accent),
-                                // 버튼 크기 고정 (디자인 통일감)
                                 modifier = Modifier.height(56.dp)
                             ) {
                                 Text(
@@ -132,7 +126,6 @@ fun register(
                             }
                         }
 
-                        // --- [2. 인증번호 입력 & 확인] ---
                         if (isCodeSent) {
                             ModernFieldLabel("인증번호", required = true)
                             Row(
@@ -171,7 +164,6 @@ fun register(
 
                         Divider(modifier = Modifier.padding(vertical = 12.dp))
 
-                        // --- [나머지 입력 필드들] ---
                         ModernFieldLabel("아이디", true)
                         TextField(
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
@@ -208,7 +200,6 @@ fun register(
                             value = adress, onValueChange = { adress = it }, singleLine = true, colors = inputColors()
                         )
 
-                        // 성별 선택
                         ModernFieldLabel("성별", true)
                         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             SelectionChip("남자", sex == 0, accent) { vm.onSexSelected(0) }
@@ -219,11 +210,19 @@ fun register(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // [가입하기 버튼]
+                if (errorMsg != null) {
+                    Text(
+                        text = errorMsg!!,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(bottom = 10.dp)
+                    )
+                }
+
                 Button(
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = accent),
+
                     onClick = { vm.register() }
                 ) {
                     Text("가입하기", fontSize = 16.sp, fontWeight = FontWeight.Bold)
@@ -239,7 +238,6 @@ fun register(
     }
 }
 
-// --- 보조 UI 요소들 ---
 @Composable
 private fun ModernFieldLabel(text: String, required: Boolean) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 4.dp)) {
