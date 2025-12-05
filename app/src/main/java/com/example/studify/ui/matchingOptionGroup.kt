@@ -57,7 +57,13 @@ fun matchingOptionGroup(
     val purposeOptions = studylist.contents
     var showPicker by remember { mutableStateOf(false)}
     var selectedPurpose by remember { mutableStateOf("") }
-
+    if (vm.nogroup.value){
+        WarningDialog (message = "매칭 가능한 그룹이 없습니다.\n 새로운 그룹을 만들어 보세요." , onConfirm =  {navController.navigate("createGroup"){
+            popUpTo("matchMenu"){
+                inclusive = true
+            }
+        } })
+    }
     Column(
         modifier = BaseModifiers.BaseModifier
             .fillMaxSize()
@@ -190,7 +196,7 @@ fun matchingOptionGroup(
         // 매칭 시작 버튼
         Button(
             onClick = {
-                // TODO: 매칭 시작 로직
+                vm.requestmatch()
             },
             enabled = purpose != "",
             modifier = BaseModifiers.BaseBtnModifier
@@ -242,5 +248,30 @@ fun matchingOptionGroup(
         )
     }
 }
-
+@Composable
+fun WarningDialog(
+    title: String = "알림",
+    message: String,
+    onConfirm: () -> Unit = {}
+) {
+    AlertDialog(
+        onDismissRequest = onConfirm,
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("확인")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onConfirm) {
+                Text("취소")
+            }
+        },
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = message)
+        }
+    )
+}
 

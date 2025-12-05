@@ -54,10 +54,11 @@ fun matchingOptionMentor(
     var selectedPurpose by remember { mutableStateOf("") }
     if (vm.matchcomplete.value){
         navController.navigate("grouplist"){
-
+            popUpTo("grouplist"){
+                inclusive = true
+            }
         }
     }
-    val subjectOptions = studylist.contents
 
     Scaffold(
         topBar = {
