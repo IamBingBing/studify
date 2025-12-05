@@ -18,6 +18,9 @@ data class BookModel(
         @SerializedName("isbn") @Expose var isbn: String? = null,
         @SerializedName("price") @Expose var price: String? = null,
         @SerializedName("image") @Expose var image: String? = null,
-        @SerializedName("desc") @Expose var description: String = ""
+        @SerializedName("desc") @Expose var description: String = "",
+        @SerializedName("place") @Expose var place: String? = null,
+        @SerializedName("link") @Expose var link: String? = null
+
     ) : Serializable
 }

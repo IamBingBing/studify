@@ -1,7 +1,7 @@
 package com.example.studify.ui
 
 import android.app.Application
-import android.util.Log // 로그 추가
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -23,19 +23,20 @@ class searchbookVM @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    fun searchBookByGroup(groupId: String) {
-        // [로그] 검색 시작
-        Log.d("SearchBookVM", "검색 요청 시작. 입력된 GroupID: $groupId")
+    // [수정] 함수명 변경 (searchBookByGroup -> searchBooks)
+    // 파라미터 변경 (groupId -> keyword)
+    fun searchBooks(keyword: String) {
+        Log.d("SearchBookVM", "검색 요청 시작. 키워드: $keyword")
 
-        if (groupId.isBlank()) {
-            Log.e("SearchBookVM", "검색 실패: GroupID가 비어있음")
+        if (keyword.isBlank()) {
+            Log.e("SearchBookVM", "검색 실패: 검색어가 비어있음")
             return
         }
 
         isLoading.value = true
         errorMsg.value = null
 
-        val d = searchBookRepository.requestSearchBook(groupId)
+        val d = searchBookRepository.requestSearchBook(keyword)
             .subscribe({ model ->
                 isLoading.value = false
                 Log.d("SearchBookVM", "서버 응답 코드: ${model.resultCode}")
@@ -58,7 +59,7 @@ class searchbookVM @Inject constructor(
             }, { e ->
                 isLoading.value = false
                 Log.e("SearchBookVM", "통신 실패: ${e.message}")
-                e.printStackTrace() // 자세한 에러 로그 출력
+                e.printStackTrace()
                 errorMsg.value = "통신 에러: ${e.message}"
             })
 

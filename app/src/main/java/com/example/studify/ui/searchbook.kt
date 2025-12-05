@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.studify.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,31 +31,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studify.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
+// [중요] Coil 3.0.0 사용 시 import 경로 확인
 import coil3.compose.AsyncImage
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.data.model.BookModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun searchbook(
     vm: searchbookVM = hiltViewModel(),
     navController: NavController
 ) {
-
+    // 뷰모델 데이터 연결
     val bookList = vm.bookList
     val isLoading by vm.isLoading
     val errorMsg by vm.errorMsg
 
-    var inputId by remember { mutableStateOf("") }
+    // 검색어 입력 상태
+    var keyword by remember { mutableStateOf("") }
+
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(
@@ -67,12 +75,15 @@ fun searchbook(
                     .padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // 타이틀
                 Text(
-                    text = "그룹 해시태그 도서 추천",
+                    text = "도서 검색",
                     fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     modifier = BaseModifiers.BaseModifier.padding(bottom = 16.dp)
                 )
 
+                // 검색 입력창 영역
                 Row(
                     modifier = BaseModifiers.BaseTextfillModifier,
                     verticalAlignment = Alignment.CenterVertically
@@ -81,25 +92,28 @@ fun searchbook(
                         modifier = BaseModifiers.BaseModifier
                             .weight(1f)
                             .padding(end = 8.dp),
-                        value = inputId,
-                        onValueChange = { inputId = it },
-                        label = { Text("그룹 ID 입력 (숫자)") },
+                        value = keyword,
+                        onValueChange = { keyword = it },
+                        label = { Text("검색어 입력") },
                         singleLine = true
                     )
                     Button(
                         onClick = {
-                            vm.searchBookByGroup(inputId)
+                            // 뷰모델의 검색 함수 호출
+                            vm.searchBooks(keyword)
                             keyboardController?.hide()
-                        }
+                        },
+                        shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("검색")
                     }
                 }
 
+                // 결과 리스트 영역
                 Box(
                     modifier = BaseModifiers.BaseModifier
                         .fillMaxSize()
-                        .padding(horizontal = 10.dp)
+                        .padding(horizontal = 10.dp, vertical = 10.dp)
                 ) {
                     when {
                         isLoading -> {
@@ -124,7 +138,7 @@ fun searchbook(
                         }
                         else -> {
                             LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
                                 modifier = BaseModifiers.BaseModifier.fillMaxSize()
                             ) {
                                 items(bookList) { book ->
@@ -144,55 +158,76 @@ fun BookItemRow(book: BookModel.BookInfo) {
     Card(
         modifier = BaseModifiers.BaseModifier
             .fillMaxWidth()
-            .height(120.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5))
+            .height(160.dp), // 정보가 많아져서 높이를 확보
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = BaseModifiers.BaseModifier
                 .fillMaxSize()
-                .padding(10.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 이미지 (비어있으면 기본 로고 표시)
-            // R.drawable.logo는 프로젝트에 있는 실제 이미지 리소스로 바꾸세요.
+            // [이미지] Coil 3.0
             AsyncImage(
                 model = if (book.image.isNullOrBlank()) R.drawable.logo else book.image,
                 contentDescription = "책 표지",
                 modifier = BaseModifiers.BaseModifier
-                    .width(80.dp)
-                    .fillMaxHeight(),
+                    .width(90.dp)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = BaseModifiers.BaseModifier.width(16.dp))
 
+            // [정보 텍스트]
             Column(
                 modifier = BaseModifiers.BaseModifier.weight(1f),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ) {
-                // [수정] 제목이 비어있으면 "제목 없음" 표시 (isNullOrBlank 사용)
+                // 1. 제목
                 Text(
                     text = if (book.title.isNullOrBlank()) "제목 없음" else book.title!!,
                     fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    maxLines = 2
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = BaseModifiers.BaseModifier.height(4.dp))
 
-                // [수정] 저자가 비어있으면 "저자 미상" 표시
+                // 2. 저자
                 Text(
-                    text = "저자: ${if (book.author.isNullOrBlank()) "저자 미상" else book.author}",
-                    fontSize = 14.sp,
-                    color = Color.DarkGray,
-                    maxLines = 1
+                    text = "저자: ${if (book.author.isNullOrBlank()) "미상" else book.author}",
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                // [수정] 가격이 비어있으면 "정보 없음" 표시
+                // 3. 소장 위치 (New)
                 Text(
-                    text = "가격: ${if (book.price.isNullOrBlank()) "정보 없음" else book.price}",
-                    fontSize = 14.sp,
-                    color = Color(0xFF0066FF)
+                    text = "위치: ${if (book.place.isNullOrBlank()) "정보 없음" else book.place}",
+                    fontSize = 13.sp,
+                    color = Color(0xFF2E7D32), // 짙은 초록색
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.weight(1f)) // 빈 공간 밀어내기
+
+                // 4. 대출 가능 여부 / 링크 (New)
+                // 링크 정보가 "이용불가"면 빨간색, 아니면 파란색
+                val linkText = if (book.link.isNullOrBlank()) "정보 없음" else book.link!!
+                val isAvailable = linkText != "이용불가"
+
+                Text(
+                    text = if (isAvailable) "대출가능 여부 확인 >" else "이용불가",
+                    fontSize = 12.sp,
+                    color = if (isAvailable) Color.Blue else Color.Red,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
