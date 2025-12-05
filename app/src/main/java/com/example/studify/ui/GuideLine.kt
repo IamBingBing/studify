@@ -108,7 +108,7 @@ fun Guideline(
             // [3] 하단 버튼 영역 (친구 페이지로 이동)
             Button(
                 onClick = {
-                    navController.navigate("bookRecommend")
+                    navController.navigate("searchbook")
                 },
                 modifier = BaseModifiers.BaseBtnModifier
                     .fillMaxWidth()

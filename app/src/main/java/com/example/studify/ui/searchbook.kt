@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.studify.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
@@ -153,9 +154,10 @@ fun BookItemRow(book: BookModel.BookInfo) {
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
+            // 이미지 (비어있으면 기본 로고 표시)
+            // R.drawable.logo는 프로젝트에 있는 실제 이미지 리소스로 바꾸세요.
             AsyncImage(
-                model = book.image,
+                model = if (book.image.isNullOrBlank()) R.drawable.logo else book.image,
                 contentDescription = "책 표지",
                 modifier = BaseModifiers.BaseModifier
                     .width(80.dp)
@@ -169,21 +171,26 @@ fun BookItemRow(book: BookModel.BookInfo) {
                 modifier = BaseModifiers.BaseModifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
+                // [수정] 제목이 비어있으면 "제목 없음" 표시 (isNullOrBlank 사용)
                 Text(
-                    text = book.title ?: "제목 없음",
+                    text = if (book.title.isNullOrBlank()) "제목 없음" else book.title!!,
                     fontSize = 16.sp,
                     color = Color.Black,
                     maxLines = 2
                 )
                 Spacer(modifier = BaseModifiers.BaseModifier.height(4.dp))
+
+                // [수정] 저자가 비어있으면 "저자 미상" 표시
                 Text(
-                    text = "저자: ${book.author ?: "미상"}",
+                    text = "저자: ${if (book.author.isNullOrBlank()) "저자 미상" else book.author}",
                     fontSize = 14.sp,
                     color = Color.DarkGray,
                     maxLines = 1
                 )
+
+                // [수정] 가격이 비어있으면 "정보 없음" 표시
                 Text(
-                    text = "가격: ${book.price ?: "정보 없음"}",
+                    text = "가격: ${if (book.price.isNullOrBlank()) "정보 없음" else book.price}",
                     fontSize = 14.sp,
                     color = Color(0xFF0066FF)
                 )

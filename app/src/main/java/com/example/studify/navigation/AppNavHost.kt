@@ -40,6 +40,7 @@ import com.example.studify.ui.createDate
 import com.example.studify.ui.grouplist
 import com.example.studify.ui.member
 import com.example.studify.ui.progress
+import com.example.studify.ui.searchbook
 
 @Composable
 @ExperimentalMaterial3Api
@@ -192,6 +193,10 @@ fun AppNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("groupGoal") { type = NavType.StringType })
         ) {
             Guideline(navController = navController)
+        }
+        composable(route = "searchbook") {
+            // searchbook 컴포저블 함수 호출 (import 필요)
+            searchbook(navController = navController)
         }
     }
 }
