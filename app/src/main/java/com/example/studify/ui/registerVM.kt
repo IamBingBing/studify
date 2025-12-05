@@ -46,26 +46,18 @@ class registerVM @Inject constructor(
     fun onExpandedChange(isExpanded: Boolean) { expanded.value = isExpanded }
     fun onSexSelected(selection: Int) { sex.value = selection }
 
-    fun requestEmailCode(emailInput: String) {
-        if (emailInput.isBlank()) {
-            _registerError.value = "이메일을 입력해주세요."
-            return
-        }
+    fun requestEmailCode(emailInput: String = email.value)= userRepository.requestEmailCode(emailInput)
+        .subscribe({ response ->
+            if (response.resultCode == "200") {
+                isCodeSent.value = true
+                _registerError.value = null
+            } else {
+                _registerError.value = response.errorMsg ?: "인증번호 발송 실패"
+            }
+        }, { error ->
+            _registerError.value = "통신 오류: ${error.message}"
+        })
 
-        val d = userRepository.requestEmailCode(emailInput)
-            .subscribe({ response ->
-                if (response.resultCode == "200") {
-                    isCodeSent.value = true
-                    _registerError.value = null
-                } else {
-                    _registerError.value = response.errorMsg ?: "인증번호 발송 실패"
-                }
-            }, { error ->
-                _registerError.value = "통신 오류: ${error.message}"
-            })
-
-        compositeDisposable.add(d)
-    }
 
     fun verifyEmailCode(emailInput: String = email.value, codeInput: String = authcode.value)=userRepository.AuthEmailCode(emailInput,codeInput)
         .subscribe({ response ->

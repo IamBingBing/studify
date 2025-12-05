@@ -231,7 +231,7 @@ fun register(
                 Spacer(modifier = Modifier.height(30.dp))
 
                 LaunchedEffect(isSuccess) {
-                    if (isSuccess) navController.navigate("grouplist")
+                    if (isSuccess) navController.navigate("login")
                 }
             }
         }

@@ -91,10 +91,10 @@ interface StudifyService {
     fun requestProductDetail(@FieldMap param: HashMap<String, String>): Single<ShopModel>
 
     @FormUrlEncoded
-    @POST("sendemail.php")
+    @POST("api/sendemail.php")
     fun requestEmailCode(@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
-    @POST("AuthEmailCode.php")
+    @POST("api/AuthEmailCode.php")
     fun AuthEmailCode(@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/addNotice.php")
