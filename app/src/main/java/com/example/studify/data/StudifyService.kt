@@ -15,7 +15,6 @@ import com.example.studify.data.model.ShopModel
 import com.example.studify.data.model.UpdateModel
 import com.example.studify.data.req.GroupReqModel
 import io.reactivex.Single
-import com.example.studify.data.model.EmailAuthModel
 import com.example.studify.data.model.isMatchModel
 import retrofit2.http.Field
 import retrofit2.http.FieldMap
@@ -93,8 +92,10 @@ interface StudifyService {
 
     @FormUrlEncoded
     @POST("sendemail.php")
-    fun requestEmailCode(@FieldMap data: Map<String, String>): Single<EmailAuthModel>
-
+    fun requestEmailCode(@FieldMap data: Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("AuthEmailCode.php")
+    fun AuthEmailCode(@FieldMap data: Map<String, String>): Single<UpdateModel>
     @FormUrlEncoded
     @POST("api/addNotice.php")
     fun addNotice(@FieldMap data: Map<String, String>): Single<UpdateModel>

@@ -1,7 +1,9 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.toString
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.AnnounceModel
@@ -23,7 +25,7 @@ class groupVM @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")!!)
+    val groupId = mutableStateOf(savedStateHandle.get<String>("groupid")!!.toLong())
 
     val groupName = mutableStateOf("")
     val groupGoal = mutableStateOf("")
@@ -37,47 +39,34 @@ class groupVM @Inject constructor(
     private val disposables = CompositeDisposable()
 
     init {
-        loadGroup(groupId.value)
+
         requestNotice()
         requestDates()
+        loadGroup(groupId.value)
     }
 
-    fun loadGroup(id: String) {
-
-        errorMessage.value = null
-
-        val d = groupRepository.requestGroupData()
-            .subscribe({ model ->
-
-                if (model.resultCode == "200") {
-                    model.result!!.forEach(
-                        {
-                            result-> if ( result.groupid.toString() == id){
-                                groupName.value = result.groupname !!
-                                groupGoal.value = result.purpose !!
-
-                                hashTags.value = result.hashtag!!
-
-                                users.value = result.users ?: emptyList()
-                            }
+    fun loadGroup(id: Long) = groupRepository.requestGroupData()
+        .subscribe({ model ->
+            if (model.resultCode == "200") {
+                Log.e("grouphomeid", id.toString())
+                model.result!!.forEach(
+                    {
+                            result->
+                        if ( result.groupid == id){
+                            groupName.value = result.groupname !!
+                            groupGoal.value = result.purpose !!
+                            hashTags.value = result.hashtag!!
+                            users.value = result.users ?: emptyList()
                         }
-                    )
-
-
-
-                } else {
-                    errorMessage.value = model.errorMsg.ifBlank { "그룹 정보를 불러오지 못했습니다." }
-                    users.value = emptyList()
-                }
-            }, { /*e ->
-                errorMessage.value = e.message
+                    }
+                )
+            } else {
+                errorMessage.value = model.errorMsg.ifBlank { "그룹 정보를 불러오지 못했습니다." }
                 users.value = emptyList()
-                e.printStackTrace()
-            */})
+            }
+        },{error-> Log.e("grouphomereq", error.toString())})
 
-        disposables.add(d)
-    }
-    fun requestNotice(groupid: String = groupId.value) {
+    fun requestNotice(groupid: String = groupId.value.toString()) {
         val d = noticeRepository.requestNoticeData(groupid)
             .subscribe({ model ->
                 if (model.resultCode == "200") {
@@ -95,7 +84,7 @@ class groupVM @Inject constructor(
 
         disposables.add(d)
     }
-    fun requestDates(groupid: String = groupId.value) {
+    fun requestDates(groupid: String = groupId.value.toString()) {
         val d = dateRepository.requestDateData(groupid)
             .subscribe({ model ->
                 if (model.resultCode == "200") {

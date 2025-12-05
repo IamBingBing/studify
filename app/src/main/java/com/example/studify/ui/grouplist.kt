@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,9 +23,10 @@ fun grouplist(
     navController: NavController
 ) {
     val error = vm.error
-    val groupList = vm.grouplist   // 이미 “참여 중인 그룹만” 들어있다고 가정
-    val mentorlist = vm.mentorlist
-    // 에러 메시지
+    val groupList = vm.grouplist      // Map<GROUPID, GROUPNAME>
+    val mentorlist = vm.mentorlist    // Map<MENTORID, MENTORNAME>
+
+    // 에러 다이얼로그
     if (!error.value.isNullOrEmpty()) {
         AlertDialog(
             onDismissRequest = { error.value = "" },
@@ -40,78 +43,152 @@ fun grouplist(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("참여 그룹", fontWeight = FontWeight.Bold) },
-
+                title = {
+                    Text(
+                        text = "내 스터디 & 멘토링",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
         },
         bottomBar = { navigationbar(navController) }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = BaseModifiers.BaseModifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // ===== 참여 중인 그룹 섹션 =====
+            item {
+                SectionHeader(
+                    title = "참여 중인 그룹",
+                    description = "지금 활동 중인 스터디/그룹이에요.",
+                    icon = Icons.Default.Add
+                )
+            }
 
-            Text(
-                text = "참여 중인 그룹",
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            // 참여 그룹이 없을 때
             if (groupList.isEmpty()) {
-                Spacer(modifier = Modifier.height(80.dp))
-                Text(
-                    text = "참여 중인 그룹이 없습니다.\n그룹에 참여해 보세요!",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                item {
+                    EmptySectionCard(
+                        text = "참여 중인 그룹이 없습니다.\n새로운 그룹에 참여해 보세요!"
+                    )
+                }
             } else {
-                // 참여 중인 그룹 리스트
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = groupList.entries.toList(),
-                        key = { it.key }
-                    ) { entry ->
-                        GroupListItem(
-                            name = entry.value,
-                            onClick = {
-                                navController.navigate("groupHome/${entry.key}")
-                            }
-                        )
-                    }
+                items(
+                    items = groupList.entries.toList(),
+                    key = { it.key }
+                ) { entry ->
+                    GroupListItem(
+                        name = entry.value,
+                        onClick = {
+                            navController.navigate("groupHome/${entry.key}")
+                        }
+                    )
                 }
             }
+
+            // 섹션 사이 간격
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+
+            // ===== 멘토링 섹션 =====
+            item {
+                SectionHeader(
+                    title = "멘토링",
+                    description = "멘토·멘티로 참여 중인 방이에요.",
+                    icon = Icons.Default.Add
+                )
+            }
+
             if (mentorlist.isEmpty()) {
-                Spacer(modifier = Modifier.height(80.dp))
-                Text(
-                    text = "참여 중인 그룹이 없습니다.\n그룹에 참여해 보세요!",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                item {
+                    EmptySectionCard(
+                        text = "참여 중인 멘토링 방이 없습니다.\n멘토/멘티 매칭으로 시작해 보세요!"
+                    )
+                }
             } else {
-                // 참여 중인 그룹 리스트
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = mentorlist.entries.toList(),
-                        key = { it.key }
-                    ) { entry ->
-                        GroupListItem(
-                            name = entry.value,
-                            onClick = {
-                                navController.navigate("mentor/${entry.key}")
-                            }
-                        )
-                    }
+                items(
+                    items = mentorlist.entries.toList(),
+                    key = { it.key }
+                ) { entry ->
+                    GroupListItem(
+                        name = entry.value,
+                        onClick = {
+                            navController.navigate("mentor/${entry.key}")
+                        }
+                    )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun SectionHeader(
+    title: String,
+    description: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.medium,
+            modifier = Modifier.size(40.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptySectionCard(
+    text: String
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
@@ -124,20 +201,23 @@ private fun GroupListItem(
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,      //카드 배경
-            contentColor = MaterialTheme.colorScheme.onSurface       //글씨 색
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = name,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium
             )
             Icon(
                 imageVector = Icons.Default.ArrowForward,

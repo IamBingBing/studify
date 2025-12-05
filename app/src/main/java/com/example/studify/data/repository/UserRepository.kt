@@ -1,7 +1,6 @@
 package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
-import com.example.studify.data.model.EmailAuthModel
 import com.example.studify.data.model.LoginModel
 import com.example.studify.data.model.ProfileModel
 import com.example.studify.data.model.RegisterModel
@@ -72,7 +71,7 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun requestEmailCode(email: String): Single<EmailAuthModel> {
+    fun requestEmailCode(email: String): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
             this["EMAIL"] = email
         }
@@ -80,4 +79,13 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+    fun AuthEmailCode( code: String): Single<UpdateModel> {
+        val param = HashMap<String, String>().apply {
+            this["CODE"] = code
+        }
+        return studifyService.AuthEmailCode(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
 }
