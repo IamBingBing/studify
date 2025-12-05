@@ -195,7 +195,7 @@ fun AppNavHost(navController: NavHostController) {
             Guideline(navController = navController)
         }
         composable(route = "searchbook/{groupGoal}",
-            arguments = listOf(navArgument("groupid") { type = NavType.StringType })
+            arguments = listOf(navArgument("groupGoal") { type = NavType.StringType })
         ) {
             searchbook(navController = navController)
         }

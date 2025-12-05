@@ -79,8 +79,9 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    fun AuthEmailCode( code: String): Single<UpdateModel> {
+    fun AuthEmailCode(email: String, code: String): Single<UpdateModel> {
         val param = HashMap<String, String>().apply {
+            this["EMAIL"] = email
             this["CODE"] = code
         }
         return studifyService.AuthEmailCode(param)

@@ -67,27 +67,21 @@ class registerVM @Inject constructor(
         compositeDisposable.add(d)
     }
 
-    fun verifyEmailCode(emailInput: String, codeInput: String) {
-        if (codeInput.isBlank()) {
-            _registerError.value = "인증번호를 입력해주세요."
-            return
-        }
-
-        val d = userRepository.AuthEmailCode(codeInput)
-            .subscribe({ response ->
-                if (response.resultCode == "200") {
+    fun verifyEmailCode(emailInput: String = email.value, codeInput: String = authcode.value)=userRepository.AuthEmailCode(emailInput,codeInput)
+        .subscribe({ response ->
+            if (response.resultCode == "200") {
+                if (response.result == "true") {
                     isEmailVerified.value = true
                     _registerError.value = "인증되었습니다."
-                } else {
+                }
+                else {
                     isEmailVerified.value = false
                     _registerError.value = response.errorMsg ?: "인증번호가 틀렸습니다."
                 }
-            }, { error ->
-                _registerError.value = "통신 오류: ${error.message}"
-            })
-
-        compositeDisposable.add(d)
-    }
+            }
+        }, { error ->
+            _registerError.value = "통신 오류: ${error.message}"
+        })
 
     fun register() {
         if (userid.value.isBlank() || pw.value.isBlank() || username.value.isBlank()) {
