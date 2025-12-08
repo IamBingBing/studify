@@ -115,19 +115,7 @@ fun noticeDetail(
                         .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(onClick = {
-                        // TODO: 수정 기능
-                    }) {
-                        Text("수정")
-                    }
-                    TextButton(onClick = {
-                        vm.deleteNotice(
-                            onSuccess = { navController.popBackStack() },
-                            onError = { /* 스낵바 등으로 에러 보여주고 싶으면 여기서 */ }
-                        )
-                    }) {
-                        Text("삭제", color = MaterialTheme.colorScheme.error)
-                    }
+
                 }
             }
         }

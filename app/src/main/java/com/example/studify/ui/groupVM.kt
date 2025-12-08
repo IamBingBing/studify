@@ -15,6 +15,8 @@ import com.example.studify.data.repository.noticeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @HiltViewModel
 class groupVM @Inject constructor(
@@ -88,9 +90,8 @@ class groupVM @Inject constructor(
         val d = dateRepository.requestDateData(groupid)
             .subscribe({ model ->
                 if (model.resultCode == "200") {
-                    // TIME 기준으로 정렬 후 2개만 가져오기
                     val sorted = model.result.sortedBy { it.time }
-                    dates.value = sorted.take(2)
+                    dates.value = sorted
                 } else {
                     dates.value = emptyList()
                 }
@@ -101,6 +102,7 @@ class groupVM @Inject constructor(
 
         disposables.add(d)
     }
+
 
     override fun onCleared() {
         super.onCleared()

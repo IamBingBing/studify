@@ -20,7 +20,7 @@ private val md_theme_light_background = Color(0xFFF4F6FC) //배경컬러
 private val md_theme_light_onBackground = Color(0xFF414848) //글씨컬러
 private val md_theme_light_surface = Color(0xFFF4F6FC)   // 상단 카테고리 이름
 private val md_theme_light_onSurface = Color(0xFF414848)       // 거기 위 글씨
-private val md_theme_light_surfaceVariant = Color(0xFFE0F2EF)  // 살짝 민트 섞인 연한 배경
+private val md_theme_light_surfaceVariant = Color(0xFFE0E8F5)  // 살짝 민트 섞인 연한 배경
 private val md_theme_light_onSurfaceVariant = Color(0xFF2B2C3A)// 네비게이션 글씨, 아이디 패스워드 글씨
 private val md_theme_light_outline = Color(0xFF434A6E)         // 테두리(인디케이터) 민트 계열
 private val md_theme_dark_primary = Color(0xFF9EC4BE)
@@ -29,7 +29,7 @@ private val md_theme_dark_background = Color(0xFF1A1C19)
 private val md_theme_dark_onBackground = Color(0xFFE2E3DD)
 private val md_theme_light_nav = Color(0xFFF0F1F8) //하단네비
 private val md_theme_top_nav = Color(0xFFF7F7FD) //상단네비,그룹리스트 목록
-private val md_theme_light_textField = Color(0xFFE0E8F5) // 아주 연한 민트
+private val md_theme_light_textField = Color(0xFFE0E8F5)
 
 
 // -------- 2) ColorScheme --------
