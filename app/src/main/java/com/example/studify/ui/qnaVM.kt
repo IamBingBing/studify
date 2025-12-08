@@ -1,5 +1,7 @@
+/*
 package com.example.studify.ui
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -16,14 +18,50 @@ class qnaVM @Inject constructor(
     var items = mutableStateListOf<QnaItem>()
     var errorMsg = mutableStateOf("")
     var isLoading = mutableStateOf(false)
+
+    // 글쓰기 상태
     var showDialog = mutableStateOf(false)
     var inputTitle = mutableStateOf("")
     var inputContent = mutableStateOf("")
-    private val disposables = CompositeDisposable()
-    private var currentGroupId = -1
 
-    fun loadGroupQna(groupId: Int) {
+    private val disposables = CompositeDisposable()
+    private var currentGroupId: Long = -1L
+
+    // ✅ 멘토방 여부 판단용 플래그
+    private var isMentorRoom: Boolean = false
+
+    // ✅ 멘토방용 QNA 로드
+    fun loadMentorQna(mentorId: Long) {
+        currentGroupId = mentorId
+        isMentorRoom = true // 멘토방 플래그 설정
+        isLoading.value = true
+
+        val d = repository.requestMentorQnaData(mentorId)
+            .subscribe({ model ->
+                isLoading.value = false
+                if (model.resultCode == "200" && model.result != null) {
+                    items.clear()
+                    model.result!!.forEach { q ->
+                        items.add(QnaItem(
+                            id = q.qnaid?.toLongOrNull() ?: 0L,
+                            title = q.qnatitle,
+                            content = q.qnacontent,
+                            answer = q.qnaanswer
+                        ))
+                    }
+                }
+            }, { error ->
+                isLoading.value = false
+                errorMsg.value = "로딩 실패"
+                Log.e("QnaVM", "멘토 QNA 로딩 에러: ${error.message}")
+            })
+        disposables.add(d)
+    }
+
+    // ✅ 일반 그룹용 QNA 로드 (기존 함수)
+    fun loadGroupQna(groupId: Long) {
         currentGroupId = groupId
+        isMentorRoom = false // 일반 그룹 플래그 설정
         isLoading.value = true
 
         val d = repository.requestGroupMentorQnaData(groupId)
@@ -32,48 +70,78 @@ class qnaVM @Inject constructor(
                 if (model.resultCode == "200" && model.result != null) {
                     items.clear()
                     model.result!!.forEach { q ->
-                        items.add(
-                            QnaItem(
-                                id = q.qnaid ?: 0,
-                                title = q.qnatitle,
-                                content = q.qnacontent,
-                                answer = q.qnaanswer
-                            )
-                        )
-                    }
-                } else {
-                    if (model.errorMsg.contains("데이터가 존재하지")) {
-                        items.clear()
-                    } else {
-                        errorMsg.value = model.errorMsg
+                        items.add(QnaItem(
+                            id = q.qnaid?.toLongOrNull() ?: 0L,
+                            title = q.qnatitle,
+                            content = q.qnacontent,
+                            answer = q.qnaanswer
+                        ))
                     }
                 }
             }, { error ->
                 isLoading.value = false
-                errorMsg.value = "통신 오류: ${error.message}"
+                errorMsg.value = "로딩 실패"
+                Log.e("QnaVM", "그룹 QNA 로딩 에러: ${error.message}")
             })
         disposables.add(d)
     }
 
+    // [질문 등록]
     fun writeQna() {
-        if (currentGroupId == -1) return
-        if (inputTitle.value.isBlank()) {
-            errorMsg.value = "제목을 입력해주세요."
-            return
+        Log.d("QnaVM", "글쓰기 시도: ID=$currentGroupId, IsMentor=$isMentorRoom, Title=${inputTitle.value}")
+
+        if (currentGroupId == -1L) return
+
+        // ✅ 멘토방이면 멘토 전용 API 호출
+        val d = if (isMentorRoom) {
+            repository.requestAddMentorQna(currentGroupId, inputTitle.value, inputContent.value)
+        } else {
+            repository.requestAddQna(currentGroupId, inputTitle.value, inputContent.value)
         }
 
-        val d = repository.requestAddQna(currentGroupId, inputTitle.value, inputContent.value)
-            .subscribe({ model ->
-                if (model.resultCode == "200") {
-                    inputTitle.value = ""
-                    inputContent.value = ""
-                    showDialog.value = false
-                    loadGroupQna(currentGroupId)
+        d.subscribe({ model ->
+            Log.d("QnaVM", "응답: Code=${model.resultCode}, Msg=${model.errorMsg}")
+
+            if (model.resultCode == "200") {
+                inputTitle.value = ""
+                inputContent.value = ""
+                showDialog.value = false
+
+                // 목록 갱신
+                if (isMentorRoom) {
+                    loadMentorQna(currentGroupId)
                 } else {
-                    errorMsg.value = model.errorMsg
+                    loadGroupQna(currentGroupId)
+                }
+            } else {
+                errorMsg.value = model.errorMsg
+            }
+        }, { error ->
+            Log.e("QnaVM", "통신 에러: ${error.message}")
+            errorMsg.value = "작성 실패"
+        }).let { disposables.add(it) }
+    }
+
+    // [답변 등록]
+    fun addAnswer(qnaId: Long, answerContent: String) {
+        Log.d("QnaVM", "답변 등록 시도: QnaID=$qnaId, Content=$answerContent")
+
+        val d = repository.requestAddAnswer(qnaId.toInt(), answerContent)
+            .subscribe({ model ->
+                Log.d("QnaVM", "답변 응답: Code=${model.resultCode}, Msg=${model.errorMsg}")
+
+                if (model.resultCode == "200") {
+                    if (isMentorRoom) {
+                        loadMentorQna(currentGroupId)
+                    } else {
+                        loadGroupQna(currentGroupId)
+                    }
+                } else {
+                    errorMsg.value = "답변 등록 실패: ${model.errorMsg}"
                 }
             }, { error ->
-                errorMsg.value = "작성 실패: ${error.message}"
+                Log.e("QnaVM", "답변 통신 에러: ${error.message}")
+                errorMsg.value = "답변 등록 실패"
             })
         disposables.add(d)
     }
@@ -85,3 +153,4 @@ class qnaVM @Inject constructor(
 
     data class QnaItem(val id: Long, val title: String, val content: String, val answer: String)
 }
+*/

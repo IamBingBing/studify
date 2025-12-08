@@ -29,8 +29,11 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
     var showMainGoalDialog by vm.showMainGoalDialog
     var showPersonalGoalDialog by vm.showPersonalGoalDialog
 
-    // ✅ 수정: 화면에 들어올 때마다 데이터를 서버에서 새로 가져옵니다
-    // 이 코드가 없으면 다른 페이지 갔다 왔을 때 내용이 사라져 보일 수 있습니다
+    // [중요] 현재 페이지의 groupId 가져오기 (가이드라인 페이지로 넘겨주기 위함)
+    val navBackStackEntry = navController.currentBackStackEntry
+    val currentGroupId = navBackStackEntry?.arguments?.getString("groupid") ?: ""
+
+    // 화면 진입 시 데이터 로드
     LaunchedEffect(Unit) {
         vm.loadProgress()
     }
@@ -132,7 +135,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
 
             Spacer(Modifier.height(24.dp))
 
-            // [3] 진도율 표시 및 버튼
+            // [3] 진도율 표시 및 버튼 영역
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -151,6 +154,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
 
                 Spacer(Modifier.height(16.dp))
 
+                // [기존] 진도 체크 버튼
                 Button(
                     onClick = {
                         vm.calculateProgress()
@@ -159,12 +163,30 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                 ) {
                     Text("진도 체크")
                 }
+
+                Spacer(Modifier.height(12.dp))
+
+                // [추가됨] AI 가이드라인 버튼
+                OutlinedButton(
+                    onClick = {
+                        // 현재 그룹 ID를 가지고 가이드라인 페이지로 이동
+                        if (currentGroupId.isNotBlank()) {
+                            navController.navigate("guideline/$currentGroupId")
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("AI 학습 가이드 보기")
+                }
             }
 
             Spacer(Modifier.height(24.dp))
         }
 
-        // [다이얼로그 1] 주요 목표
+        // [다이얼로그 1] 주요 목표 설정
         if (showMainGoalDialog) {
             var text by remember { mutableStateOf(mainGoal) }
             AlertDialog(
@@ -195,7 +217,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
             )
         }
 
-        // [다이얼로그 2] 개인 목표
+        // [다이얼로그 2] 개인 목표 추가
         if (showPersonalGoalDialog) {
             var text by remember { mutableStateOf("") }
             AlertDialog(

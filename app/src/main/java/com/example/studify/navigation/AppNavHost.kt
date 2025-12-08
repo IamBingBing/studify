@@ -32,7 +32,7 @@ import com.example.studify.ui.noticeDetail
 import com.example.studify.ui.productDetail
 import com.example.studify.ui.profilepage
 //import com.example.studify.ui.progress
-import com.example.studify.ui.qna
+//import com.example.studify.ui.qna
 import com.example.studify.ui.register
 import com.example.studify.ui.shop
 import com.example.studify.ui.writeArticle
@@ -87,7 +87,7 @@ fun AppNavHost(navController: NavHostController) {
             
             matchMenu(navController = navController)
         }
-        composable(route="mentor{mentorid}", arguments = listOf(
+        composable(route="mentor/{mentorid}", arguments = listOf(
             navArgument("mentorid"){
                 type = NavType.StringType
             }
@@ -139,9 +139,12 @@ fun AppNavHost(navController: NavHostController) {
                 entry -> val groupid = entry.arguments?.getString("groupid")
             progress(navController = navController)
         }
-        composable(route="qna"){
+        /*composable(
+            route = "qna/{mentorid}",
+            arguments = listOf(navArgument("mentorid") { type = NavType.StringType }) // or IntType
+        ) {
             qna(navController = navController)
-        }
+        }*/
         composable(route="shop"){
             shop(navController = navController)
         }
