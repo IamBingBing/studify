@@ -4,11 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +30,7 @@ import java.util.Locale
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.font.FontWeight
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +82,9 @@ fun calender(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate("createDate/${vm.groupId.value}") },
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                containerColor = Color(0xFF8398CE),
+                contentColor = Color.White
             ) {
                 Text("+")
             }
@@ -230,35 +235,83 @@ private fun ScheduleDetailDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-        textContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-
+        shape = RoundedCornerShape(24.dp),
+        containerColor = MaterialTheme.colorScheme.surface,
         confirmButton = {
             TextButton(onClick = onDismiss) {
                 Text("닫기")
             }
         },
         title = {
-            Text("${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일 일정")
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "총 ${schedules.size}개의 일정",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 schedules.forEach { item ->
-                    Text(
-                        text = "제목: ${item.title}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text("시간: ${item.time}")
-                    if (item.location.isNotBlank()) {
-                        Text("장소: ${item.location}")
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        tonalElevation = 1.dp
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            // 제목
+                            Text(
+                                text = item.title.ifBlank { "제목 없음" },
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold
+                            )
+
+                            // 시간
+                            Text(
+                                text = "▸ ${item.time}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            // 장소
+                            if (item.location.isNotBlank()) {
+                                Text(
+                                    text = "▸ ${item.location}",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            // 내용
+                            if (item.content.isNotBlank()) {
+                                Text(
+                                    text = "▸ ${item.content}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
                     }
-                    if (item.content.isNotBlank()) {
-                        Text("내용: ${item.content}")
-                    }
-                    Divider(modifier = Modifier.padding(vertical = 6.dp))
                 }
             }
         }
     )
 }
+

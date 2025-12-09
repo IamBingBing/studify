@@ -23,6 +23,7 @@ retrofit2Rxjava2Adapter = "1.0.0"
 ksp = "2.2.20-2.0.4"
 foundationLayout = "1.9.5"
 foundationLayoutVersion = "1.10.0"
+uiText = "1.10.0"
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
@@ -57,6 +58,7 @@ retrofit2-adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2",
 retrofit2-rxjava2-adapter = { module = "com.jakewharton.retrofit:retrofit2-rxjava2-adapter", version.ref = "retrofit2Rxjava2Adapter" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayoutVersion" }
+androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -128,7 +129,9 @@ fun notice(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .offset(y = (-80).dp)
-                    .padding(16.dp)
+                    .padding(16.dp),
+                containerColor = Color(0xFF8398CE),
+                contentColor = Color.White
             ) {
                 Text("+")
             }

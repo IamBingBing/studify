@@ -23,6 +23,8 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -201,8 +203,16 @@ fun createDate(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     TimeInput(
-                        state = timeState
-                    )
+                        state = timeState,
+                        colors = TimePickerDefaults.colors(
+                            containerColor = Color(0xFFEEF2FA),   // ⬅ 배경
+                            selectorColor = Color(0xFFA5B2E0),    // ⬅ 시/분 선택 원
+                            clockDialColor = Color(0xFFDDE4FF),   // ⬅ 다이얼 배경
+                            timeSelectorSelectedContainerColor = Color(0xFFA5B2E0),
+                            timeSelectorSelectedContentColor = Color.White,
+                            timeSelectorUnselectedContainerColor = Color(0xFFE0E6F8),
+                            timeSelectorUnselectedContentColor = Color.Black
+                    ))
                 }
             }
 
@@ -293,7 +303,8 @@ fun SimpleDropdown(
 
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(Color(0xFFEAEDFC))
         ) {
             options.forEach { item ->
                 DropdownMenuItem(

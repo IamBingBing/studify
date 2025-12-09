@@ -5,6 +5,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,7 +42,7 @@ fun matchingOptionFast(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("번개 매칭") }
+                title = { Text("번개 매칭", fontWeight = FontWeight.Bold) }
             )
         },
         bottomBar = { navigationbar(navController) }
@@ -64,7 +66,10 @@ fun matchingOptionFast(
 
             // 시간 설정 카드
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFFDEE5F3)   // ← 카드 배경색
+                )
             ) {
                 Column(
                     modifier = Modifier
@@ -123,3 +128,5 @@ fun matchingOptionFast(
         }
     }
 }
+
+

@@ -26,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -37,10 +38,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.Tool.studylist
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.ui.text.font.FontWeight
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -71,98 +77,119 @@ fun matchingOptionGroup(
             }
         }
     }
-    Column(
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("그룹 매칭", fontWeight = FontWeight.Bold) }
+            )
+        },
+        bottomBar = { navigationbar(navController) }
+    ) { innerPadding ->
+        Column(
         modifier = BaseModifiers.BaseModifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        // 상단 제목 / 설명
-        Text(
-            text = "그룹 매칭 옵션",
-            style = MaterialTheme.typography.titleLarge
-        )
-        Text(
-            text = "원하는 스터디 목적과 성향, 가능한 요일을 선택해 주세요.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+            // 상단 제목 / 설명
+            Text(
+                text = "그룹 매칭 옵션",
+                fontSize = 18.sp
+            )
+            Text(
+                text = "원하는 스터디 목적과 성향, 가능한 요일을 선택해 주세요.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-        // 목적 선택 카드
-        ElevatedCard(
-            modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = BaseModifiers.BaseModifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "목적",
-                    style = MaterialTheme.typography.titleMedium
+            // 목적 선택 카드
+            ElevatedCard(
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth(),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFFDEE5F3)   // ← 카드 배경색
                 )
-
-                Button(
-                    onClick = { showPicker= true },
-                    modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = BaseModifiers.BaseModifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(purpose.ifBlank { "목적을 선택하세요" })
-                }
-
-                if (showPicker) {
-                    PurposePickerDialog(
-                        list = studylist.contents,
-                        selected = selectedPurpose,
-                        onSelect = {
-                            purpose = it
-                            showPicker=false  },
-                        onDismiss = { showPicker=false }
+                    Text(
+                        text = "목적",
+                        style = MaterialTheme.typography.titleMedium
                     )
+
+                    Button(
+                        onClick = { showPicker = true },
+                        modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
+                    ) {
+                        Text(purpose.ifBlank { "목적을 선택하세요" })
+                    }
+
+                    if (showPicker) {
+                        PurposePickerDialog(
+                            list = studylist.contents,
+                            selected = selectedPurpose,
+                            onSelect = {
+                                purpose = it
+                                showPicker = false
+                            },
+                            onDismiss = { showPicker = false }
+                        )
+                    }
                 }
             }
-        }
 
-        // 그룹 성향 카드
-        ElevatedCard(
-            modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = BaseModifiers.BaseModifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            // 그룹 성향 카드
+            ElevatedCard(
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth(),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFFDEE5F3)
+                )
             ) {
-                Text(
-                    text = "그룹 성향",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = "왼쪽으로 갈수록 집중 스터디, 오른쪽으로 갈수록 친목 / 라이트한 분위기입니다.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Slider(
-                    value = tendency.value,
-                    modifier = BaseModifiers.BaseTextfillModifier
-                        .height(56.dp)
-                        .width(280.dp) ,
-                    valueRange = 0f..100f,
-                    onValueChange = {tendency.value = it}
-                )
-
-                Row(
-                    modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Column(
+                    modifier = BaseModifiers.BaseModifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("집중", style = MaterialTheme.typography.bodySmall)
-                    Text("친목", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = "그룹 성향",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "왼쪽으로 갈수록 집중 스터디, 오른쪽으로 갈수록 친목 / 라이트한 분위기입니다.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Slider(
+                        value = tendency.value,
+                        modifier = BaseModifiers.BaseTextfillModifier
+                            .height(56.dp)
+                            .width(280.dp),
+                        valueRange = 0f..100f,
+                        onValueChange = { tendency.value = it },
+                        colors = SliderDefaults.colors(
+                            thumbColor = Color(0xFF5271C9),        // 동그란 손잡이 색
+                            activeTrackColor = Color(0xFF5271C9), // 선택된 트랙 색
+                            inactiveTrackColor = Color(0xFFEFEFF1) // 비선택 트랙 색
+                        )
+                    )
+
+                    Row(
+                        modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("집중", style = MaterialTheme.typography.bodySmall)
+                        Text("친목", style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
-        }
-        """
+            """
         // 가능한 요일 카드
         ElevatedCard(
             modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
@@ -198,20 +225,23 @@ fun matchingOptionGroup(
             }
         }
         """
-        Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
+            Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
 
-        // 매칭 시작 버튼
-        Button(
-            onClick = {
-                vm.requestmatch()
-            },
-            enabled = purpose != "",
-            modifier = BaseModifiers.BaseBtnModifier
-                .fillMaxWidth()
-                .height(52.dp)
-        ) {
-            Text("매칭 시작")
+            // 매칭 시작 버튼
+            Button(
+                onClick = {
+                    vm.requestmatch()
+                },
+                enabled = purpose != "",
+                modifier = BaseModifiers.BaseBtnModifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
+                Text("매칭 시작")
+            }
+
         }
+
     }
     @Composable
     fun PurposePickerDialog(
