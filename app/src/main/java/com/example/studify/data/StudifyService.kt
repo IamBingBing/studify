@@ -117,4 +117,13 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/searchbook.php")
     fun requestSearchBook(@FieldMap param: HashMap<String, String>): Single<BookModel>
+    @FormUrlEncoded
+    @POST("api/addmentorqna.php")
+    fun requestAddMentorQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/addAnswer.php")
+    fun requestAddAnswer(@FieldMap data: Map<String, String>): Single<UpdateModel>
+    @FormUrlEncoded
+    @POST("api/menqnadata.php")
+    fun requestMentorQnaData(@FieldMap data: Map<String, String>) : Single<QnaModel>
 }
