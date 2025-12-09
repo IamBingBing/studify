@@ -143,17 +143,26 @@ fun groupHome(
 
             Spacer(Modifier.height(9.dp))
 
-            // ================== 공지사항 ==================
             sectionTitle("공지사항")
 
             if (announcements.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text("공지사항이 없습니다.")
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 16.dp)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text("공지사항이 없습니다.")
+                        }
+                    }
                 }
             } else {
                 LazyRow(

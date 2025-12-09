@@ -6,7 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,6 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,7 +100,7 @@ fun chatingRoom(
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextField(
+                textField(
                     value = sendMessage,
                     onValueChange = { sendMessage = it },
                     modifier = Modifier
@@ -121,20 +128,29 @@ fun ChatTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .padding(start = 8.dp, end = 8.dp),
+            .height(96.dp)
+            .padding(horizontal = 12.dp)
+            .padding(top =20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "뒤로가기"
+            )
+        }
 
         // 가운데 제목
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(8f),
-            textAlign = TextAlign.Center
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold
+            )
         )
 
-        Spacer(modifier = Modifier.weight(1f)) // 좌우 균형 맞추기
+        Spacer(modifier = Modifier.width(48.dp))// 좌우 균형 맞추기
     }
 }
 
@@ -145,9 +161,9 @@ private fun ChatBubble(
     isMine: Boolean
 ) {
     val bubbleColor = if (isMine) {
-        MaterialTheme.colorScheme.primaryContainer
+        Color(0xFFBAC6E8)
     } else {
-        MaterialTheme.colorScheme.surfaceVariant
+        Color(0xFFD1D2D5)
     }
     val textColor = if (isMine) {
         MaterialTheme.colorScheme.onPrimaryContainer
