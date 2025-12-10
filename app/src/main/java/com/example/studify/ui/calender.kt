@@ -235,78 +235,80 @@ private fun ScheduleDetailDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(24.dp),
-        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(22.dp),
+        containerColor = MaterialTheme.colorScheme.surface, // ✅ 팝업 배경 단색
+        titleContentColor = Color(0xFF607ABD),       // ✅ 제목 글씨색
+        textContentColor = Color.DarkGray,     // ✅ 내용 전체 기본 글씨색
         confirmButton = {
             TextButton(onClick = onDismiss) {
                 Text("닫기")
             }
         },
         title = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
-            ) {
+            Column {
                 Text(
                     text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = "총 ${schedules.size}개의 일정",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         },
+
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 3.dp),   // ✅ 전체 균형 여백
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                schedules.forEach { item ->
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        tonalElevation = 1.dp
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            // 제목
-                            Text(
-                                text = item.title.ifBlank { "제목 없음" },
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold
-                            )
 
-                            // 시간
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.2.dp,
+                    color = Color(0xFFDCE5FC)
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                schedules.forEachIndexed { index, item ->
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // ✅ 제목
+                        Text(
+                            text = item.title.ifBlank { "제목 없음" },
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0xFF324167),
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(Modifier.height(4.dp))
+
+                        // ✅ 시간
+                        Text(
+                            text = "▸ 시간 : ${item.time}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        // ✅ 장소
+                        if (item.location.isNotBlank()) {
+                            Spacer(Modifier.height(2.dp))
                             Text(
-                                text = "▸ ${item.time}",
+                                text = "▸ 장소 : ${item.location}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                        }
 
-                            // 장소
-                            if (item.location.isNotBlank()) {
-                                Text(
-                                    text = "▸ ${item.location}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-
-                            // 내용
-                            if (item.content.isNotBlank()) {
-                                Text(
-                                    text = "▸ ${item.content}",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                        // ✅ 내용
+                        if (item.content.isNotBlank()) {
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                text = "▸ 내용 :  ${item.content}",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }
@@ -314,4 +316,5 @@ private fun ScheduleDetailDialog(
         }
     )
 }
+
 

@@ -1,5 +1,6 @@
 package com.example.studify.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -14,6 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studify.Tool.BaseModifiers
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.graphics.Brush
 
 data class MentorInfo(
     val name: String,
@@ -83,6 +87,7 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
 }
 
 // [홈 탭] groupHome과 동일한 텍스트 나열 방식
+// [홈 탭] groupHome과 동일한 텍스트 나열 방식 → 카드로 변경
 @Composable
 private fun MentorHomeTab(vm: mentorVM) {
     val mentorCanTeach by vm.mentorCanTeach
@@ -97,44 +102,105 @@ private fun MentorHomeTab(vm: mentorVM) {
     ) {
         // 섹션 1: 그룹 정보
         sectionTitle("그룹 정보")
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Text("• 그룹이름: $groupName", style = MaterialTheme.typography.bodyMedium)
-            Text("• 멘토 과목: $mentorCanTeach", style = MaterialTheme.typography.bodyMedium)
 
-            // 멘티 목표 라벨 처리
-            val label = if (menteeWants.contains("배움") || menteeWants.contains("학습")) "멘티 목표" else "멘티 과목"
-            Text("• $label: $menteeWants", style = MaterialTheme.typography.bodyMedium)
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = Color(0xFFCAD6F5)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(Color(0xFFB8C3DE), Color(0xFFB8C3DE))
+                        )
+                    )
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+               Text(
+                    text = "멘토 과목",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = mentorCanTeach,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFFFFFFFF)
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                val label =
+                    if (menteeWants.contains("배움") || menteeWants.contains("학습")) "멘티 목표" else "멘티 과목"
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = menteeWants,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFFFFFFFF)
+                )
+            }
         }
 
-        Spacer(Modifier.height(12.dp))
-        SectionDivider() // 굵은 구분선
+        Spacer(Modifier.height(16.dp))
 
-        //  섹션 2: 최근 Q&A
+        // 섹션 2: 최근 Q&A
         sectionTitle("최근 Q&A")
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            if (recentQna.isEmpty()) {
-                Text("등록된 Q&A가 없습니다.")
-            } else {
-                recentQna.forEachIndexed { index, qna ->
-                    if (index > 0) {
-                        Spacer(Modifier.height(8.dp))
-                    }
-                    val title = qna.qnatitle ?: "(제목 없음)"
+
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = Color(0xFFE1E7F5)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (recentQna.isEmpty()) {
                     Text(
-                        "• $title",
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "등록된 Q&A가 없습니다.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
                     )
+                } else {
+                    recentQna.forEachIndexed { index, qna ->
+                        val title = qna.qnatitle ?: "(제목 없음)"
+
+                        Text(
+                            text = "• $title",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+
+                        if (index != recentQna.lastIndex) {
+                            Divider(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                color = Color(0xFFB6BDE3)
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-        SectionDivider()
+        Spacer(Modifier.height(16.dp))
     }
 }
+
 
 // [멤버 탭]
 @Composable
@@ -149,43 +215,50 @@ private fun MentorMemberTab(vm: mentorVM) {
     ) {
         // 섹션 1: 멘토
         sectionTitle("멘토 (Mentor)")
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             if (mentorList.isEmpty()) {
                 Text("등록된 멘토가 없습니다.", color = Color.Gray)
             } else {
                 mentorList.forEach { mentor ->
-                    Text(
-                        text = "• ${mentor.name} (${mentor.field})",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(vertical = 4.dp)
+                    MemberCard(
+                        title = mentor.name,
+                        subtitle = mentor.field
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-        SectionDivider()
+        Spacer(Modifier.height(16.dp))
 
         // 섹션 2: 멘티
         sectionTitle("멘티 (Mentee)")
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             if (menteeList.isEmpty()) {
                 Text("등록된 멘티가 없습니다.", color = Color.Gray)
             } else {
                 menteeList.forEach { mentee ->
-                    Text(
-                        text = "• ${mentee.name} (${mentee.goal})",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(vertical = 4.dp)
+                    MemberCard(
+                        title = mentee.name,
+                        subtitle = mentee.goal
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-        SectionDivider()
+        Spacer(Modifier.height(16.dp))
     }
 }
+
 
 // --- groupHome.kt 스타일 컴포넌트 (그대로 가져옴) ---
 
@@ -204,4 +277,34 @@ private fun SectionDivider() {
         thickness = 8.dp,
         color = Color(0xFFDFE5F3) // groupHome 색상
     )
+}
+
+@Composable
+private fun MemberCard(
+    title: String,
+    subtitle: String
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        color = Color(0xFFE0E8F5),        // 🔹멤버 카드 배경색
+        tonalElevation = 0.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
 }

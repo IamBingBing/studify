@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -67,6 +68,7 @@ fun MemberRow(
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable { onClick() },
+        color = Color(0xFFE0E8F5),
         tonalElevation = 1.dp
     ) {
         Column(modifier = Modifier.padding(12.dp)) {

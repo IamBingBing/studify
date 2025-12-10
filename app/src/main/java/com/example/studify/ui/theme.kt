@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 // -------- 1) 색 정의 --------
-private val md_theme_light_primary = Color(0xFF2B3B69) //버튼색
+private val md_theme_light_primary = Color(0xFF425CA4) //버튼색
 private val md_theme_light_onPrimary = Color(0xFFFBFCF3) //버튼글씨
 private val md_theme_light_background = Color(0xFFF4F6FC) //배경컬러
 private val md_theme_light_onBackground = Color(0xFF414848) //글씨컬러

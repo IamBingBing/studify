@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.graphics.Color
 
-private val TopNavColor = Color(0xFF2B3B69)
+private val TopNavColor = Color(0xFF8398D7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +62,7 @@ fun groupNavigation(
             TabRow(
                 selectedTabIndex = selectedIndex,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = Color(0xFF394367)
             ) {
                 tabs.forEachIndexed { index, (route, label) ->
                     Tab(

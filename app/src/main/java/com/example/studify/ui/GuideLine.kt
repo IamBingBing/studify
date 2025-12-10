@@ -25,7 +25,7 @@ fun Guideline(
     val goal by vm.groupGoal // [수정] State 구독 (by 사용)
 
     Scaffold(
-        topBar = { CenterAlignedTopAppBar(title = { Text("AI 학습 가이드") }) },
+        topBar = { CenterAlignedTopAppBar(title = { Text("AI 학습 가이드", fontWeight = FontWeight.Bold) }) },
         bottomBar = { navigationbar(navController) }
     ) { innerPadding ->
 
@@ -75,7 +75,7 @@ fun Guideline(
                             items(guidelineList) { item ->
                                 Card(
                                     elevation = CardDefaults.cardElevation(4.dp),
-                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                                 ) {
                                     Column(Modifier.padding(20.dp)) {
                                         Text(text = "💡 ${item.title}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
