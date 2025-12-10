@@ -4,6 +4,7 @@ package com.example.studify.ui
 import android.annotation.SuppressLint
 import com.example.studify.R
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.text.input.KeyboardType
@@ -114,15 +117,26 @@ fun login(vm : loginVM = hiltViewModel(), navController: NavController) {
                         )
                     }
                 }
-                Button(
-                    onClick = { navController.navigate("register") },
-                    enabled = true,
-                    modifier = BaseModifiers.BaseBtnModifier
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "회원가입"
+                        text = "계정이 없으신가요? ",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "회원가입",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.clickable {
+                            navController.navigate("register")
+                        }
                     )
                 }
+
 
             }
         }

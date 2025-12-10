@@ -205,7 +205,7 @@ private fun GroupListItem(
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.elevatedCardColors(
             containerColor = Color(0xFFE0E8F5),
-            contentColor = Color(0xFF394367)
+            contentColor = Color(0xFF525564)
         )
     ) {
         Row(

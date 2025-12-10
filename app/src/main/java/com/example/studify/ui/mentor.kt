@@ -100,54 +100,83 @@ private fun MentorHomeTab(vm: mentorVM) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // 섹션 1: 그룹 정보
-        sectionTitle("그룹 정보")
+        // ───────── 그룹 정보 ─────────
+        sectionTitle("멘토-멘티 정보")
 
-        ElevatedCard(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 4.dp),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = Color(0xFFCAD6F5)
-            )
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
+            // 🔹 카드 1: 멘토 과목
+            ElevatedCard(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(Color(0xFFB8C3DE), Color(0xFFB8C3DE))
-                        )
-                    )
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                    .weight(1f)
+                    .height(120.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFF51669D)   // 진한 블루
+                )
             ) {
-               Text(
-                    text = "멘토 과목",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = mentorCanTeach,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFFFFFFFF)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(14.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "멘토 과목",
+                        fontSize = 13.sp,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFFE0E3F1)
+                    )
+                    Text(
+                        text = mentorCanTeach.ifBlank { "-" },
+                        fontSize = 25.sp,                 // ✅ 메인 글씨 크게
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                }
+            }
 
-                Spacer(Modifier.height(8.dp))
+            // 🔹 카드 2: 멘티 과목 / 목표
+            val label =
+                if (menteeWants.contains("배움") || menteeWants.contains("학습")) "멘티 목표"
+                else "멘티 과목"
 
-                val label =
-                    if (menteeWants.contains("배움") || menteeWants.contains("학습")) "멘티 목표" else "멘티 과목"
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
+            ElevatedCard(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(120.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFF6F82BC)   // 조금 더 밝은 블루
                 )
-                Text(
-                    text = menteeWants,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFFFFFFFF)
-                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(14.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = label,
+                        fontSize = 13.sp,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFFE0E3F1)
+                    )
+                    Text(
+                        text = menteeWants.ifBlank { "-" },
+                        fontSize = 25.sp,                 // ✅ 메인 글씨 크게
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                }
             }
         }
 

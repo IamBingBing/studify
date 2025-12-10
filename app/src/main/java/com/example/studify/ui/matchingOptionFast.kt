@@ -92,7 +92,16 @@ fun matchingOptionFast(
                         )
                         TimeInput(
                             state = startTime,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = TimePickerDefaults.colors(
+                                containerColor = Color(0xFFFFFFFF),   // ⬅ 배경
+                                selectorColor = Color(0xFFDFE4F5),    // ⬅ 시/분 선택 원
+                                clockDialColor = Color(0xFFF8FAFF),   // ⬅ 다이얼 배경
+                                timeSelectorSelectedContainerColor = Color(0xFF7E8BBB),
+                                timeSelectorSelectedContentColor = Color.White,
+                                timeSelectorUnselectedContainerColor = Color(0xFFF2F5FC),
+                                timeSelectorUnselectedContentColor = Color.Black
+                            )
                         )
                     }
 
@@ -106,7 +115,16 @@ fun matchingOptionFast(
                         )
                         TimeInput(
                             state = endTime,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                                colors = TimePickerDefaults.colors(
+                                    containerColor = Color(0xFFFFFFFF),   // ⬅ 배경
+                                    selectorColor = Color(0xFFDFE4F5),    // ⬅ 시/분 선택 원
+                                    clockDialColor = Color(0xFFF8FAFF),   // ⬅ 다이얼 배경
+                                    timeSelectorSelectedContainerColor = Color(0xFF7E8BBB),
+                                    timeSelectorSelectedContentColor = Color.White,
+                                    timeSelectorUnselectedContainerColor = Color(0xFFF2F5FC),
+                                    timeSelectorUnselectedContentColor = Color.Black
+                                )
                         )
                     }
                 }
