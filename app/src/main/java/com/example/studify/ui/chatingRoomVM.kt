@@ -35,6 +35,8 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
             )
     var sendmessage = mutableStateOf<String>("")
     var error = mutableStateOf("")
+    var reportText = mutableStateOf("")
+
     init {
         requestMessage()
     }

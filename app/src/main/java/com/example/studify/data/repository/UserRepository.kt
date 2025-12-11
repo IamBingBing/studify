@@ -88,5 +88,13 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-
+    fun reportUser( userid :String , prompt: String ): Single<UpdateModel>{
+        val param = HashMap<String, String>().apply {
+            this["USERID"] = userid
+            this["PROMPT"] = prompt
+        }
+        return studifyService.AuthEmailCode(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

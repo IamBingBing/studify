@@ -1,7 +1,9 @@
 package com.example.studify.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,20 +11,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +48,9 @@ fun chatingRoom(
     val messages = vm.message.collectAsState()        // vm.message: State<List<Chat>>
     var sendMessage by vm.sendmessage // vm.sendmessage: MutableState<String>
     val myName = Preferences.getLong("USERID")
-
+    var reportwindow by remember { mutableStateOf(false)}
+    val reportText = vm.reportText
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             ChatTopBar(
@@ -81,7 +91,13 @@ fun chatingRoom(
                                 text = entry.CHATNAME,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp).combinedClickable(
+                                    onLongClick = {
+                                        reportwindow = true;
+                                    },
+                                    onClick = {}
+                                )
+
                             )
                         }
 
@@ -118,6 +134,54 @@ fun chatingRoom(
             }
         }
     }
+    if (reportwindow) {
+        AlertDialog(
+            onDismissRequest = {
+                reportwindow = false
+            },
+            title = { Text(text = "신고하기") },
+            text = {
+                Column {
+                    Text(text = "신고 내용을 작성해 주세요.")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = reportText.value,
+                        onValueChange = {
+                            reportText.value = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("신고 사유를 입력하세요.") },
+                        minLines = 3
+                    )
+
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "신고가 접수되었습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        reportText.value = ""
+                        reportwindow = false
+                    }
+                ) {
+                    Text("보내기")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        reportText.value = ""
+                        reportwindow = false
+                    }
+                ) {
+                    Text("취소")
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -152,6 +216,7 @@ fun ChatTopBar(
 
         Spacer(modifier = Modifier.width(48.dp))// 좌우 균형 맞추기
     }
+
 }
 
 
@@ -191,4 +256,5 @@ private fun ChatBubble(
             color = textColor
         )
     }
+
 }
