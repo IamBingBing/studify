@@ -46,9 +46,12 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
 
             if (isEditing) {
                 EditProfileField(label = "이름", value = name, onValueChange = { name = it })
-                EditProfileField(label = "이메일", value = email, onValueChange = { email = it })
                 EditProfileField(label = "주소", value = address, onValueChange = { address = it })
-                EditProfileField(label = "성별 (남자/여자)", value = sex, onValueChange = { sex = it })
+                EditProfileField(
+                    label = "성별 (남자/여자)",
+                    value = sex,
+                    onValueChange = { sex = it }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -68,12 +71,12 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
 
             } else {
                 DisplayProfileField(label = "이름", value = name)
-                val groupDisplay = if(group == "[]" || group.isEmpty()) "없음" else group
+                DisplayProfileField(label = "이메일", value = email)
+                val groupDisplay = if (group == "[]" || group.isEmpty()) "없음" else group
                 DisplayProfileField(label = "소속 그룹", value = groupDisplay)
                 DisplayProfileField(label = "성별", value = sex)
                 DisplayProfileField(label = "주소", value = address)
                 DisplayProfileField(label = "포인트", value = point)
-
 
                 Spacer(modifier = Modifier.height(24.dp))
 
