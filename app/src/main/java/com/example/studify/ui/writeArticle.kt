@@ -69,8 +69,7 @@ fun writeArticle(
                 label = { Text("내용") },
                 modifier = BaseModifiers.BaseTextfillModifier
                     .fillMaxWidth()
-                    .weight(1f),
-                maxLines = 10
+                    .weight(1f)
             )
 
             Spacer(Modifier.height(12.dp))

@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.graphics.Color
 
-private val TopNavColor = Color(0xFF8398D7)
+private val TopNavColor = Color(0xFF768DD7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -19,7 +19,7 @@ data class GroupModel (
         @SerializedName("QNA") @Expose var qna: List<String>? = null,
         @SerializedName("DATES") @Expose var dates: List<String>? = null,
         @SerializedName("HASHTAG") @Expose var hashtag: String?=null,
-        @SerializedName("HOST") @Expose var host: Int? = null,
+        @SerializedName("HOST") @Expose var host: Long? = null,
         @SerializedName("TENDENCY") @Expose var tendency: Int? = null,
         @SerializedName("PURPOSE") @Expose var purpose: String ? = null,
         @SerializedName ("GROUPTYPE") @Expose var grouptype : Int = 0 //0 : 번개 1: 그룹 2: 멘토
