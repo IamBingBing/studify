@@ -46,12 +46,17 @@ fun member(
             ) {
                 items(users) { user ->
                     val userId = user.userid
-                    MemberRow(name = user.username ?: "이름 없음",
+                    val currentGroupId = vm.groupId.value   // 🔹 현재 그룹 ID
+
+                    MemberRow(
+                        name = user.username ?: "이름 없음",
                         onClick = {
                             userId.let { id ->
-                                navController.navigate("profilepage/$id")
+                                // 🔹 userId + groupId 둘 다 넘겨주기
+                                navController.navigate("profilepage/$id/$currentGroupId")
                             }
-                        })
+                        }
+                    )
                 }
             }
         }

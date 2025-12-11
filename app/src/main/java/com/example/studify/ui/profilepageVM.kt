@@ -1,10 +1,14 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.studify.data.model.ProgressModel.ProgressResult.Purpose
+import com.example.studify.data.repository.ProgressRepository
 import com.example.studify.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -13,29 +17,57 @@ import javax.inject.Inject
 @HiltViewModel
 class profilepageVM @Inject constructor(
     private val application: Application,
-    private val repository: UserRepository,
+    private val userRepository: UserRepository,
+    private val progressRepository: ProgressRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var name = mutableStateOf("로딩 중...")
+    // ── 기본 프로필 정보 ───────────────────────
+    var name = mutableStateOf("로딩 중.")
     var email = mutableStateOf("")
     var sex = mutableStateOf("")
     var address = mutableStateOf("")
     var point = mutableStateOf("")
-    private val targetId: Int = savedStateHandle.get<String>("userId")?.toIntOrNull() ?: -1
+
+    // ── 개인 목표 정보 ────────────────────────
+    var personalGoals = mutableStateListOf<Purpose>()
+    var progressPercent = mutableStateOf(0f)
+
+    // 네비게이션에서 넘어온 값들
+    private val targetId: Int =
+        savedStateHandle.get<String>("userId")?.toIntOrNull() ?: -1   // 프로필 대상 유저
+    private val groupId: String =
+        savedStateHandle.get<String>("groupId") ?: "-1"             // 이 프로필이 속한 그룹
+
     private val disposables = CompositeDisposable()
 
     init {
+        Log.d("ProfilePageVM", "init targetId=$targetId, groupId=$groupId")
+
         if (targetId != -1) {
             loadProfile(targetId)
         } else {
             Toast.makeText(application, "잘못된 사용자 접근입니다.", Toast.LENGTH_SHORT).show()
         }
+
+        if (groupId != "-1" && targetId != -1) {
+            loadUserProgress()
+        } else {
+            Log.d("ProfilePageVM", "skip loadUserProgress() groupId=$groupId, targetId=$targetId")
+        }
     }
 
+    // ── 1) 프로필 정보 불러오기 ─────────────────
     fun loadProfile(id: Int) {
-        val d = repository.requestGetProfile(id)
+        Log.d("ProfilePageVM", "loadProfile() id=$id")
+
+        val d = userRepository.requestGetProfile(id)
             .subscribe({ model ->
+                Log.d(
+                    "ProfilePageVM",
+                    "loadProfile() resultCode=${model.resultCode}, error=${model.errorMsg}"
+                )
+
                 if (model.resultCode == "200" && model.result != null) {
                     val r = model.result!!
                     name.value = r.username
@@ -43,12 +75,128 @@ class profilepageVM @Inject constructor(
                     address.value = r.address
                     point.value = "${r.point}P"
                     sex.value = if (r.sex == 0) "남자" else "여자"
+
+                    Log.d(
+                        "ProfilePageVM",
+                        "profile loaded username=${r.username}, email=${r.email}"
+                    )
                 } else {
                     Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
                 }
             }, { error ->
-                Toast.makeText(application, "통신 오류: ${error.message}", Toast.LENGTH_SHORT).show()
+                Log.e("ProfilePageVM", "프로필 로딩 실패", error)
+                Toast.makeText(
+                    application,
+                    "통신 오류: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             })
+        disposables.add(d)
+    }
+
+    // ── 2) 개인 목표 / 달성률 불러오기 ───────────
+    fun loadUserProgress() {
+        if (groupId == "-1" || targetId == -1) {
+            Log.d("ProfilePageVM", "loadUserProgress() aborted groupId=$groupId, targetId=$targetId")
+            return
+        }
+
+        Log.d("ProfilePageVM", "loadUserProgress() groupId=$groupId, targetId=$targetId")
+
+        val d = progressRepository.getUserProgress(groupId, targetId.toString())
+            .subscribe({ model ->
+                Log.d(
+                    "ProfilePageVM",
+                    "loadUserProgress() resultCode=${model.resultCode}, error=${model.errorMsg}"
+                )
+
+                if (model.resultCode == "200" && model.result != null) {
+                    val list = model.result!!.purposeList
+                    Log.d(
+                        "ProfilePageVM",
+                        "loadUserProgress() purposeList size=${list?.size}"
+                    )
+
+                    if (!list.isNullOrEmpty()) {
+                        // progressVM 규칙: [0] = 주요 목표, [1..] = 개인 목표
+                        personalGoals.clear()
+                        if (list.size > 1) {
+                            personalGoals.addAll(list.subList(1, list.size))
+                        }
+                        calculateProgress()
+                    } else {
+                        personalGoals.clear()
+                        progressPercent.value = 0f
+                    }
+                } else {
+                    Log.e("ProfilePageVM", "진도 로딩 실패: ${model.errorMsg}")
+                }
+            }, { error ->
+                Log.e("ProfilePageVM", "진도 로딩 예외: ${error.message}", error)
+            })
+
+        disposables.add(d)
+    }
+
+    // 달성률 계산
+    fun calculateProgress() {
+        if (personalGoals.isEmpty()) {
+            progressPercent.value = 0f
+            Log.d("ProfilePageVM", "calculateProgress() empty goals -> 0%")
+        } else {
+            val doneCount = personalGoals.count { it.complit }
+            val total = personalGoals.size
+            val percent = (doneCount.toFloat() / total.toFloat()) * 100f
+            progressPercent.value = percent
+            Log.d(
+                "ProfilePageVM",
+                "calculateProgress() done=$doneCount, total=$total, percent=$percent"
+            )
+        }
+    }
+
+    // ── 3) 신고 전송 ────────────────────────────
+    fun sendReport(reason: String) {
+        if (targetId == -1) {
+            Toast.makeText(application, "대상 사용자를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (reason.isBlank()) {
+            Toast.makeText(application, "신고 내용을 입력해 주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Log.d("ProfilePageVM", "sendReport() targetId=$targetId, reason=$reason")
+
+        val d = userRepository.reportUser(targetId.toString(), reason)
+            .subscribe({ model ->
+                Log.d(
+                    "ProfilePageVM",
+                    "sendReport() resultCode=${model.resultCode}, error=${model.errorMsg}"
+                )
+
+                if (model.resultCode == "200") {
+                    Toast.makeText(
+                        application,
+                        "신고가 접수되었습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        application,
+                        model.errorMsg,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }, { error ->
+                Log.e("ProfileReport", "신고 전송 실패", error)
+                Toast.makeText(
+                    application,
+                    "신고 전송 실패: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
+
         disposables.add(d)
     }
 
