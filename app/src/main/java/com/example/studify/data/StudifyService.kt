@@ -113,10 +113,6 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/ismentormatch.php")
     fun requestismentormatch(@FieldMap data: Map<String, String>): Single<isMatchModel>
-
-    @FormUrlEncoded
-    @POST("api/searchbook.php")
-    fun requestSearchBook(@FieldMap param: HashMap<String, String>): Single<BookModel>
     @FormUrlEncoded
     @POST("api/addmentorqna.php")
     fun requestAddMentorQna (@FieldMap data : Map<String, String>) : Single<UpdateModel>
@@ -126,4 +122,7 @@ interface StudifyService {
     @FormUrlEncoded
     @POST("api/menqnadata.php")
     fun requestMentorQnaData(@FieldMap data: Map<String, String>) : Single<QnaModel>
+    @FormUrlEncoded
+    @POST("api/searchbook.php")
+    fun requestSearchBook(@FieldMap param: HashMap<String, String>): Single<BookModel>
 }

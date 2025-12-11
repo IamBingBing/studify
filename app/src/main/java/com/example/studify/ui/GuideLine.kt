@@ -95,12 +95,11 @@ fun Guideline(
 
             // [3] 하단 버튼 (서치북으로 이동)
             Button(
-                onClick = { navController.navigate("searchbook") },
+                onClick = { navController.navigate("searchbook/$goal") },
                 modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth().height(56.dp),
                 enabled = !isLoading && guidelineList.isNotEmpty()
             ) {
                 Text(text = "이 전략에 맞는 책 추천받기", fontSize = 18.sp)
             }
         }
-    }
-}
+    }}

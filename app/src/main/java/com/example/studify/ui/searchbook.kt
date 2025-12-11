@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,8 +43,6 @@ import androidx.compose.ui.unit.sp
 import com.example.studify.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-
-// [중요] Coil 3.0.0 사용 시 import 경로 확인
 import coil3.compose.AsyncImage
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.data.model.BookModel
@@ -51,17 +50,21 @@ import com.example.studify.data.model.BookModel
 @Composable
 fun searchbook(
     vm: searchbookVM = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    startKeyword: String = ""
 ) {
-    // 뷰모델 데이터 연결
     val bookList = vm.bookList
     val isLoading by vm.isLoading
     val errorMsg by vm.errorMsg
 
-    // 검색어 입력 상태
-    var keyword by remember { mutableStateOf("") }
-
+    var keyword by remember { mutableStateOf(startKeyword) }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(Unit) {
+        if (startKeyword.isNotBlank()) {
+            vm.searchBooks(startKeyword)
+        }
+    }
 
     Box(
         modifier = BaseModifiers.BaseModifier.fillMaxSize()
@@ -75,7 +78,6 @@ fun searchbook(
                     .padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // 타이틀
                 Text(
                     text = "도서 검색",
                     fontSize = 22.sp,
@@ -83,7 +85,6 @@ fun searchbook(
                     modifier = BaseModifiers.BaseModifier.padding(bottom = 16.dp)
                 )
 
-                // 검색 입력창 영역
                 Row(
                     modifier = BaseModifiers.BaseTextfillModifier,
                     verticalAlignment = Alignment.CenterVertically
@@ -99,7 +100,6 @@ fun searchbook(
                     )
                     Button(
                         onClick = {
-                            // 뷰모델의 검색 함수 호출
                             vm.searchBooks(keyword)
                             keyboardController?.hide()
                         },
@@ -109,7 +109,6 @@ fun searchbook(
                     }
                 }
 
-                // 결과 리스트 영역
                 Box(
                     modifier = BaseModifiers.BaseModifier
                         .fillMaxSize()
@@ -158,7 +157,7 @@ fun BookItemRow(book: BookModel.BookInfo) {
     Card(
         modifier = BaseModifiers.BaseModifier
             .fillMaxWidth()
-            .height(160.dp), // 정보가 많아져서 높이를 확보
+            .height(160.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -169,7 +168,6 @@ fun BookItemRow(book: BookModel.BookInfo) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // [이미지] Coil 3.0
             AsyncImage(
                 model = if (book.image.isNullOrBlank()) R.drawable.logo else book.image,
                 contentDescription = "책 표지",
@@ -182,12 +180,10 @@ fun BookItemRow(book: BookModel.BookInfo) {
 
             Spacer(modifier = BaseModifiers.BaseModifier.width(16.dp))
 
-            // [정보 텍스트]
             Column(
                 modifier = BaseModifiers.BaseModifier.weight(1f),
                 verticalArrangement = Arrangement.Top
             ) {
-                // 1. 제목
                 Text(
                     text = if (book.title.isNullOrBlank()) "제목 없음" else book.title!!,
                     fontSize = 16.sp,
@@ -198,7 +194,6 @@ fun BookItemRow(book: BookModel.BookInfo) {
                 )
                 Spacer(modifier = BaseModifiers.BaseModifier.height(4.dp))
 
-                // 2. 저자
                 Text(
                     text = "저자: ${if (book.author.isNullOrBlank()) "미상" else book.author}",
                     fontSize = 13.sp,
@@ -207,19 +202,16 @@ fun BookItemRow(book: BookModel.BookInfo) {
                     overflow = TextOverflow.Ellipsis
                 )
 
-                // 3. 소장 위치 (New)
                 Text(
                     text = "위치: ${if (book.place.isNullOrBlank()) "정보 없음" else book.place}",
                     fontSize = 13.sp,
-                    color = Color(0xFF2E7D32), // 짙은 초록색
+                    color = Color(0xFF2E7D32),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.weight(1f)) // 빈 공간 밀어내기
+                Spacer(modifier = Modifier.weight(1f))
 
-                // 4. 대출 가능 여부 / 링크 (New)
-                // 링크 정보가 "이용불가"면 빨간색, 아니면 파란색
                 val linkText = if (book.link.isNullOrBlank()) "정보 없음" else book.link!!
                 val isAvailable = linkText != "이용불가"
 

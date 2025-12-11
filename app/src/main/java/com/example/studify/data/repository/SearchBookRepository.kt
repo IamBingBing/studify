@@ -1,4 +1,3 @@
-
 package com.example.studify.data.repository
 
 import com.example.studify.data.StudifyService
@@ -12,11 +11,8 @@ import javax.inject.Singleton
 @Singleton
 class SearchBookRepository @Inject constructor(private val studifyService: StudifyService) {
 
-    fun requestSearchBook(groupId: String): Single<BookModel> {
-        val param = HashMap<String, String>()
-        param["GROUPID"] = groupId
-
-        return studifyService.requestSearchBook(param)
+    fun requestSearchBook(params: HashMap<String, String>): Single<BookModel> {
+        return studifyService.requestSearchBook(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

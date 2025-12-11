@@ -57,11 +57,11 @@ fun AppNavHost(navController: NavHostController) {
                 type = NavType.StringType
             }
         )){
-            entry -> val roomid = entry.arguments?.getString("roomid")
+                entry -> val roomid = entry.arguments?.getString("roomid")
             chatingRoom(navController = navController)
         }
         composable(route="chatlist"){
-            
+
             chatlist(navController = navController)
         }
         composable(route="createGroup"){
@@ -82,9 +82,9 @@ fun AppNavHost(navController: NavHostController) {
         composable(route="matchingOptionMentor"){
             matchingOptionMentor(navController = navController)
         }
-        
+
         composable(route="matchMenu"){
-            
+
             matchMenu(navController = navController)
         }
         composable(route="mentor/{mentorid}", arguments = listOf(
@@ -92,11 +92,11 @@ fun AppNavHost(navController: NavHostController) {
                 type = NavType.StringType
             }
         )){
-            entry -> val mentorid = entry.arguments?.getString("mentorid")
+                entry -> val mentorid = entry.arguments?.getString("mentorid")
             mentor(navController = navController)
         }
         composable(route="mypage"){
-            
+
             mypage(navController = navController)
         }
         composable(route= "notice/{groupid}", arguments = listOf(
@@ -112,7 +112,7 @@ fun AppNavHost(navController: NavHostController) {
                 type = NavType.StringType
             }
         )){
-            entry -> val noticeid = entry.arguments?.getString("noticeid")
+                entry -> val noticeid = entry.arguments?.getString("noticeid")
             noticeDetail(navController = navController)
         }
         composable(
@@ -167,7 +167,7 @@ fun AppNavHost(navController: NavHostController) {
                 type = NavType.StringType
             }
         )){
-            entry -> val groupid = entry.arguments?.getString("groupid")
+                entry -> val groupid = entry.arguments?.getString("groupid")
             groupHome(navController = navController)
         }
         composable(route= "calender/{groupid}", arguments = listOf(
@@ -203,10 +203,15 @@ fun AppNavHost(navController: NavHostController) {
         ) {
             Guideline(navController = navController)
         }
-        composable(route = "searchbook/{groupGoal}",
-            arguments = listOf(navArgument("groupGoal") { type = NavType.StringType })
-        ) {
-            searchbook(navController = navController)
+        composable(
+            route = "searchbook/{keyword}", // 1. 주소 뒤에 달린 keyword를 잡아서
+            arguments = listOf(navArgument("keyword") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val keyword = backStackEntry.arguments?.getString("keyword") ?: ""
+            searchbook(
+                navController = navController,
+                startKeyword = keyword
+            )
         }
     }
 }

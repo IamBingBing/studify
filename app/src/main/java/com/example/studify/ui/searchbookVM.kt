@@ -23,20 +23,20 @@ class searchbookVM @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    // [수정] 함수명 변경 (searchBookByGroup -> searchBooks)
-    // 파라미터 변경 (groupId -> keyword)
     fun searchBooks(keyword: String) {
         Log.d("SearchBookVM", "검색 요청 시작. 키워드: $keyword")
 
         if (keyword.isBlank()) {
-            Log.e("SearchBookVM", "검색 실패: 검색어가 비어있음")
             return
         }
 
         isLoading.value = true
         errorMsg.value = null
 
-        val d = searchBookRepository.requestSearchBook(keyword)
+        val params = HashMap<String, String>()
+        params["HASHTAG"] = keyword
+
+        val d = searchBookRepository.requestSearchBook(params)
             .subscribe({ model ->
                 isLoading.value = false
                 Log.d("SearchBookVM", "서버 응답 코드: ${model.resultCode}")
@@ -44,21 +44,15 @@ class searchbookVM @Inject constructor(
                 if (model.resultCode == "200") {
                     bookList.clear()
                     model.result?.let { list ->
-                        Log.d("SearchBookVM", "검색 성공: ${list.size}권 가져옴")
                         bookList.addAll(list)
-                    }
-                    if (bookList.isEmpty()) {
-                        Log.d("SearchBookVM", "성공했으나 결과 리스트가 비어있음")
                     }
                 } else {
                     val msg = model.errorMsg ?: "검색 결과가 없습니다."
-                    Log.e("SearchBookVM", "서버 에러 발생: $msg")
                     bookList.clear()
                     errorMsg.value = msg
                 }
             }, { e ->
                 isLoading.value = false
-                Log.e("SearchBookVM", "통신 실패: ${e.message}")
                 e.printStackTrace()
                 errorMsg.value = "통신 에러: ${e.message}"
             })
