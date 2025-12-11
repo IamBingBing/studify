@@ -108,7 +108,7 @@ fun qnaDetail(
                         Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기")
                     }
                 }
-            )
+            ) 
         }
     ) { innerPadding ->
 
