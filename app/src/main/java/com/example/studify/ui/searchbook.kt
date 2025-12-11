@@ -2,44 +2,42 @@
 
 package com.example.studify.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studify.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.studify.R
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.data.model.BookModel
+
+// 디자인을 위한 커스텀 색상 정의
+val BackgroundColor = Color(0xFFF5F7FA) // 연한 회색 배경
+val PointColor = Color(0xFF5B67CA)      // 포인트 컬러 (보라빛 파랑)
+val TextDark = Color(0xFF2D3436)        // 진한 회색 텍스트
+val TextGray = Color(0xFF636E72)        // 중간 회색 텍스트
 
 @Composable
 fun searchbook(
@@ -58,59 +56,84 @@ fun searchbook(
     }
 
     Box(
-        modifier = BaseModifiers.BaseModifier.fillMaxSize()
+        modifier = BaseModifiers.BaseModifier
+            .fillMaxSize()
+            .background(BackgroundColor)
     ) {
-        Surface(
-            color = Color.White,
+        Column(
             modifier = BaseModifiers.BaseModifier.fillMaxSize()
         ) {
-            Column(
+            // [상단 헤더 영역]
+            Row(
                 modifier = BaseModifiers.BaseModifier
-                    .padding(vertical = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    // [수정] 위쪽(top) 여백을 48.dp로 늘려 시원하게 만들었습니다.
+                    .padding(start = 16.dp, end = 16.dp, top = 48.dp, bottom = 24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // [수정됨] 키워드가 있으면 "OOO"에 관한 책 추천, 없으면 그냥 "책 추천" 출력
-                Text(
-                    text = if (startKeyword.isNotBlank()) "\"$startKeyword\"에 관한 책 추천" else "책 추천",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = BaseModifiers.BaseModifier.padding(bottom = 16.dp)
-                )
-
-                Box(
-                    modifier = BaseModifiers.BaseModifier
-                        .fillMaxSize()
-                        .padding(horizontal = 10.dp, vertical = 10.dp)
+                IconButton(
+                    onClick = { navController.popBackStack() },
+                    modifier = BaseModifiers.BaseModifier.size(32.dp)
                 ) {
-                    when {
-                        isLoading -> {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center)
-                            )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "뒤로가기",
+                        tint = TextDark
+                    )
+                }
+
+                Spacer(modifier = BaseModifiers.BaseModifier.width(8.dp))
+
+                Text(
+                    text = if (startKeyword.isNotBlank()) "\"$startKeyword\" 관련 추천 도서" else "추천 도서",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextDark,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // [컨텐츠 영역]
+            Box(
+                modifier = BaseModifiers.BaseModifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                when {
+                    isLoading -> {
+                        CircularProgressIndicator(
+                            modifier = BaseModifiers.BaseModifier.align(Alignment.Center),
+                            color = PointColor
+                        )
+                    }
+                    errorMsg != null -> {
+                        Column(
+                            modifier = BaseModifiers.BaseModifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = "오류가 발생했습니다", fontWeight = FontWeight.Bold, color = TextDark)
+                            Spacer(modifier = BaseModifiers.BaseModifier.height(8.dp))
+                            Text(text = errorMsg!!, color = Color.Red, fontSize = 14.sp)
                         }
-                        errorMsg != null -> {
-                            Text(
-                                text = errorMsg!!,
-                                color = Color.Red,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        bookList.isEmpty() -> {
-                            Text(
-                                text = "추천 도서가 없습니다.",
-                                color = Color.Gray,
-                                modifier = Modifier.align(Alignment.Center),
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
-                        }
-                        else -> {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                modifier = BaseModifiers.BaseModifier.fillMaxSize()
-                            ) {
-                                items(bookList) { book ->
-                                    BookItemRow(book)
-                                }
+                    }
+                    bookList.isEmpty() -> {
+                        Text(
+                            text = "추천해 드릴 책을 찾지 못했어요 😢",
+                            color = TextGray,
+                            fontSize = 16.sp,
+                            modifier = BaseModifiers.BaseModifier.align(Alignment.Center)
+                        )
+                    }
+                    else -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            // [수정] 리스트의 맨 아래쪽 여백(bottom)을 60.dp로 넉넉하게 주었습니다.
+                            contentPadding = PaddingValues(bottom = 60.dp),
+                            modifier = BaseModifiers.BaseModifier.fillMaxSize()
+                        ) {
+                            items(bookList) { book ->
+                                BookItemRow(book)
                             }
                         }
                     }
@@ -120,30 +143,30 @@ fun searchbook(
     }
 }
 
-// BookItemRow는 기존과 동일하게 유지
+// BookItemRow 및 InfoRow는 이전과 동일합니다.
 @Composable
 fun BookItemRow(book: BookModel.BookInfo) {
     Card(
         modifier = BaseModifiers.BaseModifier
             .fillMaxWidth()
-            .height(160.dp),
+            .height(180.dp)
+            .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp), spotColor = Color.LightGray),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = BaseModifiers.BaseModifier
                 .fillMaxSize()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
             AsyncImage(
                 model = if (book.image.isNullOrBlank()) R.drawable.logo else book.image,
                 contentDescription = "책 표지",
                 modifier = BaseModifiers.BaseModifier
-                    .width(90.dp)
+                    .width(100.dp)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(12.dp)),
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Gray.copy(alpha = 0.1f)),
                 contentScale = ContentScale.Crop
             )
 
@@ -151,46 +174,75 @@ fun BookItemRow(book: BookModel.BookInfo) {
 
             Column(
                 modifier = BaseModifiers.BaseModifier.weight(1f),
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = if (book.title.isNullOrBlank()) "제목 없음" else book.title!!,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = BaseModifiers.BaseModifier.height(4.dp))
+                Column {
+                    Text(
+                        text = book.title ?: "제목 없음",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextDark,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        lineHeight = 24.sp
+                    )
 
-                Text(
-                    text = "저자: ${if (book.author.isNullOrBlank()) "미상" else book.author}",
-                    fontSize = 13.sp,
-                    color = Color.Gray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    Spacer(modifier = BaseModifiers.BaseModifier.height(8.dp))
 
-                Text(
-                    text = "위치: ${if (book.place.isNullOrBlank()) "정보 없음" else book.place}",
-                    fontSize = 13.sp,
-                    color = Color(0xFF2E7D32),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    InfoRow(
+                        icon = Icons.Default.Person,
+                        text = book.author ?: "저자 미상"
+                    )
 
-                Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = BaseModifiers.BaseModifier.height(4.dp))
 
-                val linkText = if (book.link.isNullOrBlank()) "정보 없음" else book.link!!
+                    InfoRow(
+                        icon = Icons.Default.LocationOn,
+                        text = book.place ?: "위치 정보 없음",
+                        textColor = Color(0xFF2E7D32)
+                    )
+                }
+
+                val linkText = book.link ?: "정보 없음"
                 val isAvailable = linkText != "이용불가"
 
-                Text(
-                    text = if (isAvailable) "대출가능 여부 확인 >" else "이용불가",
-                    fontSize = 12.sp,
-                    color = if (isAvailable) Color.Blue else Color.Red,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Box(
+                    modifier = BaseModifiers.BaseModifier
+                        .background(
+                            color = if (isAvailable) PointColor.copy(alpha = 0.1f) else Color.Red.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                        .align(Alignment.End)
+                ) {
+                    Text(
+                        text = if (isAvailable) "대출 가능 확인하기 >" else "이용 불가",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isAvailable) PointColor else Color.Red
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+fun InfoRow(icon: ImageVector, text: String, textColor: Color = TextGray) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = BaseModifiers.BaseModifier.size(14.dp),
+            tint = textColor.copy(alpha = 0.7f)
+        )
+        Spacer(modifier = BaseModifiers.BaseModifier.width(4.dp))
+        Text(
+            text = text,
+            fontSize = 13.sp,
+            color = textColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
