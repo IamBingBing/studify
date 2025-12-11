@@ -16,26 +16,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -57,9 +51,11 @@ fun searchbook(
     val isLoading by vm.isLoading
     val errorMsg by vm.errorMsg
 
-    var keyword by remember { mutableStateOf(startKeyword) }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
+    LaunchedEffect(Unit) {
+        if (startKeyword.isNotEmpty()) {
+            vm.searchBooks(startKeyword)
+        }
+    }
 
     Box(
         modifier = BaseModifiers.BaseModifier.fillMaxSize()
@@ -73,36 +69,13 @@ fun searchbook(
                     .padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // [수정됨] 키워드가 있으면 "OOO"에 관한 책 추천, 없으면 그냥 "책 추천" 출력
                 Text(
-                    text = "도서 검색",
+                    text = if (startKeyword.isNotBlank()) "\"$startKeyword\"에 관한 책 추천" else "책 추천",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = BaseModifiers.BaseModifier.padding(bottom = 16.dp)
                 )
-
-                Row(
-                    modifier = BaseModifiers.BaseTextfillModifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        modifier = BaseModifiers.BaseModifier
-                            .weight(1f)
-                            .padding(end = 8.dp),
-                        value = keyword,
-                        onValueChange = { keyword = it },
-                        label = { Text("검색어 입력") },
-                        singleLine = true
-                    )
-                    Button(
-                        onClick = {
-                            vm.searchBooks(keyword)
-                            keyboardController?.hide()
-                        },
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("검색")
-                    }
-                }
 
                 Box(
                     modifier = BaseModifiers.BaseModifier
@@ -124,7 +97,7 @@ fun searchbook(
                         }
                         bookList.isEmpty() -> {
                             Text(
-                                text = "검색 결과가 없습니다.",
+                                text = "추천 도서가 없습니다.",
                                 color = Color.Gray,
                                 modifier = Modifier.align(Alignment.Center),
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -147,6 +120,7 @@ fun searchbook(
     }
 }
 
+// BookItemRow는 기존과 동일하게 유지
 @Composable
 fun BookItemRow(book: BookModel.BookInfo) {
     Card(
