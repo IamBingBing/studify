@@ -10,8 +10,23 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -55,7 +70,6 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text("포인트는 이렇게 획득할 수 있어요!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-
             }
         }
 
@@ -74,7 +88,6 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // 상단 광고 자리
                     item(span = { GridItemSpan(4) }) {
                         Card(modifier = BaseModifiers.BaseModifier.fillMaxWidth()) {
                             Box(
@@ -89,17 +102,28 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                         }
                     }
 
-                    // 상품 목록
                     items(itemList) { item ->
-                        val name  = item.goodName ?: ""
+                        val name = item.goodName ?: ""
                         val price = item.price ?: 0
-                        val goodId = item.goodId ?: 0
+
+                        val goodId = item.goodId ?: 0L
+
+                        val imageRes = when (goodId) {
+                            1L -> R.drawable.img_1
+                            2L -> R.drawable.img_2
+                            3L -> R.drawable.img_3
+                            4L -> R.drawable.img_4
+                            5L -> R.drawable.img_5
+                            6L -> R.drawable.img_6
+                            7L -> R.drawable.img_7
+                            else -> R.drawable.img_0
+                        }
 
                         Card(
                             modifier = BaseModifiers.BaseModifier.fillMaxWidth(),
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,   // 카드 배경
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         ) {
@@ -108,7 +132,7 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                                 modifier = BaseModifiers.BaseModifier.padding(8.dp)
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                                    painter = painterResource(id = imageRes),
                                     contentDescription = name,
                                     modifier = BaseModifiers.BaseModifier
                                         .fillMaxWidth()

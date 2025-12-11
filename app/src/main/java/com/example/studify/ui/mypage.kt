@@ -68,7 +68,6 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
 
             } else {
                 DisplayProfileField(label = "이름", value = name)
-                DisplayProfileField(label = "이메일", value = email)
                 val groupDisplay = if(group == "[]" || group.isEmpty()) "없음" else group
                 DisplayProfileField(label = "소속 그룹", value = groupDisplay)
                 DisplayProfileField(label = "성별", value = sex)

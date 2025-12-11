@@ -1,6 +1,5 @@
 package com.example.studify.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -34,21 +34,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
+import com.example.studify.data.model.ProgressModel.ProgressResult.Purpose
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun profilepage(vm: profilepageVM = hiltViewModel(), navController: NavController) {
-
+fun profilepage(
+    vm: profilepageVM = hiltViewModel(),
+    navController: NavController
+) {
     val name by vm.name
     val email by vm.email
-    val context = LocalContext.current
+
+    val progressPercent by vm.progressPercent
+    val personalGoals = vm.personalGoals
+
     var isReportDialogOpen by remember { mutableStateOf(false) }
     var reportText by remember { mutableStateOf("") }
 
@@ -76,19 +82,26 @@ fun profilepage(vm: profilepageVM = hiltViewModel(), navController: NavControlle
                 .padding(16.dp)
         ) {
 
-            // 위쪽 정보 영역
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // 기본 정보
                 ProfileInfoRow(label = "이름", value = name)
                 ProfileInfoRow(label = "이메일", value = email)
+
+                // 개인 목표 섹션
+                PersonalGoalsSection(
+                    progressPercent = progressPercent,
+                    goals = personalGoals
+                )
 
                 Spacer(modifier = Modifier.height(80.dp))
             }
 
+            // 오른쪽 아래 신고 버튼
             Button(
                 onClick = { isReportDialogOpen = true },
                 modifier = Modifier
@@ -102,6 +115,7 @@ fun profilepage(vm: profilepageVM = hiltViewModel(), navController: NavControlle
                 Text("신고")
             }
 
+            // 신고 다이얼로그
             if (isReportDialogOpen) {
                 AlertDialog(
                     onDismissRequest = {
@@ -124,11 +138,7 @@ fun profilepage(vm: profilepageVM = hiltViewModel(), navController: NavControlle
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "신고가 접수되었습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                vm.sendReport(reportText)
                                 reportText = ""
                                 isReportDialogOpen = false
                             }
@@ -171,5 +181,73 @@ fun ProfileInfoRow(label: String, value: String) {
             fontSize = 16.sp,
             color = Color.DarkGray
         )
+    }
+}
+
+// 이름/이메일 아래에 붙는 개인 목표 UI
+@Composable
+fun PersonalGoalsSection(
+    progressPercent: Float,
+    goals: List<Purpose>
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp)
+    ) {
+        Text(
+            text = "개인 목표",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 달성률 텍스트 + ProgressBar
+        Text(
+            text = "달성률: ${progressPercent.toInt()}%",
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        LinearProgressIndicator(
+            progress = (progressPercent / 100f).coerceIn(0f, 1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 개인 목표 리스트
+        if (goals.isEmpty()) {
+            Text(
+                text = "등록된 개인 목표가 없습니다.",
+                fontSize = 13.sp,
+                color = Color.Gray
+            )
+        } else {
+            goals.forEach { goal ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 2.dp)
+                ) {
+                    Text(
+                        text = if (goal.complit) "✓" else "•",
+                        fontSize = 14.sp,
+                        modifier = Modifier.width(18.dp)
+                    )
+                    Text(
+                        text = goal.purpose,
+                        fontSize = 14.sp,
+                        textDecoration = if (goal.complit)
+                            TextDecoration.LineThrough
+                        else
+                            TextDecoration.None,
+                        color = if (goal.complit) Color.Gray else Color.Unspecified
+                    )
+                }
+            }
+        }
     }
 }
