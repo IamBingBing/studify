@@ -28,7 +28,7 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
                 jsonObject.getLong("CHATID"),
                 jsonObject["CHATNAME"] as String,
                 jsonObject["CHAT"] as String,
-                jsonObject["TIME"] as String,
+                jsonObject["SENDTIME"] as String,
                 jsonObject["USERID"] as Long
             )
             messageHandler.onNewMessage(msg)

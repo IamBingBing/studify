@@ -72,4 +72,13 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
                 Log.e("CHATROOM",error.toString())
             }
         )
+    fun report (usid:String,pt:String) = userRepository.reportUser(usid , pt)
+        .subscribe(
+            {
+                result->
+                if ( result.resultCode == "200"){
+
+                }
+            },{}
+        )
 }

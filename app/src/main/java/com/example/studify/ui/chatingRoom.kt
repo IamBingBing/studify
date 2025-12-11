@@ -97,10 +97,8 @@ fun chatingRoom(
                                     },
                                     onClick = {}
                                 )
-
                             )
                         }
-
                         ChatBubble(
                             text = entry.CHAT,
                             isMine = isMine

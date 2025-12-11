@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.studify.data.model.BookModel
 import com.example.studify.data.repository.SearchBookRepository
@@ -14,16 +15,19 @@ import javax.inject.Inject
 @HiltViewModel
 class searchbookVM @Inject constructor(
     application: Application,
-    private val searchBookRepository: SearchBookRepository
+    private val searchBookRepository: SearchBookRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val bookList = mutableStateListOf<BookModel.BookInfo>()
     val isLoading = mutableStateOf(false)
     val errorMsg = mutableStateOf<String?>(null)
-
+    val keywordd = mutableStateOf(SavedStateHandle().get<String>("keyword"))
     private val disposables = CompositeDisposable()
-
-    fun searchBooks(keyword: String) {
+    init {
+        searchBooks(keywordd.value.toString());
+    }
+    fun searchBooks(keyword: String ) {
         Log.d("SearchBookVM", "검색 요청 시작. 키워드: $keyword")
 
         if (keyword.isBlank()) {

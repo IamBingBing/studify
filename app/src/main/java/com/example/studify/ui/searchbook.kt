@@ -60,11 +60,6 @@ fun searchbook(
     var keyword by remember { mutableStateOf(startKeyword) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(Unit) {
-        if (startKeyword.isNotBlank()) {
-            vm.searchBooks(startKeyword)
-        }
-    }
 
     Box(
         modifier = BaseModifiers.BaseModifier.fillMaxSize()
