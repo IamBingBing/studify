@@ -80,12 +80,17 @@ fun login(vm: loginVM = hiltViewModel(), navController: NavController) {
                 .imePadding(), // 2. 키보드가 올라올 때 화면을 위로 밀어 올리는 기능
             verticalArrangement = Arrangement.Center,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             horizontalAlignment = Alignment.End // 기존 코드 유지 (전체 Column 정렬)
         ) {
             // 이미지 등 내용물
 =======
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+=======
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+>>>>>>> Stashed changes
         Image(modifier = BaseModifiers.BaseModifier.size(350.dp, 350.dp),painter = painterResource(id = R.drawable.logo3) , contentDescription = null)
         Box(modifier = BaseModifiers.BaseModifier
             .size(280.dp, 280.dp)
