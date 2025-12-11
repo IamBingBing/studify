@@ -20,18 +20,17 @@ class mentorVM @Inject constructor(
 ) : ViewModel() {
 
     var groupName = mutableStateOf("멘토링 스터디 그룹")
-
-    // 화면 상단에 표시할 텍스트
-    var mentorCanTeach = mutableStateOf("")
-    var menteeWants = mutableStateOf("")
-
-    // 멤버 리스트 (mentor.kt에 정의된 클래스 사용)
+    var iWillTeach = mutableStateOf("")
+    var iWillLearn = mutableStateOf("")
     var mentorList = mutableStateListOf<MentorInfo>()
     var menteeList = mutableStateListOf<MenteeInfo>()
     var recentQna = mutableStateOf<List<QnaModel.QnaResult>>(emptyList())
     var currentTab = mutableStateOf(0)
     var mentorError = mutableStateOf("")
     var currentMentorId = mutableStateOf(-1L)
+    // 현재 사용자 정보 (SharedPreferences에서 가져오기)
+    private val sharedPreferences = application.getSharedPreferences("studify_prefs", Application.MODE_PRIVATE)
+    private val currentUserId = sharedPreferences.getLong("userid", -1L)
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -62,19 +61,42 @@ class mentorVM @Inject constructor(
                         currentMentorId.value = it
                     }
 
-                    // [수정] TEACH와 LEARN 값에 따라 화면 표시 내용 결정
                     val teach = r.teach
                     val learn = r.learn
 
+                    // 현재 사용자가 멘토인지 멘티인지 확인
+                    val iAmMentor = (currentUserId == r.mentorId)
+
+                    Log.d("mentorVM", "현재 사용자 ID: $currentUserId")
+                    Log.d("mentorVM", "멘토 ID: ${r.mentorId}, 멘티 ID: ${r.mentiId}")
+                    Log.d("mentorVM", "나는 멘토? $iAmMentor")
+
                     if (learn == "없음" || learn.isBlank()) {
-                        // Case 1: 일반 멘토링 (나는 가르치기만 함)
-                        mentorCanTeach.value = teach
-                        menteeWants.value = r.qna
+                        // Case 1: 일반 멘토링 (LEARN이 없음)
+                        if (iAmMentor) {
+                            // 멘토 입장: 내가 가르침, QNA가 배울 목표
+                            iWillTeach.value = teach
+                            iWillLearn.value = r.qna
+                        } else {
+                            // 멘티 입장: QNA가 배울 목표, 멘토가 가르침
+                            iWillTeach.value = r.qna
+                            iWillLearn.value = teach
+                        }
                     } else {
-                        // Case 2: 지식 교환 (서로 가르침)
-                        mentorCanTeach.value = teach
-                        menteeWants.value = learn // 멘티가 나에게 가르쳐주는 과목
+                        // Case 2: 지식 교환 (LEARN 있음)
+                        if (iAmMentor) {
+                            // 멘토 입장: TEACH를 가르치고, LEARN을 배움
+                            iWillTeach.value = teach
+                            iWillLearn.value = learn
+                        } else {
+                            // 멘티 입장: LEARN을 가르치고, TEACH를 배움
+                            iWillTeach.value = learn
+                            iWillLearn.value = teach
+                        }
                     }
+
+                    Log.d("mentorVM", "내가 알려줄 것: ${iWillTeach.value}")
+                    Log.d("mentorVM", "내가 배울 것: ${iWillLearn.value}")
 
                     // 멘토 리스트 채우기
                     mentorList.clear()
@@ -96,7 +118,7 @@ class mentorVM @Inject constructor(
         compositeDisposable.add(d)
     }
 
-    // 최근 Q&A 2개 가져오기 (groupVM의 requestNotice 패턴)
+    // 최근 Q&A 2개 가져오기
     fun requestRecentQna(mentorId: Long = currentMentorId.value) {
         if (mentorId == -1L) {
             recentQna.value = emptyList()

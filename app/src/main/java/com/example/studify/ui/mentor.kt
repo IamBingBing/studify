@@ -35,7 +35,7 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
     var groupName by vm.groupName
     var currentTab by vm.currentTab
 
-    //  멘토 ID 가져오기
+    // 멘토 ID 가져오기
     val currentMentorId = vm.currentMentorId.value
 
     val tabs = listOf("홈", "멤버", "Q&A")
@@ -86,12 +86,10 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
     }
 }
 
-// [홈 탭] groupHome과 동일한 텍스트 나열 방식
-// [홈 탭] groupHome과 동일한 텍스트 나열 방식 → 카드로 변경
 @Composable
 private fun MentorHomeTab(vm: mentorVM) {
-    val mentorCanTeach by vm.mentorCanTeach
-    val menteeWants by vm.menteeWants
+    val iWillTeach by vm.iWillTeach
+    val iWillLearn by vm.iWillLearn
     val groupName by vm.groupName
     val recentQna by vm.recentQna
 
@@ -100,8 +98,8 @@ private fun MentorHomeTab(vm: mentorVM) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // ───────── 그룹 정보 ─────────
-        sectionTitle("멘토-멘티 정보")
+        // ─────── 멘토-멘티 정보 ─────────
+        sectionTitle("지식 교환")
 
         Row(
             modifier = Modifier
@@ -109,7 +107,7 @@ private fun MentorHomeTab(vm: mentorVM) {
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // 🔹 카드 1: 멘토 과목
+            // 🔹 카드 1: 내가 알려줄 내용
             ElevatedCard(
                 modifier = Modifier
                     .weight(1f)
@@ -127,14 +125,14 @@ private fun MentorHomeTab(vm: mentorVM) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "멘토 과목",
+                        text = "내가 알려줄 것",
                         fontSize = 13.sp,
                         style = MaterialTheme.typography.labelSmall,
                         color = Color(0xFFE0E3F1)
                     )
                     Text(
-                        text = mentorCanTeach.ifBlank { "-" },
-                        fontSize = 25.sp,                 // ✅ 메인 글씨 크게
+                        text = iWillTeach.ifBlank { "-" },
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
@@ -142,11 +140,7 @@ private fun MentorHomeTab(vm: mentorVM) {
                 }
             }
 
-            // 🔹 카드 2: 멘티 과목 / 목표
-            val label =
-                if (menteeWants.contains("배움") || menteeWants.contains("학습")) "멘티 목표"
-                else "멘티 과목"
-
+            // 🔹 카드 2: 내가 배울 내용
             ElevatedCard(
                 modifier = Modifier
                     .weight(1f)
@@ -164,14 +158,14 @@ private fun MentorHomeTab(vm: mentorVM) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = label,
+                        text = "내가 배울 것",
                         fontSize = 13.sp,
                         style = MaterialTheme.typography.labelSmall,
                         color = Color(0xFFE0E3F1)
                     )
                     Text(
-                        text = menteeWants.ifBlank { "-" },
-                        fontSize = 25.sp,                 // ✅ 메인 글씨 크게
+                        text = iWillLearn.ifBlank { "-" },
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
@@ -289,7 +283,7 @@ private fun MentorMemberTab(vm: mentorVM) {
 }
 
 
-// --- groupHome.kt 스타일 컴포넌트 (그대로 가져옴) ---
+// --- 스타일 컴포넌트 ---
 
 @Composable
 private fun sectionTitle(title: String) {
@@ -304,7 +298,7 @@ private fun sectionTitle(title: String) {
 private fun SectionDivider() {
     HorizontalDivider(
         thickness = 8.dp,
-        color = Color(0xFFDFE5F3) // groupHome 색상
+        color = Color(0xFFDFE5F3)
     )
 }
 
@@ -317,7 +311,7 @@ private fun MemberCard(
         modifier = Modifier
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
-        color = Color(0xFFE0E8F5),        // 🔹멤버 카드 배경색
+        color = Color(0xFFE0E8F5),
         tonalElevation = 0.dp
     ) {
         Column(
