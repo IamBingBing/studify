@@ -45,7 +45,9 @@ class loginVM @Inject constructor(application: Application,private val userRepos
                 Preferences.putString("EMAIL", loginModel.result!!.email.toString())
                 Preferences.putBoolean("AUTOLOGIN", autologin.value)
                 Preferences.putString("access_token", loginModel.result!!.token)
+                Preferences.putString("TOKEN",loginModel.result!!.refreshtoken)
                 Log.d("access_token" , Preferences.getString("access_token").toString())
+                Log.d("token", Preferences.getString("TOKEN").toString() )
                 loginsuccess.value = true
             }
             else if(loginModel.resultCode =="400"){

@@ -22,7 +22,6 @@ class UserRepository @Inject constructor(private val studifyService: StudifyServ
         return studifyService.requestLogin(param)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
     }
     fun requestUserData (): Single<LoginModel>{
         val param = HashMap<String, String>().apply {

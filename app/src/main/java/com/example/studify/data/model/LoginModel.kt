@@ -24,6 +24,7 @@ data class LoginModel(
         @SerializedName("CHATLIST") @Expose var chatlist: List<chat>?=null,
         @SerializedName("TOKEN") @Expose var token:String?=null,
         @SerializedName("MENTOR") @Expose var mentorlist :List<mentor>?=null,
+        @SerializedName("REFRESHTOKEN") @Expose var refreshtoken : String?=null
         ){
         data class chat (
             @SerializedName("CHATID") @Expose var chatid: Long? = null,
