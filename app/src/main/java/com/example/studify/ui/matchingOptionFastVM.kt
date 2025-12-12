@@ -39,9 +39,12 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
     fun matchstart(startt:String = start, endd :String=end)= matchRepository.requestFastMatch(startt , endd)
         .subscribe({
             result->
-            if(result.resultCode == "201" ||result.resultCode == "200" ||result.resultCode == "202"  ){
+            if(result.resultCode == "201"  ){
                 matchingcomplete.value = true;
                 match.value = true;
+            }
+            else if(result.resultCode == "202"  ){
+                match.value= true;
             }
         },{
 
