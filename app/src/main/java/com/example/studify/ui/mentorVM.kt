@@ -29,14 +29,9 @@ class mentorVM @Inject constructor(
     var mentorError = mutableStateOf("")
     var currentMentorId = mutableStateOf(-1L)
 
-    private val sharedPreferences =
-        application.getSharedPreferences("studify_prefs", Application.MODE_PRIVATE)
-    private val currentUserId = sharedPreferences.getLong("userid", -1L)
-
     private val compositeDisposable = CompositeDisposable()
 
     init {
-
         val mentorIdString = savedStateHandle.get<String>("mentorid")
         currentMentorId.value = mentorIdString?.toLongOrNull() ?: -1L
 
@@ -55,41 +50,29 @@ class mentorVM @Inject constructor(
                 if (model.resultCode == "200" && model.result != null) {
                     val r = model.result!!
 
-                    r.mentorid?.let {
-                        currentMentorId.value = it
-                    }
+                    r.mentorid?.let { currentMentorId.value = it }
 
-                    val teach = r.teach?.trim().orEmpty()
-                    val learn = r.learn?.trim().orEmpty()
+                    val teach = r.teach.trim()
+                    val learn = r.learn.trim()
 
                     groupName.value = if (learn.isNotBlank() && teach.isNotBlank()) {
                         "${learn}-${teach} 방"
                     } else if (teach.isNotBlank()) {
                         "${teach} 방"
                     } else {
-                        ""
+                        "멘토링 스터디 그룹"
                     }
 
-                    // 현재 사용자가 멘토인지 멘티인지 확인
-                    val iAmMentor = (currentUserId == r.mentorId)
+                    val iAmMentor = (r.isMentor == 1)
 
-                    Log.d("mentorVM", "현재 사용자 ID: $currentUserId")
+                    Log.d("mentorVM", "MY_ID=${r.myId}, IS_MENTOR=${r.isMentor}")
                     Log.d("mentorVM", "멘토 ID: ${r.mentorId}, 멘티 ID: ${r.mentiId}")
                     Log.d("mentorVM", "나는 멘토? $iAmMentor")
                     Log.d("mentorVM", "TEACH=$teach, LEARN=$learn")
                     Log.d("mentorVM", "TITLE=${groupName.value}")
 
-                    if (learn == "없음" || learn.isBlank()) {
-                        // Case 1: 일반 멘토링 (LEARN이 없음)
-                        if (iAmMentor) {
-                            iWillTeach.value = teach
-                            iWillLearn.value = r.qna
-                        } else {
-                            iWillTeach.value = r.qna
-                            iWillLearn.value = teach
-                        }
+                    if (learn.isBlank() || learn == "없음") {
                     } else {
-                        // Case 2: 지식 교환 (LEARN 있음)
                         if (iAmMentor) {
                             iWillTeach.value = teach
                             iWillLearn.value = learn
@@ -102,11 +85,9 @@ class mentorVM @Inject constructor(
                     Log.d("mentorVM", "내가 알려줄 것: ${iWillTeach.value}")
                     Log.d("mentorVM", "내가 배울 것: ${iWillLearn.value}")
 
-                    // 멘토 리스트 채우기
                     mentorList.clear()
                     mentorList.add(MentorInfo(name = r.mentor, field = teach))
 
-                    // 멘티 리스트 채우기
                     menteeList.clear()
                     val menteeGoal = if (learn != "없음" && learn.isNotBlank()) learn else r.qna
                     menteeList.add(MenteeInfo(name = r.menti, goal = menteeGoal))
@@ -122,7 +103,6 @@ class mentorVM @Inject constructor(
         compositeDisposable.add(d)
     }
 
-    // 최근 Q&A 2개 가져오기
     fun requestRecentQna(mentorId: Long = currentMentorId.value) {
         if (mentorId == -1L) {
             recentQna.value = emptyList()
