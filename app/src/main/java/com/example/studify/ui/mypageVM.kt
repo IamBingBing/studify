@@ -1,6 +1,7 @@
 package com.example.studify.ui
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,6 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
-import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +33,7 @@ class mypageVM @Inject constructor(
 
     init {
         loadUserInfoFromPreferences()
+        refreshMyInfoFromServer()
     }
 
     private fun loadUserInfoFromPreferences() {
@@ -45,18 +46,53 @@ class mypageVM @Inject constructor(
 
         val pointInt = Preferences.getInt("POINT")
         point.value = "${pointInt}P"
-        val groupJson = JSONArray(Preferences.getString("GROUPLIST"))
-        if (groupJson.length() == 0){
+
+        val groupJsonStr = Preferences.getString("GROUPLIST") ?: "[]"
+        val groupJson = JSONArray(groupJsonStr)
+        if (groupJson.length() == 0) {
             group.value = "없음"
-        }
-        else {
-            (0 until groupJson.length()).forEach { key ->
+        } else {
+            group.value = ""
+            (0 until groupJson.length()).forEach { idx ->
                 val type = object : TypeToken<LoginModel.Result.group>() {}.type
-                val groupmodel: LoginModel.Result.group =
-                    Gson().fromJson(groupJson.getString(key), type)
-                group.value = group.value + groupmodel.groupname + ","
+                val groupModel: LoginModel.Result.group =
+                    Gson().fromJson(groupJson.getString(idx), type)
+                group.value += groupModel.groupname + ","
             }
         }
+    }
+
+    fun refreshMyInfoFromServer() {
+        Log.d("MypageVM", "refreshMyInfoFromServer() 호출")
+
+        val d = userRepository.requestUserData()
+            .subscribe({ model ->
+                Log.d(
+                    "MypageVM",
+                    "refreshMyInfoFromServer() resultCode=${model.resultCode}, error=${model.errorMsg}"
+                )
+
+                if (model.resultCode == "200" && model.result != null) {
+                    val r = model.result!!
+
+                    r.username?.let { name.value = it }
+                    r.email?.let { email.value = it }
+                    r.address?.let { address.value = it }
+                    r.sex?.let { sex.value = if (it == 0) "남자" else "여자" }
+                    r.point?.let {
+                        point.value = "${it}P"
+                    }
+
+                } else {
+                    if (model.errorMsg.isNotBlank()) {
+                        Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }, { error ->
+                Log.e("MypageVM", "refreshMyInfoFromServer() exception", error)
+            })
+
+        disposables.add(d)
     }
 
     fun saveUserInfo() {
@@ -76,6 +112,7 @@ class mypageVM @Inject constructor(
 
                 isEditing.value = false
                 Toast.makeText(application, "정보가 수정되었습니다.", Toast.LENGTH_SHORT).show()
+                refreshMyInfoFromServer()
             } else {
                 Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
             }
