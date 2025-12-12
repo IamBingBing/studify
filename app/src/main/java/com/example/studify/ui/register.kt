@@ -2,8 +2,10 @@
 
 package com.example.studify.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,22 +17,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.studify.Tool.BaseModifiers  // 써도 되고 안 써도 되는데, 혹시 다른 데서 쓰면 유지
 
 @Composable
 fun register(
     vm: registerVM = hiltViewModel(),
     navController: NavController
 ) {
+    // ViewModel 상태
     var email by vm.email
     var authCode by vm.authcode
     var sex by vm.sex
@@ -44,7 +48,13 @@ fun register(
     val isCodeSent by vm.isCodeSent
     val errorMsg by vm.registerError.collectAsState()
 
-    val scrollState = rememberScrollState()   // ✅ 다시 추가
+    // UI 로컬 상태
+    var isTermsAgreed by remember { mutableStateOf(false) } // 약관 동의 체크 여부
+    var showTermsSheet by remember { mutableStateOf(false) } // 바텀 시트 표시 여부
+    val sheetState = rememberModalBottomSheetState()
+
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val accent = Color(0xFF4F46E5)
 
@@ -67,7 +77,7 @@ fun register(
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .verticalScroll(scrollState),     // ✅ 스크롤 가능하게 해서 키보드 위로 올릴 수 있게
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // ===== 제목 =====
@@ -79,10 +89,10 @@ fun register(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    textAlign = TextAlign.Center     // ✅ 중앙 정렬
+                    textAlign = TextAlign.Center
                 )
 
-                // ===== 입력 영역 카드 =====
+                // ===== 입력 폼 카드 =====
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
@@ -96,7 +106,6 @@ fun register(
                     ) {
                         // ------- 학교 이메일 -------
                         ModernFieldLabel("학교 이메일", required = true)
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -109,8 +118,9 @@ fun register(
                                     .padding(end = 8.dp),
                                 value = email,
                                 onValueChange = { email = it },
+                                // [수정] 인증 코드가 발송되면 수정 불가
+                                enabled = !isCodeSent,
                                 singleLine = true,
-                                // placeholder 조금 줄여서 보기 좋게
                                 placeholder = { Text("예: abc@hknu.ac.kr") },
                                 colors = inputColors()
                             )
@@ -151,9 +161,7 @@ fun register(
                                     onValueChange = { authCode = it },
                                     singleLine = true,
                                     placeholder = { Text("6자리 코드") },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Number
-                                    ),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     colors = inputColors()
                                 )
                                 OutlinedButton(
@@ -175,7 +183,7 @@ fun register(
                             if (vm.isEmailVerified.value) {
                                 Text(
                                     text = "인증되었습니다.",
-                                    color = Color(0xFF16A34A),  // 초록색
+                                    color = Color(0xFF16A34A),
                                     fontSize = 13.sp,
                                     modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
                                 )
@@ -206,9 +214,7 @@ fun register(
                             onValueChange = { pw = it },
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password
-                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                             colors = inputColors()
                         )
 
@@ -222,9 +228,7 @@ fun register(
                             onValueChange = { repw = it },
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password
-                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                             colors = inputColors()
                         )
 
@@ -268,6 +272,7 @@ fun register(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // 에러 메시지
                 if (errorMsg != null && !vm.isEmailVerified.value) {
                     Text(
                         text = errorMsg!!,
@@ -278,13 +283,23 @@ fun register(
                     )
                 }
 
-
+                // ===== 가입하기 버튼 =====
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    onClick = { vm.register() }
+                    colors = ButtonDefaults.buttonColors(
+                        // 동의 안 하면 회색, 동의 하면 포인트 컬러
+                        containerColor = if (isTermsAgreed) accent else Color.Gray
+                    ),
+                    onClick = {
+                        if (!isTermsAgreed) {
+                            Toast.makeText(context, "이용약관에 동의해주세요.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            vm.register()
+                        }
+                    }
                 ) {
                     Text(
                         "가입하기",
@@ -293,15 +308,114 @@ fun register(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
+                // ===== 이용약관 체크박스 & 텍스트 =====
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showTermsSheet = true }, // 클릭 시 시트 오픈
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Checkbox(
+                        checked = isTermsAgreed,
+                        onCheckedChange = { isTermsAgreed = it },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = accent,
+                            uncheckedColor = Color.Gray
+                        )
+                    )
+                    Text(
+                        text = "이용약관 확인 및 동의 (필수)",
+                        fontSize = 14.sp,
+                        color = Color(0xFF374151),
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 회원가입 성공 시 화면 이동
                 LaunchedEffect(isSuccess) {
                     if (isSuccess) navController.navigate("login")
                 }
             }
         }
+
+        // ===== 이용약관 바텀 시트 =====
+        if (showTermsSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showTermsSheet = false },
+                sheetState = sheetState,
+                containerColor = Color.White
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 32.dp)
+                ) {
+                    Text(
+                        text = "서비스 이용약관",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    // 약관 내용 스크롤 영역
+                    Column(
+                        modifier = Modifier
+                            .height(300.dp)
+                            .fillMaxWidth()
+                            .background(Color(0xFFF3F4F6), RoundedCornerShape(8.dp))
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = """
+                                제1조 (목적)
+                                본 약관은 Studify 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+                                
+                                제2조 (개인정보 수집)
+                                서비스 제공을 위해 필요한 최소한의 개인정보를 수집합니다. 수집된 정보는 회원 탈퇴 시 파기됩니다.
+                                
+                                제3조 (회원의 의무)
+                                회원은 타인의 정보를 도용하거나 서비스를 부정하게 이용해서는 안 됩니다.
+                                
+                                (이하 생략...)
+                                본 서비스는 학생들의 편의를 위해 제공되며...
+                            """.trimIndent(),
+                            fontSize = 14.sp,
+                            color = Color(0xFF4B5563),
+                            lineHeight = 20.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // 시트 내부 동의 버튼
+                    Button(
+                        onClick = {
+                            isTermsAgreed = true
+                            showTermsSheet = false
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = accent),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("동의하고 닫기", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
     }
 }
+
+// --- Helper UI Components ---
 
 @Composable
 private fun ModernFieldLabel(text: String, required: Boolean) {
@@ -347,6 +461,9 @@ private fun SelectionChip(text: String, selected: Boolean, accent: Color, onClic
 private fun inputColors() = TextFieldDefaults.colors(
     focusedContainerColor = Color.White,
     unfocusedContainerColor = Color.White,
+    disabledContainerColor = Color(0xFFF3F4F6), // [수정] 비활성화 시 배경색 (연회색)
     focusedIndicatorColor = Color(0xFF4F46E5),
-    unfocusedIndicatorColor = Color(0xFFE5E7EB)
+    unfocusedIndicatorColor = Color(0xFFE5E7EB),
+    disabledIndicatorColor = Color.Transparent, // [수정] 비활성화 시 밑줄 없음
+    disabledTextColor = Color.Gray            // [수정] 비활성화 시 텍스트 색상
 )
