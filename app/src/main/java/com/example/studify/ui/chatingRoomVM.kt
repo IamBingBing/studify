@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.sql.Time
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,13 +57,20 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
             {
                 result->
                 if(result.resultCode == "200"){
+
                     scope.launch {
                         chatRepository.insertMessages(result.list!!.map { msg ->
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                            val localDateTime = LocalDateTime.parse(msg.TIME!!, formatter)
+                            val sendTimeMillis = localDateTime
+                                .atZone(ZoneId.of("Asia/Seoul"))
+                                .toInstant()
+                                .toEpochMilli()
                             Message(
                                 msg.chatid!!,
                                 msg.CHATNAME!!,
                                 msg.CHAT!!,
-                                msg.TIME!!,
+                                sendTimeMillis,
                                 msg.USERID!!
                             )
                         })
