@@ -126,7 +126,7 @@ fun chatingRoom(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = { vm.sendMessage() },
+                    onClick = { if (sendMessage !=""){ vm.sendMessage()} },
                     modifier = Modifier.height(48.dp)
                 ) {
                     Text("전송")
