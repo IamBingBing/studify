@@ -34,7 +34,8 @@ fun register(
     vm: registerVM = hiltViewModel(),
     navController: NavController
 ) {
-    // ViewModel 상태
+    // [1] VM 상태 변수들을 UI 변수로 위임 (by)
+    // 이렇게 하면 UI에서는 .value 없이 일반 변수처럼 쓸 수 있어 깔끔합니다.
     var email by vm.email
     var authCode by vm.authcode
     var sex by vm.sex
@@ -44,13 +45,17 @@ fun register(
     var pw by vm.pw
     var repw by vm.repw
 
+    // 관찰 가능한 상태들 (Flow, State)
     val isSuccess by vm.registerSuccess.collectAsState()
-    val isCodeSent by vm.isCodeSent
     val errorMsg by vm.registerError.collectAsState()
 
-    // UI 로컬 상태
-    var isTermsAgreed by remember { mutableStateOf(false) } // 약관 동의 체크 여부
-    var showTermsSheet by remember { mutableStateOf(false) } // 바텀 시트 표시 여부
+    // VM의 MutableState도 by로 가져오면 UI 갱신이 자동 처리됩니다.
+    val isCodeSent by vm.isCodeSent
+    val isEmailVerified by vm.isEmailVerified
+
+    // [2] UI 로컬 상태
+    var isTermsAgreed by remember { mutableStateOf(false) } // 약관 동의 체크
+    var showTermsSheet by remember { mutableStateOf(false) } // 약관 시트 표시
     val sheetState = rememberModalBottomSheetState()
 
     val context = LocalContext.current
@@ -118,7 +123,8 @@ fun register(
                                     .padding(end = 8.dp),
                                 value = email,
                                 onValueChange = { email = it },
-                                // [수정] 인증 코드가 발송되면 수정 불가
+                                // [중요] 인증번호가 발송된 상태(성공)라면 수정 금지
+                                // 중복 에러 등으로 실패했다면 isCodeSent는 false이므로 계속 수정 가능
                                 enabled = !isCodeSent,
                                 singleLine = true,
                                 placeholder = { Text("예: abc@hknu.ac.kr") },
@@ -127,8 +133,9 @@ fun register(
 
                             OutlinedButton(
                                 onClick = {
+                                    // 빈 값이 아닐 때만 요청
                                     if (email.isNotEmpty()) {
-                                        vm.requestEmailCode(email)
+                                        vm.requestEmailCode() // 인자 없이 호출 (VM이 email.value 사용)
                                         keyboardController?.hide()
                                     }
                                 },
@@ -136,6 +143,7 @@ fun register(
                                 border = BorderStroke(1.dp, accent),
                             ) {
                                 Text(
+                                    // 발송 성공시 '재전송', 아직 안 보냈거나 실패시 '인증요청'
                                     text = if (isCodeSent) "재전송" else "인증요청",
                                     fontSize = 13.sp,
                                     color = accent,
@@ -144,7 +152,7 @@ fun register(
                             }
                         }
 
-                        // ------- 인증번호 -------
+                        // ------- 인증번호 입력칸 (발송 성공시에만 보임) -------
                         if (isCodeSent) {
                             ModernFieldLabel("인증번호", required = true)
                             Row(
@@ -166,7 +174,7 @@ fun register(
                                 )
                                 OutlinedButton(
                                     onClick = {
-                                        vm.verifyEmailCode(email, authCode)
+                                        vm.verifyEmailCode() // 인자 없이 호출
                                         keyboardController?.hide()
                                     },
                                     shape = RoundedCornerShape(8.dp),
@@ -180,10 +188,11 @@ fun register(
                                     )
                                 }
                             }
-                            if (vm.isEmailVerified.value) {
+                            // 인증 완료 메시지
+                            if (isEmailVerified) {
                                 Text(
                                     text = "인증되었습니다.",
-                                    color = Color(0xFF16A34A),
+                                    color = Color(0xFF16A34A), // Green
                                     fontSize = 13.sp,
                                     modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
                                 )
@@ -192,24 +201,19 @@ fun register(
 
                         Divider(modifier = Modifier.padding(vertical = 8.dp))
 
-                        // ------- 아이디 -------
+                        // ------- 나머지 입력 필드들 -------
                         ModernFieldLabel("아이디", true)
                         TextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                             value = userid,
                             onValueChange = { userid = it },
                             singleLine = true,
                             colors = inputColors()
                         )
 
-                        // ------- 비밀번호 -------
                         ModernFieldLabel("비밀번호", true)
                         TextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                             value = pw,
                             onValueChange = { pw = it },
                             singleLine = true,
@@ -218,12 +222,9 @@ fun register(
                             colors = inputColors()
                         )
 
-                        // ------- 비밀번호 확인 -------
                         ModernFieldLabel("비밀번호 확인", true)
                         TextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                             value = repw,
                             onValueChange = { repw = it },
                             singleLine = true,
@@ -232,36 +233,27 @@ fun register(
                             colors = inputColors()
                         )
 
-                        // ------- 이름 -------
                         ModernFieldLabel("이름", true)
                         TextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                             value = username,
                             onValueChange = { username = it },
                             singleLine = true,
                             colors = inputColors()
                         )
 
-                        // ------- 주소 -------
                         ModernFieldLabel("주소", false)
                         TextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            value = adress,
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                            value = adress, // VM의 변수명(adress)과 일치
                             onValueChange = { adress = it },
                             singleLine = true,
                             colors = inputColors()
                         )
 
-                        // ------- 성별 -------
                         ModernFieldLabel("성별", true)
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 4.dp),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             SelectionChip("남자", sex == 0, accent) { vm.onSexSelected(0) }
@@ -272,8 +264,9 @@ fun register(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // 에러 메시지
-                if (errorMsg != null && !vm.isEmailVerified.value) {
+                // [에러 메시지 표시]
+                // 인증이 아직 안 됐는데 에러 메시지가 있다면 보여줌 (중복 이메일 등)
+                if (errorMsg != null && !isEmailVerified) {
                     Text(
                         text = errorMsg!!,
                         color = Color.Red,
@@ -290,7 +283,7 @@ fun register(
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        // 동의 안 하면 회색, 동의 하면 포인트 컬러
+                        // 약관 동의 여부에 따라 색상 변경
                         containerColor = if (isTermsAgreed) accent else Color.Gray
                     ),
                     onClick = {
@@ -310,11 +303,11 @@ fun register(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // ===== 이용약관 체크박스 & 텍스트 =====
+                // ===== 이용약관 체크박스 =====
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { showTermsSheet = true }, // 클릭 시 시트 오픈
+                        .clickable { showTermsSheet = true },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -337,7 +330,7 @@ fun register(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // 회원가입 성공 시 화면 이동
+                // [네비게이션] 회원가입 성공 시 로그인 화면으로 이동
                 LaunchedEffect(isSuccess) {
                     if (isSuccess) navController.navigate("login")
                 }
@@ -364,7 +357,6 @@ fun register(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
 
-                    // 약관 내용 스크롤 영역
                     Column(
                         modifier = Modifier
                             .height(300.dp)
@@ -376,16 +368,9 @@ fun register(
                         Text(
                             text = """
                                 제1조 (목적)
-                                본 약관은 Studify 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+                                본 약관은 Studify 서비스의 이용과 관련하여...
                                 
-                                제2조 (개인정보 수집)
-                                서비스 제공을 위해 필요한 최소한의 개인정보를 수집합니다. 수집된 정보는 회원 탈퇴 시 파기됩니다.
-                                
-                                제3조 (회원의 의무)
-                                회원은 타인의 정보를 도용하거나 서비스를 부정하게 이용해서는 안 됩니다.
-                                
-                                (이하 생략...)
-                                본 서비스는 학생들의 편의를 위해 제공되며...
+                                (이하 생략)
                             """.trimIndent(),
                             fontSize = 14.sp,
                             color = Color(0xFF4B5563),
@@ -395,15 +380,12 @@ fun register(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // 시트 내부 동의 버튼
                     Button(
                         onClick = {
                             isTermsAgreed = true
                             showTermsSheet = false
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = accent),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -416,7 +398,6 @@ fun register(
 }
 
 // --- Helper UI Components ---
-
 @Composable
 private fun ModernFieldLabel(text: String, required: Boolean) {
     Row(
@@ -430,11 +411,7 @@ private fun ModernFieldLabel(text: String, required: Boolean) {
             color = Color(0xFF111827)
         )
         if (required) {
-            Text(
-                " *",
-                fontSize = 13.sp,
-                color = Color(0xFFE11D48)
-            )
+            Text(" *", fontSize = 13.sp, color = Color(0xFFE11D48))
         }
     }
 }
@@ -450,10 +427,7 @@ private fun SelectionChip(text: String, selected: Boolean, accent: Color, onClic
         ),
         modifier = Modifier.height(40.dp)
     ) {
-        Text(
-            text,
-            color = if (selected) accent else Color.Gray
-        )
+        Text(text, color = if (selected) accent else Color.Gray)
     }
 }
 
@@ -461,9 +435,9 @@ private fun SelectionChip(text: String, selected: Boolean, accent: Color, onClic
 private fun inputColors() = TextFieldDefaults.colors(
     focusedContainerColor = Color.White,
     unfocusedContainerColor = Color.White,
-    disabledContainerColor = Color(0xFFF3F4F6), // [수정] 비활성화 시 배경색 (연회색)
+    disabledContainerColor = Color(0xFFF3F4F6), // 비활성화 배경색
     focusedIndicatorColor = Color(0xFF4F46E5),
     unfocusedIndicatorColor = Color(0xFFE5E7EB),
-    disabledIndicatorColor = Color.Transparent, // [수정] 비활성화 시 밑줄 없음
-    disabledTextColor = Color.Gray            // [수정] 비활성화 시 텍스트 색상
+    disabledIndicatorColor = Color.Transparent, // 비활성화 시 밑줄 제거
+    disabledTextColor = Color.Gray            // 비활성화 시 텍스트 색
 )
