@@ -23,51 +23,47 @@ class qnaDetailVM @Inject constructor(
     var errorMessage = mutableStateOf("")
     private val compositeDisposable = CompositeDisposable()
 
+    private val prefs =
+        application.getSharedPreferences("studify_prefs", Application.MODE_PRIVATE)
+
+    private fun getMyUserName(): String {
+        val name =
+            prefs.getString("username", null)
+                ?: prefs.getString("userName", null)
+                ?: prefs.getString("USERNAME", null)
+
+        return name?.trim().takeUnless { it.isNullOrBlank() } ?: "알 수 없음"
+    }
     fun loadQnaDetail(qnaId: Long, allQnaList: List<qnaVM.QnaItem>) {
-        Log.d("qnaDetailVM", "loadQnaDetail 시작: qnaId=$qnaId, list size=${allQnaList.size}")
         qnaItem.value = allQnaList.find { it.id == qnaId }
-        if (qnaItem.value == null) {
-            Log.e("qnaDetailVM", "QNA ID $qnaId 를 찾을 수 없습니다")
-            Log.d("qnaDetailVM", "전체 IDs: ${allQnaList.map { it.id }}")
-        } else {
-            Log.d("qnaDetailVM", "QNA 찾기 성공: title=${qnaItem.value?.title}")
-        }
     }
 
     fun addAnswer(qnaId: Long, content: String) {
-        Log.d("qnaDetailVM", "코멘트 등록 시도: qnaId=$qnaId, content=$content")
-
         val d = repository.requestAddAnswer(qnaId, content)
             .subscribe({ model ->
                 if (model.resultCode == "200") {
-                    Log.d("qnaDetailVM", "코멘트 등록 성공")
-
-                    // 코멘트를 현재 qnaItem에 추가
-                    val currentItem = qnaItem.value
-                    if (currentItem != null) {
-                        val currentAnswers = try {
-                            val type = object : TypeToken<List<Comment>>() {}.type
-                            Gson().fromJson<List<Comment>>(currentItem.answer, type)
-                                ?: emptyList()
-                        } catch (e: Exception) {
-                            emptyList()
-                        }
-
-                        val newComment = Comment(writer = "나", content = content)
-                        val updatedAnswers = currentAnswers + newComment
-                        val newAnswerJson = Gson().toJson(updatedAnswers)
-
-                        // qnaItem 업데이트
-                        qnaItem.value = currentItem.copy(answer = newAnswerJson)
+                    val current = qnaItem.value ?: return@subscribe
+                    val currentAnswers: List<Comment> = try {
+                        val type = object : TypeToken<List<Comment>>() {}.type
+                        Gson().fromJson<List<Comment>>(current.answer, type) ?: emptyList()
+                    } catch (e: Exception) {
+                        emptyList()
                     }
+
+                    val newComment = Comment(
+                        writer = getMyUserName(),
+                        content = content
+                    )
+
+                    val updated = currentAnswers + newComment
+                    qnaItem.value = current.copy(answer = Gson().toJson(updated))
 
                     errorMessage.value = ""
                 } else {
-                    Log.e("qnaDetailVM", "코멘트 등록 실패: ${model.errorMsg}")
                     errorMessage.value = model.errorMsg
                 }
             }, { error ->
-                Log.e("qnaDetailVM", "코멘트 등록 에러: ${error.message}")
+                Log.e("qnaDetailVM", "addAnswer error=${error.message}")
                 errorMessage.value = error.message ?: "에러 발생"
             })
 

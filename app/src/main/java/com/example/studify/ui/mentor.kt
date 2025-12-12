@@ -54,7 +54,6 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 탭 바
             TabRow(
                 selectedTabIndex = currentTab,
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -65,11 +64,9 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
                         selected = currentTab == index,
                         onClick = {
                             when (index) {
-                                0 -> currentTab = 0  // 홈
-                                1 -> currentTab = 1  // 멤버
-                                2 -> {
-                                    navController.navigate("mentorQna/$currentMentorId")
-                                }
+                                0 -> currentTab = 0
+                                1 -> currentTab = 1
+                                2 -> navController.navigate("mentorQna/$currentMentorId")
                             }
                         },
                         text = { Text(title) }
@@ -77,10 +74,9 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
                 }
             }
 
-            // 탭 내용 표시
             when (currentTab) {
-                0 -> MentorHomeTab(vm = vm)    // 홈
-                1 -> MentorMemberTab(vm = vm)  // 멤버
+                0 -> MentorHomeTab(vm = vm)
+                1 -> MentorMemberTab(vm = vm)
             }
         }
     }
@@ -90,7 +86,6 @@ fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
 private fun MentorHomeTab(vm: mentorVM) {
     val iWillTeach by vm.iWillTeach
     val iWillLearn by vm.iWillLearn
-    val groupName by vm.groupName
     val recentQna by vm.recentQna
 
     Column(
@@ -98,7 +93,6 @@ private fun MentorHomeTab(vm: mentorVM) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // ─────── 멘토-멘티 정보 ─────────
         sectionTitle("지식 교환")
 
         Row(
@@ -107,67 +101,41 @@ private fun MentorHomeTab(vm: mentorVM) {
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // 🔹 카드 1: 내가 알려줄 내용
             ElevatedCard(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(120.dp),
+                modifier = Modifier.weight(1f).height(120.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = Color(0xFF51669D)   // 진한 블루
-                )
+                colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF51669D))
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(14.dp),
+                    modifier = Modifier.fillMaxSize().padding(14.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "내가 알려줄 것",
-                        fontSize = 13.sp,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFFE0E3F1)
-                    )
+                    Text("내가 알려줄 것", fontSize = 13.sp, color = Color(0xFFE0E3F1))
                     Text(
                         text = iWillTeach.ifBlank { "-" },
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
                     )
                 }
             }
 
-            // 🔹 카드 2: 내가 배울 내용
             ElevatedCard(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(120.dp),
+                modifier = Modifier.weight(1f).height(120.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = Color(0xFF6F82BC)   // 조금 더 밝은 블루
-                )
+                colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF6F82BC))
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(14.dp),
+                    modifier = Modifier.fillMaxSize().padding(14.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "내가 배울 것",
-                        fontSize = 13.sp,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFFE0E3F1)
-                    )
+                    Text("내가 배울 것", fontSize = 13.sp, color = Color(0xFFE0E3F1))
                     Text(
                         text = iWillLearn.ifBlank { "-" },
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
                     )
                 }
@@ -176,7 +144,6 @@ private fun MentorHomeTab(vm: mentorVM) {
 
         Spacer(Modifier.height(16.dp))
 
-        // 섹션 2: 최근 Q&A
         sectionTitle("최근 Q&A")
 
         ElevatedCard(
@@ -184,36 +151,20 @@ private fun MentorHomeTab(vm: mentorVM) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = Color(0xFFE1E7F5)
-            )
+            colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFFE1E7F5))
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (recentQna.isEmpty()) {
-                    Text(
-                        text = "등록된 Q&A가 없습니다.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
+                    Text("등록된 Q&A가 없습니다.", color = Color.Gray)
                 } else {
                     recentQna.forEachIndexed { index, qna ->
                         val title = qna.qnatitle ?: "(제목 없음)"
-
-                        Text(
-                            text = "• $title",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
+                        Text("• $title")
                         if (index != recentQna.lastIndex) {
-                            Divider(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                color = Color(0xFFB6BDE3)
-                            )
+                            Divider(modifier = Modifier.padding(vertical = 4.dp), color = Color(0xFFB6BDE3))
                         }
                     }
                 }
@@ -224,8 +175,6 @@ private fun MentorHomeTab(vm: mentorVM) {
     }
 }
 
-
-// [멤버 탭]
 @Composable
 private fun MentorMemberTab(vm: mentorVM) {
     val mentorList = vm.mentorList
@@ -236,44 +185,28 @@ private fun MentorMemberTab(vm: mentorVM) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // 섹션 1: 멘토
-        sectionTitle("멘토 (Mentor)")
-
         Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (mentorList.isEmpty()) {
                 Text("등록된 멘토가 없습니다.", color = Color.Gray)
             } else {
                 mentorList.forEach { mentor ->
-                    MemberCard(
-                        title = mentor.name,
-                        subtitle = mentor.field
-                    )
+                    MemberCard(title = mentor.name, subtitle = mentor.field)
                 }
             }
         }
 
-        Spacer(Modifier.height(16.dp))
-
-        // 섹션 2: 멘티
-        sectionTitle("멘티 (Mentee)")
-
         Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (menteeList.isEmpty()) {
                 Text("등록된 멘티가 없습니다.", color = Color.Gray)
             } else {
                 menteeList.forEach { mentee ->
-                    MemberCard(
-                        title = mentee.name,
-                        subtitle = mentee.goal
-                    )
+                    MemberCard(title = mentee.name, subtitle = mentee.goal)
                 }
             }
         }
@@ -281,9 +214,6 @@ private fun MentorMemberTab(vm: mentorVM) {
         Spacer(Modifier.height(16.dp))
     }
 }
-
-
-// --- 스타일 컴포넌트 ---
 
 @Composable
 private fun sectionTitle(title: String) {
@@ -295,34 +225,18 @@ private fun sectionTitle(title: String) {
 }
 
 @Composable
-private fun SectionDivider() {
-    HorizontalDivider(
-        thickness = 8.dp,
-        color = Color(0xFFDFE5F3)
-    )
-}
-
-@Composable
-private fun MemberCard(
-    title: String,
-    subtitle: String
-) {
+private fun MemberCard(title: String, subtitle: String) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         color = Color(0xFFE0E8F5),
         tonalElevation = 0.dp
     ) {
         Column(
-            modifier = Modifier
-                .padding(horizontal = 14.dp, vertical = 10.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Text(text = title, style = MaterialTheme.typography.bodyLarge)
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
