@@ -77,7 +77,6 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
             {
                 result->
                 if ( result.resultCode == "200"){
-
                 }
             },{}
         )

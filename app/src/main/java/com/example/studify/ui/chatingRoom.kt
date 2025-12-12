@@ -51,6 +51,7 @@ fun chatingRoom(
     var reportwindow by remember { mutableStateOf(false)}
     val reportText = vm.reportText
     val context = LocalContext.current
+    var reportUser by remember { mutableStateOf<Long>(-1) }
     Scaffold(
         topBar = {
             ChatTopBar(
@@ -94,6 +95,7 @@ fun chatingRoom(
                                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp).combinedClickable(
                                     onLongClick = {
                                         reportwindow = true;
+                                        reportUser = entry.USERID;
                                     },
                                     onClick = {}
                                 )
@@ -156,6 +158,7 @@ fun chatingRoom(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        vm.report(reportUser.toString(),reportText.value)
                         Toast.makeText(
                             context,
                             "신고가 접수되었습니다.",
