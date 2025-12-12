@@ -28,12 +28,23 @@ class mypageVM @Inject constructor(
     var sex = mutableStateOf("")
     var address = mutableStateOf("")
     var point = mutableStateOf("")
+    var accountStatus = mutableStateOf("정상")
 
     private val disposables = CompositeDisposable()
 
     init {
         loadUserInfoFromPreferences()
         refreshMyInfoFromServer()
+    }
+
+    private fun buildAccountStatusText(report: Int): String {
+        // 너무 강한 단정 표현은 피하고 "요약"으로만
+        return when {
+            report <= 0 -> "정상"
+            report in 1..2 -> "주의 (누적 ${report}회)"
+            report in 3..4 -> "경고 (누적 ${report}회)"
+            else -> "제한 가능성 있음 (누적 ${report}회)"
+        }
     }
 
     private fun loadUserInfoFromPreferences() {
@@ -46,6 +57,9 @@ class mypageVM @Inject constructor(
 
         val pointInt = Preferences.getInt("POINT")
         point.value = "${pointInt}P"
+
+        val reportInt = Preferences.getInt("REPORT")
+        accountStatus.value = buildAccountStatusText(reportInt)
 
         val groupJsonStr = Preferences.getString("GROUPLIST") ?: "[]"
         val groupJson = JSONArray(groupJsonStr)
@@ -79,8 +93,11 @@ class mypageVM @Inject constructor(
                     r.email?.let { email.value = it }
                     r.address?.let { address.value = it }
                     r.sex?.let { sex.value = if (it == 0) "남자" else "여자" }
-                    r.point?.let {
-                        point.value = "${it}P"
+                    r.point?.let { point.value = "${it}P" }
+                    // (서버가 REPORT를 내려줘야 함)
+                    r.report?.let { reportCount ->
+                        accountStatus.value = buildAccountStatusText(reportCount)
+                        Preferences.putInt("REPORT", reportCount)
                     }
 
                 } else {

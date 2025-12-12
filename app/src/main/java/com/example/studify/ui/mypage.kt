@@ -28,6 +28,7 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
     var sex by vm.sex
     var address by vm.address
     var point by vm.point
+    val accountStatus by vm.accountStatus
 
     Scaffold(
         bottomBar = { navigationbar(navController) }
@@ -81,6 +82,7 @@ fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
                 DisplayProfileField(label = "성별", value = sex)
                 DisplayProfileField(label = "주소", value = address)
                 DisplayProfileField(label = "포인트", value = point)
+                DisplayProfileField(label = "계정 상태", value = accountStatus)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
