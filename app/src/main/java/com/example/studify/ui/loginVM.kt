@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class loginVM @Inject constructor(application: Application,private val userRepository: UserRepository): ViewModel() {
-    var loginid =mutableStateOf<String>("admin")
-    var password = mutableStateOf<String>("admin")
+    var loginid =mutableStateOf<String>("")
+    var password = mutableStateOf<String>("")
     var autologin=mutableStateOf<Boolean>(false)
     var loginerror = mutableStateOf<String>("")
     var loginsuccess = mutableStateOf(false)
