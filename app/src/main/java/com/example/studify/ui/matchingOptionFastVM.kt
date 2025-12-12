@@ -40,7 +40,7 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
         .subscribe({
             result->
             if(result.resultCode == "201" ){
-
+                matchingcomplete.value = true;
             }
         },{
 
