@@ -30,6 +30,9 @@ import com.example.studify.Tool.BaseModifiers
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
 
 
 // ───────────────── 데이터 표현용 UI 모델 ─────────────────
@@ -58,10 +61,13 @@ fun groupHome(
         bottomBar = { navigationbar(navController = navController) }
     ) { innerPadding ->
 
+        val scrollState = rememberScrollState()
+
         Column(
             modifier = BaseModifiers.BaseModifier
                 .padding(innerPadding)
                 .background(Color(0xFFF6F7FB))
+                .verticalScroll(scrollState)
         ) {
 
             if (!errorMessage.isNullOrEmpty()) {
