@@ -1,5 +1,6 @@
 package com.example.studify.ui
 
+import android.webkit.WebView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.R
@@ -90,15 +92,15 @@ fun shop(vm: shopVM = hiltViewModel(), navController: NavController) {
                 ) {
                     item(span = { GridItemSpan(4) }) {
                         Card(modifier = BaseModifiers.BaseModifier.fillMaxWidth()) {
-                            Box(
-                                modifier = BaseModifiers.BaseModifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                                    .background(Color.LightGray),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("광고가 들어갈 자리입니다.", fontWeight = FontWeight.Bold)
-                            }
+                            AndroidView(
+                                factory = {context->
+                                    val content = "<iframe width=\"320\" height=\"100\" allowtransparency=\"true\" src=\"https://mtab.clickmon.co.kr/pop/wp_m_320_100.php?PopAd=CM_M_1003067%7C%5E%7CCM_A_1081936%7C%5E%7CAdver_M_1046207&mon_rf=REFERRER_URL&mon_direct_url=URLENCODE_PASSBACK_INPUT&ifmcent=NO\" frameborder=\"0\" scrolling=\"no\"></iframe>"
+                                    WebView(context).apply {
+                                        settings.javaScriptEnabled=true
+                                        loadData(content,"text/html","UTF-8")
+                                    }
+                                }
+                            )
                         }
                     }
 
