@@ -17,6 +17,10 @@ import com.example.studify.Tool.BaseModifiers
 @Composable
 fun mypage(vm: mypageVM = hiltViewModel(), navController: NavController) {
 
+    LaunchedEffect(Unit) {
+        vm.refreshMyInfoFromServer()
+    }
+
     val isEditing by vm.isEditing
     var name by vm.name
     var email by vm.email

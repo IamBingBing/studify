@@ -9,7 +9,7 @@ data class ProfileModel(
     @SerializedName("result") @Expose var result: ProfileResult? = null
 ) {
     data class ProfileResult(
-        @SerializedName("USERID") @Expose var userId: Int = 0,
+        @SerializedName("USERID") val userid: Long?,
         @SerializedName("USERNAME") @Expose var username: String = "",
         @SerializedName("SEX") @Expose var sex: Int = 0,
         @SerializedName("ADDRESS") @Expose var address: String = "",

@@ -33,24 +33,26 @@ class profilepageVM @Inject constructor(
     var personalGoals = mutableStateListOf<Purpose>()
     var progressPercent = mutableStateOf(0f)
 
-    // 네비게이션에서 넘어온 값들
-    private val targetId: Int =
-        savedStateHandle.get<String>("userId")?.toIntOrNull() ?: -1   // 프로필 대상 유저
+    private val targetId: Long =
+        savedStateHandle.get<String>("userId")?.toLongOrNull() ?: -1L
+
     private val groupId: String =
-        savedStateHandle.get<String>("groupId") ?: "-1"             // 이 프로필이 속한 그룹
+        savedStateHandle.get<String>("groupId") ?: "-1"
 
     private val disposables = CompositeDisposable()
+
+    private fun s(v: Any?): String = v?.toString() ?: ""
 
     init {
         Log.d("ProfilePageVM", "init targetId=$targetId, groupId=$groupId")
 
-        if (targetId != -1) {
+        if (targetId != -1L) {
             loadProfile(targetId)
         } else {
             Toast.makeText(application, "잘못된 사용자 접근입니다.", Toast.LENGTH_SHORT).show()
         }
 
-        if (groupId != "-1" && targetId != -1) {
+        if (groupId != "-1" && targetId != -1L) {
             loadUserProgress()
         } else {
             Log.d("ProfilePageVM", "skip loadUserProgress() groupId=$groupId, targetId=$targetId")
@@ -58,7 +60,7 @@ class profilepageVM @Inject constructor(
     }
 
     // ── 1) 프로필 정보 불러오기 ─────────────────
-    fun loadProfile(id: Int) {
+    fun loadProfile(id: Long) {
         Log.d("ProfilePageVM", "loadProfile() id=$id")
 
         val d = userRepository.requestGetProfile(id)
@@ -70,16 +72,15 @@ class profilepageVM @Inject constructor(
 
                 if (model.resultCode == "200" && model.result != null) {
                     val r = model.result!!
-                    name.value = r.username
-                    email.value = r.email
-                    address.value = r.address
-                    point.value = "${r.point}P"
+
+                    name.value = s(r.username)
+                    email.value = s(r.email)
+                    address.value = s(r.address)
+                    val p = s(r.point)
+                    point.value = if (p.isBlank()) "" else "${p}P"
                     sex.value = if (r.sex == 0) "남자" else "여자"
 
-                    Log.d(
-                        "ProfilePageVM",
-                        "profile loaded username=${r.username}, email=${r.email}"
-                    )
+                    Log.d("ProfilePageVM", "profile loaded username=${name.value}, email=${email.value}")
                 } else {
                     Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
                 }
@@ -96,7 +97,7 @@ class profilepageVM @Inject constructor(
 
     // ── 2) 개인 목표 / 달성률 불러오기 ───────────
     fun loadUserProgress() {
-        if (groupId == "-1" || targetId == -1) {
+        if (groupId == "-1" || targetId == -1L) {
             Log.d("ProfilePageVM", "loadUserProgress() aborted groupId=$groupId, targetId=$targetId")
             return
         }
@@ -112,10 +113,6 @@ class profilepageVM @Inject constructor(
 
                 if (model.resultCode == "200" && model.result != null) {
                     val list = model.result!!.purposeList
-                    Log.d(
-                        "ProfilePageVM",
-                        "loadUserProgress() purposeList size=${list?.size}"
-                    )
 
                     if (!list.isNullOrEmpty()) {
                         // progressVM 규칙: [0] = 주요 목표, [1..] = 개인 목표
@@ -138,26 +135,21 @@ class profilepageVM @Inject constructor(
         disposables.add(d)
     }
 
-    // 달성률 계산
+    // 달성률 계산 (0~100)
     fun calculateProgress() {
         if (personalGoals.isEmpty()) {
             progressPercent.value = 0f
-            Log.d("ProfilePageVM", "calculateProgress() empty goals -> 0%")
         } else {
             val doneCount = personalGoals.count { it.complit }
             val total = personalGoals.size
             val percent = (doneCount.toFloat() / total.toFloat()) * 100f
             progressPercent.value = percent
-            Log.d(
-                "ProfilePageVM",
-                "calculateProgress() done=$doneCount, total=$total, percent=$percent"
-            )
         }
     }
 
     // ── 3) 신고 전송 ────────────────────────────
     fun sendReport(reason: String) {
-        if (targetId == -1) {
+        if (targetId == -1L) {
             Toast.makeText(application, "대상 사용자를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -170,23 +162,10 @@ class profilepageVM @Inject constructor(
 
         val d = userRepository.reportUser(targetId.toString(), reason)
             .subscribe({ model ->
-                Log.d(
-                    "ProfilePageVM",
-                    "sendReport() resultCode=${model.resultCode}, error=${model.errorMsg}"
-                )
-
                 if (model.resultCode == "200") {
-                    Toast.makeText(
-                        application,
-                        "신고가 접수되었습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(application, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(
-                        application,
-                        model.errorMsg,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(application, model.errorMsg, Toast.LENGTH_SHORT).show()
                 }
             }, { error ->
                 Log.e("ProfileReport", "신고 전송 실패", error)
