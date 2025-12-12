@@ -12,7 +12,7 @@ interface MessageDao {
     suspend fun insertMessage(message: Message)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages : List<Message>)
-    @Query(" SELECT * FROM message WHERE CHATID = :chatid ORDER BY TIME ASC")
+    @Query(" SELECT * FROM message WHERE CHATID = :chatid ORDER BY TIME DESC")
     fun getMessageByRoom(chatid : Long): Flow<List<Message>>
 
 }
