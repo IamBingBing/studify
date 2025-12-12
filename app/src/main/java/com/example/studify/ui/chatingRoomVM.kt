@@ -61,7 +61,7 @@ class chatingRoomVM @Inject constructor(application: Application, private val ch
                     scope.launch {
                         chatRepository.insertMessages(result.list!!.map { msg ->
                             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                            val localDateTime = LocalDateTime.parse(msg.TIME!!, formatter)
+                            val localDateTime = LocalDateTime.parse(msg.TIME!!.padEnd(19,'0'), formatter)
                             val sendTimeMillis = localDateTime
                                 .atZone(ZoneId.of("Asia/Seoul"))
                                 .toInstant()

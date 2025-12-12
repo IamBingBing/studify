@@ -25,9 +25,9 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
         super.onMessage(webSocket, text)
         val jsonObject = JSONObject(text)
         if (jsonObject.getString("CHANNEL") == "chatserver") {
-
+            var sendtime = jsonObject["SENDTIME"] as String
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            val localDateTime = LocalDateTime.parse(jsonObject["SENDTIME"] as String, formatter)
+            val localDateTime = LocalDateTime.parse(sendtime.padEnd(19,'0'), formatter)
 
             val sendTimeMillis = localDateTime
                 .atZone(ZoneId.of("Asia/Seoul"))
