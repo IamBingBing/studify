@@ -2,14 +2,12 @@ package com.example.studify.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -18,9 +16,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,100 +44,119 @@ fun chatingRoom(
     vm: chatingRoomVM = hiltViewModel(),
     navController: NavController
 ) {
-    val messages = vm.message.collectAsState()        // vm.message: State<List<Chat>>
-    var sendMessage by vm.sendmessage // vm.sendmessage: MutableState<String>
-    val myName = Preferences.getLong("USERID")
-    var reportwindow by remember { mutableStateOf(false)}
+    val messages = vm.message.collectAsState()
+    var sendMessage by vm.sendmessage
+    val myId = Preferences.getLong("USERID")
+    var reportwindow by remember { mutableStateOf(false) }
     val reportText = vm.reportText
     val context = LocalContext.current
     var reportUser by remember { mutableStateOf<Long>(-1) }
-    Scaffold(
-        topBar = {
-            ChatTopBar(
-                title = "채팅방",
-                onBackClick = { navController.popBackStack() }
-            )
-        },
-        bottomBar = { navigationbar(navController) }
-    ) { padding ->
-        Column(
-            modifier = BaseModifiers.BaseModifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            // 채팅 리스트
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-            ) {
-                items(messages.value) { entry ->
-                    val isMine = myName == entry.USERID
 
-                    Column(
+    val density = LocalDensity.current
+    val imeVisible = WindowInsets.ime.getBottom(density) > 0
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.weight(1f),
+            topBar = {
+                ChatTopBar(
+                    title = "채팅방",
+                    onBackClick = { navController.popBackStack() }
+                )
+            },
+            bottomBar = {
+                Surface(tonalElevation = 2.dp, color = Color.White) {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        horizontalAlignment = if (isMine) {
-                            Alignment.End
-                        } else {
-                            Alignment.Start
-                        }
+                            .imePadding()
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // 내 메시지가 아니면 이름 먼저 보여주기
-                        if (!isMine) {
-                            Text(
-                                text = entry.CHATNAME,
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp).combinedClickable(
-                                    onLongClick = {
-                                        reportwindow = true;
-                                        reportUser = entry.USERID;
-                                    },
-                                    onClick = {}
-                                )
-                            )
-                        }
-                        ChatBubble(
-                            text = entry.CHAT,
-                            isMine = isMine
+                        textField(
+                            value = sendMessage,
+                            onValueChange = { sendMessage = it },
+                            modifier = Modifier
+                                .weight(1f)
+                                .heightIn(min = 48.dp),
+                            placeholder = { Text("메시지를 입력하세요") }
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            onClick = {
+                                if (sendMessage.isNotBlank()) {
+                                    vm.sendMessage()
+                                }
+                            },
+                            modifier = Modifier.height(48.dp)
+                        ) {
+                            Text("전송")
+                        }
                     }
                 }
             }
-
-            // 입력창 + 전송 버튼
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+        ) { padding ->
+            Column(
+                modifier = BaseModifiers.BaseModifier
+                    .padding(padding)
+                    .fillMaxSize()
             ) {
-                textField(
-                    value = sendMessage,
-                    onValueChange = { sendMessage = it },
+                LazyColumn(
                     modifier = Modifier
                         .weight(1f)
-                        .heightIn(min = 48.dp),
-                    placeholder = { Text("메시지를 입력하세요") }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = { if (sendMessage !=""){ vm.sendMessage()} },
-                    modifier = Modifier.height(48.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    reverseLayout = true
                 ) {
-                    Text("전송")
+                    items(messages.value.asReversed()) { entry ->
+                        val isMine = myId == entry.USERID
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            horizontalAlignment = if (isMine) Alignment.End else Alignment.Start
+                        ) {
+                            if (!isMine) {
+                                Text(
+                                    text = entry.CHATNAME,
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier
+                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                        .combinedClickable(
+                                            onLongClick = {
+                                                reportwindow = true
+                                                reportUser = entry.USERID
+                                            },
+                                            onClick = {}
+                                        )
+                                )
+                            }
+                            ChatBubble(
+                                text = entry.CHAT,
+                                isMine = isMine
+                            )
+                        }
+                    }
                 }
             }
         }
+
+        if (!imeVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            ) {
+                navigationbar(navController)
+            }
+        }
     }
+
     if (reportwindow) {
         AlertDialog(
-            onDismissRequest = {
-                reportwindow = false
-            },
+            onDismissRequest = { reportwindow = false },
             title = { Text(text = "신고하기") },
             text = {
                 Column {
@@ -146,30 +164,22 @@ fun chatingRoom(
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = reportText.value,
-                        onValueChange = {
-                            reportText.value = it },
+                        onValueChange = { reportText.value = it },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("신고 사유를 입력하세요.") },
                         minLines = 3
                     )
-
                 }
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        vm.report(reportUser.toString(),reportText.value)
-                        Toast.makeText(
-                            context,
-                            "신고가 접수되었습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        vm.report(reportUser.toString(), reportText.value)
+                        Toast.makeText(context, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
                         reportText.value = ""
                         reportwindow = false
                     }
-                ) {
-                    Text("보내기")
-                }
+                ) { Text("보내기") }
             },
             dismissButton = {
                 TextButton(
@@ -177,9 +187,7 @@ fun chatingRoom(
                         reportText.value = ""
                         reportwindow = false
                     }
-                ) {
-                    Text("취소")
-                }
+                ) { Text("취소") }
             }
         )
     }
@@ -195,7 +203,7 @@ fun ChatTopBar(
             .fillMaxWidth()
             .height(96.dp)
             .padding(horizontal = 12.dp)
-            .padding(top =20.dp),
+            .padding(top = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {
@@ -205,7 +213,6 @@ fun ChatTopBar(
             )
         }
 
-        // 가운데 제목
         Text(
             text = title,
             modifier = Modifier.weight(1f),
@@ -215,27 +222,17 @@ fun ChatTopBar(
             )
         )
 
-        Spacer(modifier = Modifier.width(48.dp))// 좌우 균형 맞추기
+        Spacer(modifier = Modifier.width(48.dp))
     }
-
 }
-
 
 @Composable
 private fun ChatBubble(
     text: String,
     isMine: Boolean
 ) {
-    val bubbleColor = if (isMine) {
-        Color(0xFFBAC6E8)
-    } else {
-        Color(0xFFD1D2D5)
-    }
-    val textColor = if (isMine) {
-        MaterialTheme.colorScheme.onPrimaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
+    val bubbleColor = if (isMine) Color(0xFFBAC6E8) else Color(0xFFD1D2D5)
+    val textColor = if (isMine) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
 
     Box(
         modifier = Modifier
@@ -257,5 +254,4 @@ private fun ChatBubble(
             color = textColor
         )
     }
-
 }
