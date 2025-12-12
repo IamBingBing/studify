@@ -32,7 +32,7 @@ class qnaDetailVM @Inject constructor(
                 ?: prefs.getString("userName", null)
                 ?: prefs.getString("USERNAME", null)
 
-        return name?.trim().takeUnless { it.isNullOrBlank() } ?: "알 수 없음"
+        return name?.trim().takeUnless { it.isNullOrBlank() } ?: "나"
     }
     fun loadQnaDetail(qnaId: Long, allQnaList: List<qnaVM.QnaItem>) {
         qnaItem.value = allQnaList.find { it.id == qnaId }
