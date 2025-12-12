@@ -24,6 +24,7 @@ import com.example.studify.ui.matchingOptionFast
 import com.example.studify.ui.matchingOptionGroup
 import com.example.studify.ui.matchingOptionMentor
 import com.example.studify.ui.matchingcomplete
+import com.example.studify.ui.MatchCompleteScreen
 import com.example.studify.ui.mentor
 import com.example.studify.ui.mypage
 import com.example.studify.ui.navigationbar
@@ -66,9 +67,6 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(route="createGroup"){
             createGroup(navController = navController)
-        }
-        composable(route="matchingComplete"){
-            matchingcomplete(navController = navController)
         }
         composable(route="Matchinging"){
             MatchingIng(navController = navController)
@@ -205,6 +203,11 @@ fun AppNavHost(navController: NavHostController) {
         ) {
             Guideline(navController = navController)
         }
+
+        composable("matchComplete") {
+            MatchCompleteScreen(navController = navController)
+        }
+
         composable(
             route = "searchbook/{keyword}", // 1. 주소 뒤에 달린 keyword를 잡아서
             arguments = listOf(navArgument("keyword") { type = NavType.StringType })

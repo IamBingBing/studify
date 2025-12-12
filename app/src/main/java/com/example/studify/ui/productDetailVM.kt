@@ -18,14 +18,30 @@ class productDetailVM @Inject constructor(
 ) : ViewModel() {
 
     var productName = mutableStateOf("")
-    var productImageRes = mutableStateOf(R.drawable.ic_launcher_background)
+    var productImageRes = mutableStateOf(R.drawable.img_0) //기본 이미지
     var productPrice = mutableStateOf(0)
     var productDescription = mutableStateOf("")
 
-    private val disposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
+
+    private fun mapImageRes(goodId: Int): Int {
+        return when (goodId) {
+            1 -> R.drawable.img_1
+            2 -> R.drawable.img_2
+            3 -> R.drawable.img_3
+            4 -> R.drawable.img_4
+            5 -> R.drawable.img_5
+            6 -> R.drawable.img_6
+            7 -> R.drawable.img_7
+            else -> R.drawable.img_0
+        }
+    }
 
     /** 상품 상세 불러오기 */
     fun loadProduct(goodId: Int) {
+
+        // 먼저 이미지부터 세팅 (API 느려도 화면에 바로 뜨게)
+        productImageRes.value = mapImageRes(goodId)
 
         val d = shopRepository.requestProductDetail(goodId)
             .subscribeOn(Schedulers.io())
@@ -42,20 +58,21 @@ class productDetailVM @Inject constructor(
                     productPrice.value = item.price ?: 0
                     productDescription.value = item.detail ?: ""
 
-                    // 이미지가 서버에서 오면 이 부분에서 설정 예정
-                    productImageRes.value = R.drawable.ic_launcher_background
-
+                    //  서버에 이미지 값이 생기면 여기서 교체 가능
+                    // productImageRes.value = ...
                 } else {
                     productName.value = "상품 정보를 불러오지 못했습니다."
-                    productDescription.value = model.errorMsg
+                    productDescription.value = model.errorMsg ?: ""
+                    productImageRes.value = mapImageRes(goodId)
                 }
 
             }, { e ->
                 productName.value = "에러 발생"
                 productDescription.value = e.message ?: ""
+                productImageRes.value = mapImageRes(goodId)
             })
 
-        disposable.add(d)
+        disposables.add(d)
     }
 
     /** 구매 요청 */
@@ -69,6 +86,6 @@ class productDetailVM @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        disposable.clear()
+        disposables.clear()
     }
 }

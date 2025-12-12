@@ -40,6 +40,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import com.example.studify.Tool.studylist
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.graphics.Color
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +88,10 @@ fun matchingOptionMentor(
 
             // 배우고 싶은 과목 카드
             ElevatedCard(
-                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth(),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFFDEE5F3) // 원하는 색
+                )
             ) {
                 Column(
                     modifier = BaseModifiers.BaseModifier
@@ -119,7 +125,10 @@ fun matchingOptionMentor(
 
             // 알려줄 수 있는 과목 카드
             ElevatedCard(
-                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth()
+                modifier = BaseModifiers.BaseBoxModifier.fillMaxWidth(),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = Color(0xFFDEE5F3) // 원하는 색
+                )
             ) {
                 Column(
                     modifier = BaseModifiers.BaseModifier

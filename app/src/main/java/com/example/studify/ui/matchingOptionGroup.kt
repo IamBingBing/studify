@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -47,6 +49,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.Dialog
+import androidx.compose.material3.Card
+import androidx.compose.ui.text.style.TextAlign
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -289,26 +294,57 @@ fun matchingOptionGroup(
 fun WarningDialog(
     title: String = "알림",
     message: String,
-    onConfirm: () -> Unit = {}
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit = onConfirm
 ) {
-    AlertDialog(
-        onDismissRequest = onConfirm,
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("확인")
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFE3EAF5) // 연한 빨강 배경
+            )
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+
+                Text(
+                    text = title,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2B3259)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = message,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color(0xFF333333)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("취소")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = onConfirm,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF4150A1),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("확인")
+                    }
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onConfirm) {
-                Text("취소")
-            }
-        },
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = message)
         }
-    )
+    }
 }
 

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,7 +48,8 @@ fun createGroup(vm: createGroupVM = hiltViewModel(), navController: NavControlle
 
                 Text(
                     text = "그룹방 만들기",
-                    style = MaterialTheme.typography.headlineLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold
                 )
 
                 Spacer(Modifier.height(16.dp))
@@ -233,18 +235,18 @@ fun StudyStyleSlider(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("여유로움")
+            Text("친목")
             Text(
                 when {
                     value < 20 -> "매우 여유"
                     value < 40 -> "조금 여유"
                     value < 60 -> "보통"
-                    value < 80 -> "조금 빡셈"
-                    else       -> "매우 빡셈"
+                    value < 80 -> "조금 집중"
+                    else       -> "매우 집중"
                 },
                 style = MaterialTheme.typography.labelSmall
             )
-            Text("빡셈")
+            Text("집중")
         }
     }
 }

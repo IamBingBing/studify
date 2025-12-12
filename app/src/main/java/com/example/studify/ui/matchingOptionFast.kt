@@ -3,6 +3,7 @@ package com.example.studify.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,22 +22,19 @@ fun matchingOptionFast(
 ) {
     val startTime = vm.startTime
     val endTime = vm.endTime
-    if (vm.match.value ) {
-        if (vm.matchingcomplete.value){
-            navController.navigate("chatlist") {
-                popUpTo("grouplist") {
-                    vm.match.value = false
-                    inclusive = true
+
+    LaunchedEffect(vm.match.value) {
+        if (vm.match.value) {
+            if (vm.matchingcomplete.value) {
+                navController.navigate("matchComplete") {
+                    popUpTo("grouplist") { inclusive = true }
+                }
+            } else {
+                navController.navigate("Matchinging") {
+                    popUpTo("grouplist") { inclusive = true }
                 }
             }
-        }
-        else {
-            navController.navigate("Matchinging") {
-                popUpTo("grouplist") {
-                    vm.match.value = false
-                    inclusive = true
-                }
-            }
+            vm.match.value = false
         }
     }
     Scaffold(
