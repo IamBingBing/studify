@@ -42,6 +42,7 @@ import com.example.studify.Tool.BaseModifiers
 import com.example.studify.Tool.studylist
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +67,7 @@ fun matchingOptionMentor(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("지식 교환 매칭") }
+                title = { Text("지식 교환 매칭", fontWeight = FontWeight.Bold) }
             )
         },
         bottomBar = { navigationbar(navController) }
