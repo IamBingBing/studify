@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,6 +75,9 @@ fun qnaDetail(
 
     var commentText by remember { mutableStateOf("") }
 
+    val density = LocalDensity.current
+    val imeVisible = WindowInsets.ime.getBottom(density) > 0
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -94,7 +98,15 @@ fun qnaDetail(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .imePadding()
+                            .then(
+                                if (imeVisible) {
+                                    Modifier.imePadding()
+                                } else {
+                                    Modifier
+                                        .navigationBarsPadding()
+                                        .padding(bottom = 16.dp)
+                                }
+                            )
                             .padding(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

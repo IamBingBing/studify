@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalDensity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,14 +33,15 @@ fun qna(
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     val query by vm.query
     val qnaList = vm.filteredQna()
     val errorMessage by vm.errorMsg
+
+    val density = LocalDensity.current
+    val imeVisible = WindowInsets.ime.getBottom(density) > 0
 
     Scaffold(
         topBar = {
@@ -51,9 +53,43 @@ fun qna(
                     }
                 }
             )
-        }
-    ) { innerPadding ->
+        },
+        bottomBar = {
+            Surface(tonalElevation = 2.dp) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (imeVisible) {
+                                Modifier.imePadding()
+                            } else {
+                                Modifier.padding(bottom = 64.dp)
+                            }
+                        )
+                        .padding(start = 15.dp, end = 15.dp, top = 8.dp, bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    textField(
+                        value = query,
+                        onValueChange = { vm.onQueryChange(it) },
+                        placeholder = { Text("검색어 입력") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
 
+                    Button(
+                        onClick = {},
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .height(56.dp)
+                    ) {
+                        Text("검색")
+                    }
+                }
+            }
+        }
+    )
+     { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -62,8 +98,6 @@ fun qna(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-
-                // ----- Q&A 리스트 -----
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,15 +114,10 @@ fun qna(
                             onClick = {
                                 Log.d("qna", "=== QNA 클릭 ===")
                                 Log.d("qna", "클릭한 항목: id=${qnaItem.id}, title=${qnaItem.title}")
-
                                 try {
                                     vm.onQnaClick(qnaItem)
-                                    Log.d("qna", "onQnaClick 완료")
-
                                     val route = "qnaDetail/${qnaItem.id}"
-                                    Log.d("qna", "navigate 시도: $route")
                                     navController.navigate(route)
-                                    Log.d("qna", "navigate 완료")
                                 } catch (e: Exception) {
                                     Log.e("qna", "클릭 처리 에러: ${e.message}", e)
                                 }
@@ -97,7 +126,6 @@ fun qna(
                     }
                 }
 
-                // ----- Q&A 없음 / 에러 메시지 -----
                 if (qnaList.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -111,48 +139,19 @@ fun qna(
                         )
                     }
                 }
-
-                // ----- 검색 영역 -----
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 15.dp, end = 15.dp, bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    textField(
-                        value = query,
-                        onValueChange = { vm.onQueryChange(it) },
-                        placeholder = { Text("검색어 입력") },
-                        singleLine = true,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    Button(
-                        onClick = { /* 실시간 검색이라 필요 없음 */ },
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .height(56.dp)
-                    ) {
-                        Text("검색")
-                    }
-                }
             }
 
-            // ----- Q&A 작성 버튼 -----
             FloatingActionButton(
-                onClick = {
-                    vm.showDialog.value = true
-                },
+                onClick = { vm.showDialog.value = true },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .offset(y = (-80).dp)
+                    .offset(y = if (imeVisible) (-16).dp else (-80).dp)
                     .padding(16.dp)
             ) {
                 Text("+")
             }
         }
 
-        // ----- Q&A 작성 다이얼로그 -----
         if (vm.showDialog.value) {
             AlertDialog(
                 onDismissRequest = { vm.showDialog.value = false },
@@ -181,9 +180,7 @@ fun qna(
                             vm.writeQna()
                             vm.showDialog.value = false
                         }
-                    ) {
-                        Text("등록")
-                    }
+                    ) { Text("등록") }
                 },
                 dismissButton = {
                     TextButton(onClick = { vm.showDialog.value = false }) {
@@ -206,7 +203,6 @@ private fun QnaRow(
             .clickable { onClick() }
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        // 제목
         Text(
             text = qna.title,
             style = MaterialTheme.typography.bodyMedium
@@ -214,7 +210,6 @@ private fun QnaRow(
 
         Spacer(Modifier.height(2.dp))
 
-        // 내용 미리보기
         Text(
             text = qna.content.take(50) + if (qna.content.length > 50) "..." else "",
             style = MaterialTheme.typography.bodySmall,
@@ -223,7 +218,6 @@ private fun QnaRow(
 
         Spacer(Modifier.height(2.dp))
 
-        // 코멘트 수
         val commentCount = try {
             val answers = com.google.gson.Gson().fromJson(
                 qna.answer,
