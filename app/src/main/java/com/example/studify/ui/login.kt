@@ -61,6 +61,7 @@ fun login(vm: loginVM = hiltViewModel(), navController: NavController) {
     if (loginerror != "") {
         AlertDialog(
             onDismissRequest = { loginerror = "" },
+            containerColor = Color(0xFFF9FAFB),
             title = { Text("로그인 실패") },
             text = { Text(loginerror ?: "") },
             confirmButton = {

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -143,6 +144,8 @@ fun qna(
 
             FloatingActionButton(
                 onClick = { vm.showDialog.value = true },
+                containerColor = Color(0xFF8398CE),
+                contentColor = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .offset(y = if (imeVisible) (-16).dp else (-80).dp)
@@ -155,6 +158,8 @@ fun qna(
         if (vm.showDialog.value) {
             AlertDialog(
                 onDismissRequest = { vm.showDialog.value = false },
+
+                containerColor = Color(0xFFF9FAFB),
                 title = { Text("Q&A 작성") },
                 text = {
                     Column {

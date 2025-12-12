@@ -121,6 +121,7 @@ fun profilepage(
                     onDismissRequest = {
                         isReportDialogOpen = false
                     },
+                    containerColor = Color(0xFFF9FAFB),
                     title = { Text(text = "신고하기") },
                     text = {
                         Column {

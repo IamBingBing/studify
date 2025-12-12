@@ -219,7 +219,7 @@ fun qnaDetail(
 private fun CommentItem(comment: Comment) {
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = Color(0xFFF5F5F5),
+        color = Color(0xFFE2ECFC),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
