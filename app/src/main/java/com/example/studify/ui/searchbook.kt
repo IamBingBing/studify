@@ -2,7 +2,11 @@
 
 package com.example.studify.ui
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,10 +26,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -146,6 +153,9 @@ fun searchbook(
 // BookItemRow 및 InfoRow는 이전과 동일합니다.
 @Composable
 fun BookItemRow(book: BookModel.BookInfo) {
+    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
+
     Card(
         modifier = BaseModifiers.BaseModifier
             .fillMaxWidth()
@@ -215,11 +225,21 @@ fun BookItemRow(book: BookModel.BookInfo) {
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                         .align(Alignment.End)
                 ) {
+
                     Text(
                         text = if (isAvailable) "대출 가능 확인하기 >" else "이용 불가",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (isAvailable) PointColor else Color.Red
+                        color = if (isAvailable) PointColor else Color.Red,
+                        modifier = Modifier.clickable(onClick = {
+                            if(book.detail != "") {
+                                uriHandler.openUri(book.detail!!)
+
+                            }
+                            else {
+                                Toast.makeText(context , "상세페이지가 없습니다.",Toast.LENGTH_SHORT).show()
+                            }
+                        })
                     )
                 }
             }

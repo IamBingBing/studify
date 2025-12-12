@@ -24,9 +24,7 @@ class searchbookVM @Inject constructor(
     val errorMsg = mutableStateOf<String?>(null)
     val keywordd = mutableStateOf(SavedStateHandle().get<String>("keyword"))
     private val disposables = CompositeDisposable()
-    init {
-        searchBooks(keywordd.value.toString());
-    }
+
     fun searchBooks(keyword: String ) {
         Log.d("SearchBookVM", "검색 요청 시작. 키워드: $keyword")
 
