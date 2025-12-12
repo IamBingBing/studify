@@ -10,6 +10,10 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
+import java.sql.Timestamp
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class chatWebSocketListener @Inject constructor(private val messageHandler: ChatMessageHandler): WebSocketListener(){
@@ -22,13 +26,19 @@ class chatWebSocketListener @Inject constructor(private val messageHandler: Chat
         val jsonObject = JSONObject(text)
         if (jsonObject.getString("CHANNEL") == "chatserver") {
 
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val localDateTime = LocalDateTime.parse(jsonObject["SENDTIME"] as String, formatter)
 
+            val sendTimeMillis = localDateTime
+                .atZone(ZoneId.of("Asia/Seoul"))
+                .toInstant()
+                .toEpochMilli()
             Log.e("websocket", text)
             val msg = Message(
                 jsonObject.getLong("CHATID"),
                 jsonObject["CHATNAME"] as String,
                 jsonObject["CHAT"] as String,
-                jsonObject["SENDTIME"] as String,
+                sendTimeMillis as Long,
                 jsonObject["USERID"] as Long
             )
             messageHandler.onNewMessage(msg)

@@ -15,7 +15,7 @@ data class Message (
     @ColumnInfo(name = "CHAT")
     val CHAT : String,
     @ColumnInfo("TIME")
-    val TIME : String,
+    val TIME : Long,
     @ColumnInfo("USERID")
     val USERID : Long
 )
