@@ -161,7 +161,7 @@ fun progress(vm: progressVM = hiltViewModel(), navController: NavController) {
                     },
                     modifier = BaseModifiers.BaseBtnModifier.fillMaxWidth()
                 ) {
-                    Text("진도 체크")
+                    Text("저장")
                 }
 
                 Spacer(Modifier.height(12.dp))

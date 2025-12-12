@@ -169,18 +169,6 @@ fun BookItemRow(book: BookModel.BookInfo) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            AsyncImage(
-                model = if (book.image.isNullOrBlank()) R.drawable.logo else book.image,
-                contentDescription = "책 표지",
-                modifier = BaseModifiers.BaseModifier
-                    .width(100.dp)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.Gray.copy(alpha = 0.1f)),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = BaseModifiers.BaseModifier.width(16.dp))
 
             Column(
                 modifier = BaseModifiers.BaseModifier.weight(1f),
