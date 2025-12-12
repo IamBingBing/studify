@@ -2,8 +2,6 @@ package com.example.studify.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -16,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
@@ -43,59 +40,37 @@ fun qnaDetail(
         }
     }
 
-    Log.d("qnaDetail", "qnaDetailVM 생성 시도")
     val detailVM: qnaDetailVM = hiltViewModel()
-    Log.d("qnaDetail", "qnaDetailVM 생성 성공")
     val navBackStackEntry = navController.currentBackStackEntry
     val qnaIdString = navBackStackEntry?.arguments?.getString("qnaid")
     val qnaId = qnaIdString?.toLongOrNull() ?: -1L
-    Log.d("qnaDetail", "qnaId: $qnaId (원본: $qnaIdString)")
 
     LaunchedEffect(qnaId, qnaVM) {
-        Log.d("qnaDetail", "LaunchedEffect 시작: qnaId=$qnaId, qnaVM=${qnaVM != null}")
-
         if (qnaId != -1L && qnaVM != null) {
             val selected = qnaVM.selectedQna.value
-            Log.d("qnaDetail", "selectedQna: ${selected?.id}, title: ${selected?.title}")
-
             if (selected != null && selected.id == qnaId) {
-                Log.d("qnaDetail", "selectedQna 사용")
                 detailVM.qnaItem.value = selected
             } else {
-                Log.d("qnaDetail", "items에서 찾기, items size: ${qnaVM.items.size}")
                 detailVM.loadQnaDetail(qnaId, qnaVM.items)
-                Log.d("qnaDetail", "loadQnaDetail 완료, qnaItem: ${detailVM.qnaItem.value?.title}")
             }
-        } else {
-            Log.e("qnaDetail", "qnaId 또는 qnaVM이 null: qnaId=$qnaId, qnaVM=${qnaVM != null}")
         }
     }
 
-    // qnaItem 가져오기
     val qnaItem = detailVM.qnaItem.value
-    Log.d("qnaDetail", "qnaItem: ${qnaItem?.title}, id: ${qnaItem?.id}")
 
-    // 코멘트 파싱 (안전하게)
     val comments = remember(qnaItem?.answer) {
-        Log.d("qnaDetail", "코멘트 파싱 시작: answer length=${qnaItem?.answer?.length}")
         val answerText = qnaItem?.answer
         if (answerText.isNullOrBlank() || answerText == "[]") {
-            Log.d("qnaDetail", "코멘트 없음")
             emptyList()
         } else {
             try {
                 val type = object : TypeToken<List<Comment>>() {}.type
-                val result = Gson().fromJson<List<Comment>>(answerText, type) ?: emptyList()
-                Log.d("qnaDetail", "코멘트 파싱 성공: ${result.size}개")
-                result
+                Gson().fromJson<List<Comment>>(answerText, type) ?: emptyList()
             } catch (e: Exception) {
-                Log.e("qnaDetail", "코멘트 파싱 에러: ${e.message}", e)
                 emptyList()
             }
         }
     }
-
-    Log.d("qnaDetail", "UI 렌더링 시작")
 
     var commentText by remember { mutableStateOf("") }
 
@@ -109,11 +84,48 @@ fun qnaDetail(
                     }
                 }
             )
+        },
+        bottomBar = {
+            if (qnaItem != null) {
+                Surface(
+                    tonalElevation = 2.dp,
+                    color = Color.White
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .imePadding()
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = commentText,
+                            onValueChange = { commentText = it },
+                            placeholder = { Text("코멘트를 입력하세요") },
+                            modifier = Modifier.weight(1f),
+                            maxLines = 3
+                        )
+
+                        Spacer(Modifier.width(8.dp))
+
+                        Button(
+                            onClick = {
+                                val itemId = qnaItem.id
+                                if (commentText.isNotBlank() && itemId != -1L) {
+                                    detailVM.addAnswer(itemId, commentText)
+                                    commentText = ""
+                                }
+                            },
+                            enabled = commentText.isNotBlank()
+                        ) {
+                            Text("등록")
+                        }
+                    }
+                }
+            }
         }
     ) { innerPadding ->
-
         if (qnaItem == null) {
-            // qnaItem이 null일 때 에러 메시지
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -132,14 +144,11 @@ fun qnaDetail(
                 }
             }
         } else {
-            //  qnaItem이 있을 때만 표시
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-
-                // ----- Q&A 내용 -----
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -147,9 +156,8 @@ fun qnaDetail(
                         .verticalScroll(rememberScrollState())
                         .padding(16.dp)
                 ) {
-                    // 제목
                     Text(
-                        text = qnaItem?.title ?: "제목 없음",
+                        text = qnaItem.title.ifBlank { "제목 없음" },
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -158,9 +166,8 @@ fun qnaDetail(
                     HorizontalDivider()
                     Spacer(Modifier.height(8.dp))
 
-                    // 내용
                     Text(
-                        text = qnaItem?.content ?: "내용 없음",
+                        text = qnaItem.content.ifBlank { "내용 없음" },
                         style = MaterialTheme.typography.bodyLarge
                     )
 
@@ -168,7 +175,6 @@ fun qnaDetail(
                     HorizontalDivider()
                     Spacer(Modifier.height(16.dp))
 
-                    // 코멘트 섹션
                     Text(
                         text = "코멘트 (${comments.size})",
                         style = MaterialTheme.typography.titleMedium,
@@ -177,7 +183,6 @@ fun qnaDetail(
 
                     Spacer(Modifier.height(8.dp))
 
-                    // 코멘트 리스트
                     if (comments.isEmpty()) {
                         Text(
                             text = "아직 코멘트가 없습니다.",
@@ -190,45 +195,11 @@ fun qnaDetail(
                             Spacer(Modifier.height(8.dp))
                         }
                     }
-                }
 
-                // ----- 코멘트 작성 영역 -----
-                Surface(
-                    tonalElevation = 2.dp,
-                    color = Color.White
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = commentText,
-                            onValueChange = { commentText = it },
-                            placeholder = { Text("코멘트를 입력하세요") },
-                            modifier = Modifier.weight(1f),
-                            maxLines = 3
-                        )
-
-                        Spacer(Modifier.width(8.dp))
-
-                        Button(
-                            onClick = {
-                                val itemId = qnaItem?.id
-                                if (commentText.isNotBlank() && itemId != null && itemId != -1L) {
-                                    detailVM.addAnswer(itemId, commentText)
-                                    commentText = ""
-                                }
-                            },
-                            enabled = commentText.isNotBlank() && qnaItem != null
-                        ) {
-                            Text("등록")
-                        }
-                    }
+                    Spacer(Modifier.height(80.dp))
                 }
             }
-        } // if-else 종료
+        }
     }
 }
 
@@ -239,20 +210,14 @@ private fun CommentItem(comment: Comment) {
         color = Color(0xFFF5F5F5),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            // 작성자 (나중에 실제 이름으로 매핑 가능)
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 text = "작성자 ${comment.writer}",
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-
             Spacer(Modifier.height(4.dp))
-
-            // 코멘트 내용
             Text(
                 text = comment.content,
                 style = MaterialTheme.typography.bodyMedium
@@ -261,5 +226,4 @@ private fun CommentItem(comment: Comment) {
     }
 }
 
-// Comment 데이터 클래스 (qnaDetail에서 사용)
 data class Comment(val writer: String = "", val content: String = "")
