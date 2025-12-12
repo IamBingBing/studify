@@ -41,6 +41,7 @@ class matchingOptionFastVM @Inject constructor(application: Application, private
             result->
             if(result.resultCode == "201" ){
                 matchingcomplete.value = true;
+                match.value = true;
             }
         },{
 
