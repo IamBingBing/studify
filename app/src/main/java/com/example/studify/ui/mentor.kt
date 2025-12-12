@@ -6,18 +6,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.studify.Tool.BaseModifiers
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.ui.graphics.Brush
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 data class MentorInfo(
     val name: String,
@@ -34,11 +36,18 @@ data class MenteeInfo(
 fun mentor(vm: mentorVM = hiltViewModel(), navController: NavController) {
     var groupName by vm.groupName
     var currentTab by vm.currentTab
-
-    // 멘토 ID 가져오기
     val currentMentorId = vm.currentMentorId.value
-
     val tabs = listOf("홈", "멤버", "Q&A")
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, currentMentorId) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                vm.requestRecentQna(vm.currentMentorId.value)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Scaffold(
         topBar = {
@@ -102,12 +111,16 @@ private fun MentorHomeTab(vm: mentorVM) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ElevatedCard(
-                modifier = Modifier.weight(1f).height(120.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(120.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF51669D))
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(14.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(14.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -122,12 +135,16 @@ private fun MentorHomeTab(vm: mentorVM) {
             }
 
             ElevatedCard(
-                modifier = Modifier.weight(1f).height(120.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(120.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFF6F82BC))
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(14.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(14.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -144,7 +161,7 @@ private fun MentorHomeTab(vm: mentorVM) {
 
         Spacer(Modifier.height(16.dp))
 
-        sectionTitle("최근 Q&A")
+        sectionTitle("전체 Q&A")
 
         ElevatedCard(
             modifier = Modifier
@@ -154,7 +171,9 @@ private fun MentorHomeTab(vm: mentorVM) {
             colors = CardDefaults.elevatedCardColors(containerColor = Color(0xFFE1E7F5))
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (recentQna.isEmpty()) {
@@ -164,7 +183,10 @@ private fun MentorHomeTab(vm: mentorVM) {
                         val title = qna.qnatitle ?: "(제목 없음)"
                         Text("• $title")
                         if (index != recentQna.lastIndex) {
-                            Divider(modifier = Modifier.padding(vertical = 4.dp), color = Color(0xFFB6BDE3))
+                            Divider(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                color = Color(0xFFB6BDE3)
+                            )
                         }
                     }
                 }
@@ -177,36 +199,39 @@ private fun MentorHomeTab(vm: mentorVM) {
 
 @Composable
 private fun MentorMemberTab(vm: mentorVM) {
+
     val mentorList = vm.mentorList
     val menteeList = vm.menteeList
+    val combined = remember(mentorList, menteeList) {
+        val list = mutableListOf<Pair<String, String>>()
+
+        // mentor: subtitle = 알려줄 것 : (teach)
+        mentorList.forEach { m ->
+            list.add(m.name to "알려줄 것 : ${m.field}")
+        }
+        // mentee: subtitle = 알려줄 것 : (learn)
+        menteeList.forEach { m ->
+            list.add(m.name to "알려줄 것 : ${m.goal}")
+        }
+
+        list
+    }
 
     Column(
         modifier = BaseModifiers.BaseModifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (mentorList.isEmpty()) {
-                Text("등록된 멘토가 없습니다.", color = Color.Gray)
-            } else {
-                mentorList.forEach { mentor ->
-                    MemberCard(title = mentor.name, subtitle = mentor.field)
-                }
-            }
-        }
 
         Column(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (menteeList.isEmpty()) {
-                Text("등록된 멘티가 없습니다.", color = Color.Gray)
+            if (combined.isEmpty()) {
+                Text("등록된 멤버가 없습니다.", color = Color.Gray)
             } else {
-                menteeList.forEach { mentee ->
-                    MemberCard(title = mentee.name, subtitle = mentee.goal)
+                combined.forEach { (name, teachText) ->
+                    MemberCard(title = name, subtitle = teachText)
                 }
             }
         }

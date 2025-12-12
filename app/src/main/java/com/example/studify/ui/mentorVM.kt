@@ -112,8 +112,8 @@ class mentorVM @Inject constructor(
         val d = mentorRepository.requestMentorQnaData(mentorId)
             .subscribe({ model ->
                 if (model.resultCode == "200" && model.result != null) {
-                    recentQna.value = model.result!!.take(2)
-                    Log.d("mentorVM", "최근 QNA 로딩: ${recentQna.value.size}개")
+                    recentQna.value = model.result ?: emptyList()
+                    Log.d("mentorVM", "전체 QNA 로딩: ${recentQna.value.size}개")
                 } else {
                     recentQna.value = emptyList()
                 }
