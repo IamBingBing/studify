@@ -242,4 +242,4 @@ https://youtu.be/ovoFQB0CHD8
 
 # 📄 License
 
-본 프로젝트는 학습 목적으로 개발된 프로젝트입니다.
+이 프로젝트는 MIT License 를 사용합니다 . - 세부사항은 [LICENSE](LICENSE) 를 참고하세요.
